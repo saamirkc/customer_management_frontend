@@ -1,0 +1,44 @@
+<mat-card *ngIf="user!=null">
+  <h2>Your Profile Details</h2>
+  <mat-card-content>
+    <div class="bootstrap-wrapper">
+      <div class="container">
+        <div class="container text-center">
+          <img src="./assets/profile_image.jpg" class="profile-image">
+          <h1> Sagar KC</h1>
+        </div>
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <!-- table details-->
+            <table>
+              <tr>
+                <td> UserName</td>
+                <td> {{user.userName}}</td>
+              </tr>
+              <tr>
+                <td> UserId</td>
+                <td> {{user.userId}}</td>
+              </tr>
+              <tr>
+                <td> Phone</td>
+                <td> {{user.phoneNumber}}</td>
+              </tr>
+              <tr>
+                <td> Role</td>
+                <td> {{user.authorities[0].authority}}</td>
+              </tr>
+              <tr>
+                <td> Status</td>
+                <td> {{user.status}}</td>
+              </tr>
+            </table>
+            <mat-card-actions class="text-center">
+              <button mat-raised-button color="primary">Update</button>
+              <button mat-raised-button color="accent" style="margin-left: 4px">Share</button>
+            </mat-card-actions>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
