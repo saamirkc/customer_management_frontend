@@ -4,12 +4,12 @@ import {SignupComponent} from "./pages/signup/signup.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {HomeComponent} from "./pages/home/home.component";
 import {DashboardComponent} from "./pages/admin/dashboard/dashboard.component";
-import {UserDashboardComponent} from "./pages/user/user-dashboard/user-dashboard.component";
+import {CustomerDashboardComponent} from "./pages/customer/customer-dashboard/customer-dashboard.component";
 import {AdminGuard} from "./services/admin.guard";
-import {UserGuard} from "./services/user.guard";
 import {ProfileComponent} from "./pages/profile/profile.component";
 import {WelcomeComponent} from "./pages/admin/welcome/welcome.component";
 import {ViewCategoriesComponent} from "./pages/admin/view-categories/view-categories.component";
+import {CustomerGuard} from "./services/customer.guard";
 const routes: Routes = [
   {
     path: '',
@@ -45,10 +45,10 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'user-dashboard',
-    component: UserDashboardComponent,
+    path: 'customer-dashboard',
+    component: CustomerDashboardComponent,
     pathMatch: 'full',
-    canActivate: [UserGuard]
+    canActivate: [CustomerGuard]
   }
 ];
 @NgModule({

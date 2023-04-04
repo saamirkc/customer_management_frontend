@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {LoginService} from "../../services/login.service";
+import {LoginService} from "../../services/login/login.service";
 import {Router} from "@angular/router";
 import {DataService} from "../../services/data.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {CommonService} from "../../shared/common.service";
+import {TokenService} from "../../services/token/token.service";
+import Swal from "sweetalert2";
+import constants from "../../shared/constants";
 
-export interface LoginData {
-  userName: string;
-  password: string;
-  authorities: string[]
-}
 
 @Component({
   selector: 'app-login',
@@ -16,48 +16,70 @@ export interface LoginData {
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  loginData: LoginData = {
-    userName: '',
-    password: '',
-    authorities: ['']
+  private readonly _loginForm: FormGroup;
+
+  get loginForm(): FormGroup {
+    return this._loginForm;
   }
-  constructor(private _snackBar: MatSnackBar,private loginService: LoginService, private router: Router, private dataService: DataService) {}
-  ngOnInit(): void {}
+
+  constructor(private formBuilder: FormBuilder, private commonService: CommonService,
+              private _snackBar: MatSnackBar, private loginService: LoginService, private router: Router,
+              private dataService: DataService, private tokenService: TokenService) {
+    this._loginForm = this.formBuilder.group({
+      userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      loginType: ['']
+    })
+  }
+
+  ngOnInit(): void {
+  }
+
   formSubmit() {
-    if (this.loginData.userName.trim() === '' || this.loginData.userName === null) {
-      this._snackBar.open('Username is required', '', {
-        duration: 2000
-      });
+    if (this._loginForm.invalid) {
       return;
     }
-    this.loginService.generateToken(this.loginData).subscribe(
+    const formData = this._loginForm.value; // extract form data
+    console.log(formData);
+    this.loginService.login(formData).subscribe(
       {
         next: value => {
-          console.log(this.loginService.getToken());
-          // login
-          this.loginService.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5LCJuYW1lIjoiSm9zZXBoIn0.OpOSSw7e485LOP5PrzScxHb7SR6sAOMRckfFwi4rp7o');
-          // get the current user
-          this.loginService.setUser(this.loginService.getCurrentUser());
-          // this.loginService.getCurrentUser().subscribe({
-          //   next:(value: LoginData) =>{
-          //     this.loginService.setUser(value);
-          //     // redirection based on the user roles.
-          //   }
-          // })
-        },
-        error: err => {
-          this.loginService.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5LCJuYW1lIjoiSm9zZXBoIn0.OpOSSw7e485LOP5PrzScxHb7SR6sAOMRckfFwi4rp7o');
-          // get the current user
-          this.loginService.setUser(this.loginService.getCurrentUser());
+          console.log(value);
+          Swal.fire({
+            title: value.message,
+            icon: 'success',
+            timer: 4000
+          }).then(res => this._loginForm.reset());
+          this.tokenService.setTokens(value.object.token, value.object.refreshToken);
+          this.tokenService.setCustomerGroupId(value.object.customerGroupId);
           // redirection based on the user roles.
-          console.log("Error is thrown here", err);
-          if(this.loginService.getUserRole() === "ADMIN"){
-            this.router.navigate(['/admin-dashboard']).then(res=>{
+          if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
+            // Navigate to the customer dashboard
+            console.log("Successfully logged in", value.object.customerGroupId)
+            this.router.navigate(['/customer-dashboard'])
+          } else if (value.object.customerGroupId == constants.ADMIN_GROUP_ID) {
+            // Navigate to the customer dashboard
+            this.router.navigate(['/admin-dashboard']).then(res => {
               this.dataService.setIsAdminDashboard(true);
             });
-
           } else {
             this.loginService.logOut();
+          }
+        },
+        error: err => {
+          console.error(err)
+          if (err.error.details.length != 0) {
+            Swal.fire({
+              title: err.error.details[0],
+              icon: 'error',
+              timer: 3000
+            });
+          } else {
+            Swal.fire({
+              title: err.error.message,
+              icon: 'error',
+              timer: 3000
+            });
           }
         },
         complete: () => console.log('Observable Subscription completed')

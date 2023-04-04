@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoginService} from "../../services/login.service";
+import {LoginService} from "../../services/login/login.service";
 import {interval, map, Observable, take} from "rxjs";
 
 export interface PeriodicElement {

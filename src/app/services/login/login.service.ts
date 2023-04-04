@@ -1,8 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {LoginData} from "../pages/login/login.component";
-import {environment} from "./helper";
+import {environment} from "../env/environment";
 import { Router} from "@angular/router";
+import {LoginData} from "../../models/login-data";
+import {ApiResponse} from "../../models/api-response";
+import {Observable} from "rxjs";
+import {TokenData} from "../../models/token-data";
+import constants from "../../shared/constants";
 @Injectable({
   providedIn: 'root'
 })
@@ -10,22 +14,22 @@ export class LoginService {
   constructor(private http: HttpClient, private router: Router) {
   }
   // generate the token.
-  public generateToken(loginData: LoginData) {
-    return this.http.post(`${environment.apiBaseUrl}/login`, loginData);
+  public login(loginData: LoginData): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/public/login`, loginData);
   }
-  // logged in User: set the token in local storage.
-  setToken(token: string) {
-    localStorage.setItem('token', token);
-    return true;
+
+  public getTokensAfterJwtExpiry(refreshTokenData: TokenData): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/refreshtokens/get-tokens`, refreshTokenData);
   }
+
   isLoggedIn() {
-    let tokenStr = localStorage.getItem("token");
+    let tokenStr = localStorage.getItem(constants.JWT_TOKEN_KEY);
     return !(tokenStr == undefined || tokenStr == '' || tokenStr == null);
   }
   logOut() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    this.router.navigate(['login'])
+    this.router.navigate(['/login'])
     return true;
   }
   getToken() {

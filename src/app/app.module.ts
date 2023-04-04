@@ -20,7 +20,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {authInterceptProviders} from "./services/auth.interceptor";
 import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
-import { UserDashboardComponent } from './pages/user/user-dashboard/user-dashboard.component';
+import { CustomerDashboardComponent } from './pages/customer/customer-dashboard/customer-dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
@@ -30,6 +30,7 @@ import {MatTableModule} from "@angular/material/table";
 import { ViewCategoriesComponent } from './pages/admin/view-categories/view-categories.component';
 import { AddCategoriesComponent } from './pages/admin/add-categories/add-categories.component';
 import {MatLineModule} from "@angular/material/core";
+import Swal from "sweetalert2";
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,7 @@ import {MatLineModule} from "@angular/material/core";
     LoginComponent,
     HomeComponent,
     DashboardComponent,
-    UserDashboardComponent,
+    CustomerDashboardComponent,
     ProfileComponent,
     SidebarComponent,
     WelcomeComponent,
@@ -63,7 +64,7 @@ import {MatLineModule} from "@angular/material/core";
     MatToolbarModule,
     MatIconModule,
     MatLineModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [authInterceptProviders],
   bootstrap: [AppComponent]

@@ -3,7 +3,7 @@ import {CustomerService} from "../../services/customer/customer.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../shared/common.service";
-
+import Swal from "sweetalert2";
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -40,23 +40,31 @@ export class SignupComponent implements OnInit {
     if (this.registrationForm.invalid) {
       return;
     }
-    console.log(this.user);
-    this.userService.registerCustomer(this._registrationForm).subscribe({
+    const formData = this.registrationForm.value; // extract the form data
+    this.userService.registerUser(formData).subscribe({
         next: value => {
           console.log(value);
-          this._snackBar.open('Success', 'Cancel', {
-            duration: 2000,
-            verticalPosition: 'top',
-            horizontalPosition: 'right'
-          });
+          Swal.fire({
+            title: value.message,
+            icon: 'success',
+            timer: 4000
+          }).then(r => this._registrationForm.reset());
         },
-        error: error => {
-          console.error(error)
-          this._snackBar.open("Error", 'Ok', {
-            duration: 2000,
-            verticalPosition: 'top',
-            horizontalPosition: 'center'
-          });
+        error: err => {
+          console.error(err)
+          if (err.error.details.length != 0) {
+            Swal.fire({
+              title: err.error.details[0],
+              icon: 'error',
+              timer: 3000
+            });
+          } else {
+            Swal.fire({
+              title: err.error.message,
+              icon: 'error',
+              timer: 3000
+            });
+          }
         },
         complete: () => console.log('Complete')
       }
