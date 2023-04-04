@@ -3,13 +3,13 @@ import {RouterModule, Routes} from '@angular/router';
 import {SignupComponent} from "./pages/signup/signup.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {HomeComponent} from "./pages/home/home.component";
-import {DashboardComponent} from "./pages/admin/dashboard/dashboard.component";
 import {CustomerDashboardComponent} from "./pages/customer/customer-dashboard/customer-dashboard.component";
-import {AdminGuard} from "./services/admin.guard";
+import {AdminGuard} from "./services/authguard/admin.guard";
 import {ProfileComponent} from "./pages/profile/profile.component";
 import {WelcomeComponent} from "./pages/admin/welcome/welcome.component";
-import {ViewCategoriesComponent} from "./pages/admin/view-categories/view-categories.component";
-import {CustomerGuard} from "./services/customer.guard";
+import {ViewCustomerDetailsComponent} from "./pages/admin/view-customer-details/view-customer-details.component";
+import {CustomerGuard} from "./services/authguard/customer.guard";
+import {AdminDashboardComponent} from "./pages/admin/dashboard/admin-dashboard.component";
 const routes: Routes = [
   {
     path: '',
@@ -27,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'admin-dashboard',
-    component: DashboardComponent,
+    component: AdminDashboardComponent,
     canActivate: [AdminGuard],
     children:[
       {
@@ -39,8 +39,8 @@ const routes: Routes = [
         component: ProfileComponent
       },
       {
-        path:'categories',
-        component: ViewCategoriesComponent
+        path:'customer-details',
+        component: ViewCustomerDetailsComponent
       }
     ]
   },

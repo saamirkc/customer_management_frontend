@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LoginService} from "../../services/login/login.service";
 import {DataService} from "../../services/data.service";
+import {TokenService} from "../../services/token/token.service";
 
 @Component({
   selector: 'app-navbar',
@@ -11,9 +12,9 @@ export class NavbarComponent implements OnInit{
   isLoggedIn: boolean = false;
   userName : string = '';
   isAdminDashboard: boolean = false;
-  constructor(private loginService: LoginService, private dataService: DataService) {}
+  constructor(private tokenService: TokenService, private dataService: DataService, private loginService: LoginService) {}
   ngOnInit(): void {
-    if(this.loginService.isLoggedIn()){
+    if(this.tokenService.hasToken()){
       this.isLoggedIn = true;
       this.userName = this.loginService.getUser().userName;
     } else{
@@ -28,7 +29,7 @@ export class NavbarComponent implements OnInit{
   logOut(){
     console.log("logout is triggered")
     this.isLoggedIn = false;
-    this.loginService.logOut();
+    this.tokenService.removeTokens();
   }
 
 }

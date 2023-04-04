@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 
 @Component({
-  selector: 'app-view-categories',
-  templateUrl: './view-categories.component.html',
-  styleUrls: ['./view-categories.component.css']
+  selector: 'app-view-customer-details',
+  templateUrl: './view-customer-details.component.html',
+  styleUrls: ['./view-customer-details.component.css']
 })
-export class ViewCategoriesComponent {
+export class ViewCustomerDetailsComponent {
   categories = [
     {
       cid: 23,

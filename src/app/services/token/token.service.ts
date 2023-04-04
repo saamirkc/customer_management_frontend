@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import constants from "../../shared/constants";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import constants from "../../shared/constants";
 export class TokenService {
 
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   public setTokens(jwtToken: string, refreshToken: string): void {
@@ -50,7 +51,7 @@ export class TokenService {
 
   isTokenExpired(token: string): boolean {
     const decodedToken = this.decodeToken(token);
-    return decodedToken && decodedToken.exp < Date.now() / 1000;
+    return decodedToken && decodedToken.exp > Date.now() / 1000;
   }
 
   private decodeToken(token: string): any {
@@ -67,6 +68,7 @@ export class TokenService {
   public removeTokens(): void {
     localStorage.removeItem(constants.JWT_TOKEN_KEY);
     localStorage.removeItem(constants.REFRESH_TOKEN_KEY);
+    this.router.navigate(['/login'])
   }
 
   private encrypt(value: string): string {
