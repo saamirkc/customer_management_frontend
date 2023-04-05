@@ -114,3 +114,7 @@ table.table td i {
   margin-top: 6px;
   font-size: 95%;
 }
+#deleteModal {
+  z-index: 9999;
+}
+

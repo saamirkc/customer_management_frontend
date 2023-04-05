@@ -5,13 +5,11 @@
         <div class="jumbotron">
           <h2 class="h2-responsive"><strong>Customer Detail Form</strong></h2>
           <p>Update the Customer Detail from here</p>
-           <hr class="m-y-2">
+          <hr class="m-y-2">
           <!--Naked Form-->
           <div class="card-block">
-
             <!--Body-->
             <form action="#">
-
               <!-- Basic textbox -->
               <div class="md-form">
                 <label class="">First Name</label>
@@ -32,10 +30,11 @@
                 <label>Date Of Birth </label>
                 <input type="text" [(ngModel)]="customer.dateOfBirth" name="dateOfBirth" class="form-control mt-2">
 
-              </div>   <div class="md-form">
-              <label>Citizen Number </label>
-              <input type="text" [(ngModel)]="customer.citizenNumber" name="citizenNumber" class="form-control mt-2">
-            </div>
+              </div>
+              <div class="md-form">
+                <label>Citizen Number </label>
+                <input type="text" [(ngModel)]="customer.citizenNumber" name="citizenNumber" class="form-control mt-2">
+              </div>
 
               <div class="md-form">
                 <label>Address</label>
@@ -49,21 +48,22 @@
 
               <div class="md-form">
                 <label>Email Address</label>
-                <input type="text" [(ngModel)]="customer.emailAddress" name="emailAddress"  class="form-control mt-2">
+                <input type="text" [(ngModel)]="customer.emailAddress" name="emailAddress" class="form-control mt-2">
               </div>
+
               <div class="md-form">
                 <label>Mobile Number</label>
                 <input type="text" [(ngModel)]="customer.mobileNumber" name="mobileNumber" class="form-control mt-2">
               </div>
+
               <div class="md-form">
                 <label>Status</label>
-                <input disabled type="text" [ngModel]="customer.status" name="status"  class="form-control mt-2">
+                <input disabled type="text" [ngModel]="customer.status" name="status" class="form-control mt-2">
               </div>
 
               <div class="text-xs-left mt-2 mb-2">
-                <button class="btn btn-primary">Submit</button>
+                <button (click)="updateCustomerDetailsById()" class="btn btn-primary"> Update</button>
               </div>
-
             </form>
           </div>
         </div>

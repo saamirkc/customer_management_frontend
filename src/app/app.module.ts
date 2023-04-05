@@ -31,6 +31,7 @@ import { AddCustomerDetailsComponent } from './pages/admin/add-customer-details/
 import {MatLineModule} from "@angular/material/core";
 import {AdminDashboardComponent} from "./pages/admin/dashboard/admin-dashboard.component";
 import {CustomerViewPopupComponent} from "./pages/customer/customer-view-popup/customer-view-popup.component";
+import { DeleteModalComponentComponent } from './pages/admin/delete-modal-component/delete-modal-component.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,6 +49,7 @@ import {CustomerViewPopupComponent} from "./pages/customer/customer-view-popup/c
     AddCustomerDetailsComponent,
     CustomerViewPopupComponent,
     CustomerViewPopupComponent,
+    DeleteModalComponentComponent,
   ],
   imports: [
     BrowserModule,

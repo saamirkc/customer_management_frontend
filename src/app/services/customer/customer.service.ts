@@ -4,6 +4,8 @@ import {environment} from "../env/environment";
 import {RegistrationFormData} from "../../models/registration-form-data";
 import {ApiResponse} from "../../models/api-response";
 import {Observable} from "rxjs";
+import {CustomerDetails} from "../../models/customer-details";
+import {StatusType} from "../../enums/status-type";
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +30,12 @@ export class CustomerService {
   viewCustomerById(customerId: number): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/customer/details/id/${customerId}`);
   }
-  updateCustomerDetail(customerId: number): any {
-    return null;
-    // return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update/id/${customerId}`);
+  updateCustomerDetail(customer:CustomerDetails, customerId: number): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update/id/${customerId}`, customer);
   }
-
-
+  deleteCustomerById(customerId: number): Observable<ApiResponse> {
+    const messageBody = {"message": "User is deleted"}
+    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update-status/id/${customerId}?status=${StatusType.DELETED}`,messageBody);
+  }
 
 }

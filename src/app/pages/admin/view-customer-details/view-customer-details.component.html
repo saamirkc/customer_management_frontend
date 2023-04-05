@@ -39,19 +39,29 @@
                 class="material-icons">&#xE417;</i></a>
               <a class="edit" (click)="openEditCustomerModal(customer.id)" title="Edit" data-toggle="tooltip"><i
                 class="material-icons">&#xE254;</i></a>
-              <a (click)="deleteCustomer(customer.id)" class="delete" title="Delete" data-toggle="tooltip"><i
+              <a (click)="showDeleteModal(customer.id)"  class="delete" title="Delete"
+                 data-toggle="tooltip"><i
                 class="material-icons">&#xE872;</i></a>
-              <!-- Define the ng-container directive to hold the CustomerViewPopUpComponent -->
-<!--              <ng-container *ngTemplateOutlet="editCustomerModalContainer"></ng-container>-->
             </td>
-          </tr
-          >
+          </tr>
           </tbody>
         </table>
-        <!-- Define the ng-template directive with the content of the CustomerViewPopUpComponent -->
-<!--        <ng-template #editCustomerModalContainer>-->
-<!--          <app-customer-view-popup></app-customer-view-popup>-->
-<!--        </ng-template>-->
+        <ng-template #deleteModal>
+          <div class="modal-header">
+            <h2 class="modal-title" style="font-weight: bold">Please confirm..</h2>
+            <button style="border: none" type="button"  class="close" aria-label="Close" (click)="decline()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Do you really want to delete the customer ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK </button>
+            <button type="button" class="btn btn-primary" (click)="decline()">Cancel</button>
+          </div>
+        </ng-template>
+
         <div class="clearfix">
           <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
           <ul class="pagination">
@@ -72,3 +82,4 @@
     <button mat-raised-button color="primary">Add Category</button>
   </div>
 </mat-card>
+
