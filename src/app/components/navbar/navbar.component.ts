@@ -10,20 +10,20 @@ import {TokenService} from "../../services/token/token.service";
 })
 export class NavbarComponent implements OnInit{
   isLoggedIn: boolean = false;
-  userName : string = '';
+  userName : string = 'GRAAL VM';
   isAdminDashboard: boolean = false;
   constructor(private tokenService: TokenService, private dataService: DataService, private loginService: LoginService) {}
   ngOnInit(): void {
     if(this.tokenService.hasToken()){
       this.isLoggedIn = true;
-      this.userName = this.loginService.getUser().userName;
+      // this.userName = this.loginService.getUser().userName;
     } else{
       this.isLoggedIn = false;
     }
     console.log("The user is logged in??", this.isLoggedIn)
     this.dataService.getIsAdminDashboard().subscribe(value => {
       this.isLoggedIn = value;
-      this.userName = this.loginService.getUser().userName;
+      // this.userName = this.loginService.getUser().userName;
     })
   }
   logOut(){

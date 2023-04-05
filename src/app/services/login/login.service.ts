@@ -19,7 +19,17 @@ export class LoginService {
   }
 
   public getTokensAfterJwtExpiry(refreshTokenData: TokenData): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/refreshtokens/get-tokens`, refreshTokenData);
+     let apiResponseObservable = this.http.post<ApiResponse>(`${environment.apiBaseUrl}/refreshtokens/get-tokens`, refreshTokenData);
+
+     apiResponseObservable.subscribe({
+       next: value => {
+          console.log("API Response observable", value)
+       }, error: err => {
+         console.log(err);
+       },
+       complete: () => console.log('Observable Subscription completed')
+     });
+     return apiResponseObservable;
   }
 
   isLoggedIn() {

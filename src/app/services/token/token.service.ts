@@ -13,10 +13,10 @@ export class TokenService {
   }
 
   public setTokens(jwtToken: string, refreshToken: string): void {
-    const encryptedJwtToken = this.encrypt(jwtToken);
-    const encryptedRefreshToken = this.encrypt(refreshToken);
-    localStorage.setItem(constants.JWT_TOKEN_KEY, encryptedJwtToken);
-    localStorage.setItem(constants.REFRESH_TOKEN_KEY, encryptedRefreshToken);
+    // const encryptedJwtToken = this.encrypt(jwtToken);
+    // const encryptedRefreshToken = this.encrypt(refreshToken);
+    localStorage.setItem(constants.JWT_TOKEN_KEY, jwtToken);
+    localStorage.setItem(constants.REFRESH_TOKEN_KEY, refreshToken);
   }
 
   public setCustomerGroupId(groupId: number): void {
@@ -27,13 +27,14 @@ export class TokenService {
      return localStorage.getItem(constants.GROUP_ID);
   }
 
-  public getJwtToken(): string | null {
+  public getJwtToken(): string {
     const encryptedJwtToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
+    console.log('ENCRYPTED TOKEN', encryptedJwtToken);
     if (encryptedJwtToken) {
-      const decryptedJwtToken = this.decrypt(encryptedJwtToken);
-      return decryptedJwtToken.toString();
+      return encryptedJwtToken;
+      // return this.decrypt(encryptedJwtToken);
     }
-    return null;
+    return '';
   }
 
   hasToken(): boolean {
@@ -43,15 +44,15 @@ export class TokenService {
   public getRefreshToken(): string {
     const encryptedRefreshToken = localStorage.getItem(constants.REFRESH_TOKEN_KEY);
     if (encryptedRefreshToken) {
-      const decryptedRefreshToken = this.decrypt(encryptedRefreshToken);
-      return decryptedRefreshToken.toString();
+      return encryptedRefreshToken;
+      // return this.decrypt(encryptedRefreshToken);
     }
     return '';
   }
 
   isTokenExpired(token: string): boolean {
     const decodedToken = this.decodeToken(token);
-    return decodedToken && decodedToken.exp > Date.now() / 1000;
+    return decodedToken && decodedToken.exp < Date.now() / 1000;
   }
 
   private decodeToken(token: string): any {
@@ -75,8 +76,8 @@ export class TokenService {
     return CryptoJS.AES.encrypt(value, constants.SECRET_KEY).toString();
   }
 
-  private decrypt(value: string): any {
-    return CryptoJS.AES.decrypt(value, constants.SECRET_KEY);
+  private decrypt(value: string): string {
+    return CryptoJS.AES.decrypt(value, constants.SECRET_KEY).toString();
   }
 
 }
