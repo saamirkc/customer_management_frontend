@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
             timer: 4000
           }).then(res => this._loginForm.reset());
           this.tokenService.setTokens(value.object.token, value.object.refreshToken);
-          this.tokenService.setCustomerGroupId(value.object.customerGroupId);
+          this.tokenService.setCustomerNameGroupId(value.object.customerGroupId, value.object.fullName);
           // redirection based on the user roles.
           if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
             // Navigate to the customer dashboard

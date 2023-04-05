@@ -19,14 +19,17 @@ export class TokenService {
     localStorage.setItem(constants.REFRESH_TOKEN_KEY, refreshToken);
   }
 
-  public setCustomerGroupId(groupId: number): void {
+  public setCustomerNameGroupId(groupId: number, fullName: string): void {
     localStorage.setItem(constants.GROUP_ID, groupId.toString());
+    localStorage.setItem(constants.FULL_NAME, fullName);
   }
 
   public getGroupId(): string | null {
      return localStorage.getItem(constants.GROUP_ID);
   }
-
+  public getFullName(): string | null{
+    return localStorage.getItem(constants.FULL_NAME);
+  }
   public getJwtToken(): string {
     const encryptedJwtToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
     console.log('ENCRYPTED TOKEN', encryptedJwtToken);

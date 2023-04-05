@@ -5,11 +5,11 @@
       <div class="table-wrapper">
         <div class="table-title">
           <div class="row">
-            <div class="col-sm-8"><h2>Customer <b>Details</b></h2></div>
-            <div class="col-sm-4">
+            <div class="col-sm-7"><h2>Customer <b>Details</b></h2></div>
+            <div class="col-sm-5">
               <div class="search-box">
                 <i class="material-icons">&#xE8B6;</i>
-                <input type="text" class="form-control" placeholder="Search&hellip;">
+                <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="_searchTerm" (keyup)="search()">
               </div>
             </div>
           </div>
@@ -35,6 +35,8 @@
             <td>{{ customer?.mobileNumber ? customer.mobileNumber : 'N/A' }}</td>
             <td>{{ customer?.status }}</td>
             <td>
+              <a class="add" title="Add" data-toggle="tooltip"><i
+                class="material-icons">&#xe147;</i></a>
               <a (click)="viewCustomerById(customer.id)" class="view" title="View" data-toggle="tooltip"><i
                 class="material-icons">&#xE417;</i></a>
               <a class="edit" (click)="openEditCustomerModal(customer.id)" title="Edit" data-toggle="tooltip"><i
@@ -63,23 +65,29 @@
         </ng-template>
 
         <div class="clearfix">
-          <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+          <div class="hint-text">Showing <b>{{_pageSize * _pageNumber + 1}}</b> to <b>{{_pageSize * (_pageNumber + 1)}}</b> of <b>{{_totalElements}}</b> entries</div>
           <ul class="pagination">
-            <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-            <li class="page-item"><a href="#" class="page-link">1</a></li>
-            <li class="page-item"><a href="#" class="page-link">2</a></li>
-            <li class="page-item active"><a href="#" class="page-link">3</a></li>
-            <li class="page-item"><a href="#" class="page-link">4</a></li>
-            <li class="page-item"><a href="#" class="page-link">5</a></li>
-            <li class="page-item"><a href="#" class="page-link"><i class="fa fa-angle-double-right"></i></a></li>
+            <li class="page-item {{_pageNumber == 0 ? 'disabled' : ''}}">
+              <a  class="page-link" (click)="goToPage(_pageNumber - 1)">
+                <i class="fa fa-angle-double-left"></i>
+              </a>
+            </li>
+            <ng-container *ngFor="let page of _pages">
+              <li class="page-item {{page == _pageNumber ? 'active' : ''}}">
+                <a class="page-link" (click)="goToPage(page)">{{page + 1}}</a>
+              </li>
+            </ng-container>
+            <li class="page-item {{_pageNumber == _totalPages - 1 ? 'disabled' : ''}}">
+              <a  class="page-link" (click)="goToPage(_pageNumber + 1)">
+                <i class="fa fa-angle-double-right"></i>
+              </a>
+            </li>
           </ul>
         </div>
+
       </div>
     </div>
   </div>
   </body>
-  <div class="container text-center mt-20 mb-3">
-    <button mat-raised-button color="primary">Add Category</button>
-  </div>
 </mat-card>
 

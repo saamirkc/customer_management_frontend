@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {LoginService} from "../../services/login/login.service";
 import {DataService} from "../../services/data.service";
 import {TokenService} from "../../services/token/token.service";
+import {CustomerService} from "../../services/customer/customer.service";
 
 @Component({
   selector: 'app-navbar',
@@ -9,26 +10,27 @@ import {TokenService} from "../../services/token/token.service";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit{
-  isLoggedIn: boolean = false;
-  userName : string = 'GRAAL VM';
-  isAdminDashboard: boolean = false;
-  constructor(private tokenService: TokenService, private dataService: DataService, private loginService: LoginService) {}
+  _isLoggedIn: boolean = false;
+  _userName? : string | null;
+  _isAdminDashboard: boolean = false;
+  constructor(private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {}
   ngOnInit(): void {
     if(this.tokenService.hasToken()){
-      this.isLoggedIn = true;
-      // this.userName = this.loginService.getUser().userName;
+      this._isLoggedIn = true;
+      this.tokenService.getGroupId()
+      this._userName = this.tokenService.getFullName();
     } else{
-      this.isLoggedIn = false;
+      this._isLoggedIn = false;
     }
-    console.log("The user is logged in??", this.isLoggedIn)
+    console.log("The user is logged in??", this._isLoggedIn)
     this.dataService.getIsAdminDashboard().subscribe(value => {
-      this.isLoggedIn = value;
-      // this.userName = this.loginService.getUser().userName;
+      this._isLoggedIn = value;
+      this._userName = this.tokenService.getFullName();
     })
   }
   logOut(){
     console.log("logout is triggered")
-    this.isLoggedIn = false;
+    this._isLoggedIn = false;
     this.tokenService.removeTokens();
   }
 

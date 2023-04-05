@@ -7,7 +7,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class DataService {
   private loginStatusSubject = new Subject<boolean>()
-  constructor(private http: HttpClient) { }
+  constructor() { }
   getIsAdminDashboard(): Subject<boolean> {
     return this.loginStatusSubject;
   }

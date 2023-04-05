@@ -5,7 +5,8 @@ const constants = {
   DEFAULT_LOCALE: 'en-US',
   JWT_TOKEN_KEY: 'jwt_token',
   REFRESH_TOKEN_KEY: 'refresh_token',
-  SECRET_KEY: 'secret_key' // put your secret key here
+  SECRET_KEY: 'secret_key', // put your secret key here
+  FULL_NAME: 'full_name'
 
 };
 export default constants;

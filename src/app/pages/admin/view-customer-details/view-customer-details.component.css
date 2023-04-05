@@ -117,4 +117,6 @@ table.table td i {
 #deleteModal {
   z-index: 9999;
 }
-
+.clearfix a{
+  cursor: pointer;
+}

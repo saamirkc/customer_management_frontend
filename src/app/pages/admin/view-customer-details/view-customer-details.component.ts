@@ -19,10 +19,17 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   @ViewChild('deleteModal') deleteModal?: TemplateRef<any>;
 
+  _searchTerm: string = '';
   private _customerList: CustomerListResponse[] = [];
   private _customerDetail: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   private readonly _customerDetailForm: FormGroup;
   private _customerId?: number;
+
+  _pageSize = 10;
+  _pageNumber = 0;
+  _totalPages = 0;
+  _totalElements = 0;
+  _pages: number[] = [];
 
   constructor(private formBuilder: FormBuilder, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
     this._customerDetailForm = this.formBuilder.group({
@@ -32,7 +39,9 @@ export class ViewCustomerDetailsComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
     })
   }
-
+  search(): void {
+      this.getCustomerDetails(this._searchTerm);
+  }
   openEditCustomerModal(customerId: number): void {
     this.customerService.viewCustomerById(customerId).subscribe((response) => {
       const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true});
@@ -52,14 +61,18 @@ export class ViewCustomerDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCustomerDetails();
+    this.getCustomerDetails('');
   }
 
-  getCustomerDetails() {
-    this.customerService.getCustomerList(0, 10, '', 'createdTs', 'desc')
+  getCustomerDetails(search: string) {
+    this.customerService.getCustomerList(this._pageNumber, this._pageSize, search, 'createdTs', 'desc')
       .subscribe({
         next: value => {
           this._customerList = value.object.content;
+          this._totalPages = value.object.totalPages;
+          this._totalElements=value.object._totalElements;
+          this._pages = Array.from(Array(this._totalPages).keys());
+
         }, error: err => {
           console.error(err)
           if (err.error.details.length != 0) {
@@ -78,7 +91,12 @@ export class ViewCustomerDetailsComponent implements OnInit {
         }
       })
   }
-
+  goToPage(page: number) {
+    if (page >= 0 && page < this._totalPages) {
+      this._pageNumber = page;
+      this.getCustomerDetails('');
+    }
+  }
   // Make an API call to view the customer with the given id
   viewCustomerById(id: number) {
     this.customerService.viewCustomerById(id).subscribe({
@@ -146,7 +164,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
   get customerList(): CustomerListResponse[] {
     return this._customerList;
   }
-
   get customerDetail(): CustomerDetails {
     return this._customerDetail;
   }
