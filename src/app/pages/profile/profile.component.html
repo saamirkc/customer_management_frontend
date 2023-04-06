@@ -1,11 +1,11 @@
-<mat-card *ngIf="user!=null">
+<mat-card>
   <h2>Your Profile Details</h2>
   <mat-card-content>
     <div class="bootstrap-wrapper">
       <div class="container">
         <div class="container text-center">
           <img src="./assets/profile_image.jpg" class="profile-image">
-          <h1> Sagar KC</h1>
+          <h1> {{customerDetail.firstName}} {{customerDetail.lastName}}</h1>
         </div>
         <div class="row">
           <div class="col-md-10 offset-md-1">
@@ -13,23 +13,23 @@
             <table>
               <tr>
                 <td> UserName</td>
-                <td> {{user.userName}}</td>
+                <td> {{customerDetail.userName}}</td>
               </tr>
               <tr>
-                <td> UserId</td>
-                <td> {{user.userId}}</td>
+                <td> Address</td>
+                <td> {{customerDetail.address}}</td>
+              </tr>
+              <tr>
+                <td> Citizenship No. </td>
+                <td> {{customerDetail.citizenNumber}}</td>
               </tr>
               <tr>
                 <td> Phone</td>
-                <td> {{user.phoneNumber}}</td>
-              </tr>
-              <tr>
-                <td> Role</td>
-                <td> {{user.authorities[0].authority}}</td>
+                <td> {{customerDetail.mobileNumber}}</td>
               </tr>
               <tr>
                 <td> Status</td>
-                <td> {{user.status}}</td>
+                <td> {{customerDetail.status}}</td>
               </tr>
             </table>
             <mat-card-actions class="text-center">

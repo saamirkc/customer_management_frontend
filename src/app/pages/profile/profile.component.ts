@@ -1,6 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {LoginService} from "../../services/login/login.service";
-import {interval, map, Observable, take} from "rxjs";
+import {BehaviorSubject, interval, map, Observable, ReplaySubject, take} from "rxjs";
+import {TokenService} from "../../services/token/token.service";
+import {CustomerService} from "../../services/customer/customer.service";
+import {DataService} from "../../services/data.service";
+import {CustomerDetails} from "../../models/customer-details";
+import Swal from "sweetalert2";
+import Constants from "../../shared/constants";
 
 export interface PeriodicElement {
   column: string;
@@ -21,33 +27,45 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  private _user = null;
-  constructor(private loginService: LoginService) {
+  private _customerDetail: CustomerDetails;
+  private _customerId?: string | null;
+
+  constructor(private loginService: LoginService, private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService,) {
+    this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   }
 
   ngOnInit(): void {
-    this._user = this.loginService.getCurrentUser();
-    this.myObservable.subscribe({
-      next: (value: any) => console.log(" The profiles observable is subscribed ",value),
-      complete: () => console.log('Observable completed')
-    });
-    this.takeThree.subscribe(value =>{
-      console.log(value);
-    })
-
+    this._customerId = this.tokenService.getCustomerId()
+    if (this._customerId) {
+      this.customerService.viewCustomerById(Number(this._customerId)).subscribe({
+        next: value => {
+          console.log("View customer by id is called")
+          this._customerDetail = value.object;
+        }, error: err => {
+          console.error(err)
+          if (err.error.details.length != 0) {
+            Swal.fire({
+              title: err.error.details[0],
+              icon: 'error',
+              timer: 3000
+            });
+          } else {
+            Swal.fire({
+              title: err.error.message,
+              icon: 'error',
+              timer: 3000
+            });
+          }
+        }
+      })
+    }
   }
+
+  get customerDetail(): CustomerDetails {
+    return this._customerDetail;
+  }
+
   get user(): any {
-    return this._user;
+    return null;
   }
-  myObservable: any = new Observable(this.observer);
-    observer(value : any){
-    value.next('hello');
-    value.next('world');
-    value.complete();
-  };
-   numbers = interval(1000);
-   takeThree = this.numbers.pipe(
-     take(3),
-     map((value) => Date.now()));
-
 }

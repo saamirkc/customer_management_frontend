@@ -6,6 +6,8 @@ import {ApiResponse} from "../../models/api-response";
 import {Observable} from "rxjs";
 import {CustomerDetails} from "../../models/customer-details";
 import {StatusType} from "../../enums/status-type";
+import {TokenData} from "../../models/token-data";
+import {StatusRequest} from "../../models/status-request";
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,11 @@ export class CustomerService {
     return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update/id/${customerId}`, customer);
   }
   deleteCustomerById(customerId: number): Observable<ApiResponse> {
-    const messageBody = {"message": "User is deleted"}
+    const messageBody: StatusRequest = {
+      customerId: customerId,
+      status: StatusType.DELETED,
+      message: ""
+    };
     return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update-status/id/${customerId}?status=${StatusType.DELETED}`,messageBody);
   }
 

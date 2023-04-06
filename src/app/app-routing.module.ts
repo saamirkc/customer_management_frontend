@@ -10,6 +10,7 @@ import {WelcomeComponent} from "./pages/admin/welcome/welcome.component";
 import {ViewCustomerDetailsComponent} from "./pages/admin/view-customer-details/view-customer-details.component";
 import {CustomerGuard} from "./services/authguard/customer.guard";
 import {AdminDashboardComponent} from "./pages/admin/dashboard/admin-dashboard.component";
+
 const routes: Routes = [
   {
     path: '',
@@ -25,24 +26,10 @@ const routes: Routes = [
     component: LoginComponent,
     pathMatch: 'full'
   },
+
   {
     path: 'admin-dashboard',
-    component: AdminDashboardComponent,
-    canActivate: [AdminGuard],
-    children:[
-      {
-        path:'',
-        component: WelcomeComponent
-      },
-      {
-        path:'profile',
-        component: ProfileComponent
-      },
-      {
-        path:'customer-details',
-        component: ViewCustomerDetailsComponent
-      }
-    ]
+    loadChildren: () => import('./pages/admin/dashboard/admin-dashboard.module').then(m => m.AdminDashboardModule)
   },
   {
     path: 'customer-dashboard',
@@ -51,6 +38,7 @@ const routes: Routes = [
     canActivate: [CustomerGuard]
   }
 ];
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

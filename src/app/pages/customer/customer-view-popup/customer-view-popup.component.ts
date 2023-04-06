@@ -3,6 +3,8 @@ import {CustomerDetails} from "../../../models/customer-details";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {CustomerService} from "../../../services/customer/customer.service";
 import Swal from "sweetalert2";
+import {StatusType} from "../../../enums/status-type";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-customer-view-popup',
@@ -12,7 +14,8 @@ import Swal from "sweetalert2";
 export class CustomerViewPopupComponent implements OnInit {
   @Input() customerId?: number
   @Input() customer: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
-  constructor(private activeModal: NgbActiveModal, private customerService: CustomerService) {
+  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE,StatusType.INACTIVE,StatusType.DISABLED,StatusType.DELETED]
+  constructor(private activeModal: NgbActiveModal, private router: Router, private customerService: CustomerService) {
   }
   onSave(): void {
     // Handle save logic here
@@ -29,7 +32,8 @@ export class CustomerViewPopupComponent implements OnInit {
             icon: 'success',
             timer: 4000
           }).then(resp=>{
-              this.activeModal.dismiss();
+            this.activeModal.dismiss();
+            window.location.reload();
           })
         }, error: err => {
           console.error(err)
@@ -50,7 +54,6 @@ export class CustomerViewPopupComponent implements OnInit {
       })
     }
   }
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }

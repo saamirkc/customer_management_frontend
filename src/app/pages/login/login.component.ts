@@ -61,6 +61,8 @@ export class LoginComponent implements OnInit {
             // Navigate to the customer dashboard
             this.router.navigate(['/admin-dashboard']).then(res => {
               this.dataService.setIsAdminDashboard(true);
+              this.tokenService.setCustomerId(value.object.customerId);
+              // this.dataService.setCustomerDetailSubject(value.object.customerId)
             });
           } else {
             this.loginService.logOut();

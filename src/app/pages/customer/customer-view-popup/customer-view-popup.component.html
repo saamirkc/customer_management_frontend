@@ -55,10 +55,11 @@
                 <label>Mobile Number</label>
                 <input type="text" [(ngModel)]="customer.mobileNumber" name="mobileNumber" class="form-control mt-2">
               </div>
-
               <div class="md-form">
-                <label>Status</label>
-                <input disabled type="text" [ngModel]="customer.status" name="status" class="form-control mt-2">
+                <label for="status">Status</label>
+                <select id="status" name="status" [(ngModel)]="customer.status"  class="form-control mt-2">
+                  <option *ngFor="let option of statusOptions" [value]="option" [selected]="option == customer.status">{{option}}</option>
+                </select>
               </div>
 
               <div class="text-xs-left mt-2 mb-2">

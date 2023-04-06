@@ -21,7 +21,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   _searchTerm: string = '';
   private _customerList: CustomerListResponse[] = [];
-  private _customerDetail: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
+  private _customerDetail: CustomerDetails;
   private readonly _customerDetailForm: FormGroup;
   private _customerId?: number;
 
@@ -32,6 +32,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
   _pages: number[] = [];
 
   constructor(private formBuilder: FormBuilder, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
+    this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
     this._customerDetailForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -47,11 +48,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
       const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true});
       modalRef.componentInstance.customer = response.object;
       modalRef.componentInstance.customerId = customerId;
-      modalRef.result.then((result) => {
-        // Handle any actions needed after the modal closes, if necessary
-      }, (reason) => {
-        // Handle any actions needed if the modal is dismissed or closed for some other reason
-      });
     });
   }
 

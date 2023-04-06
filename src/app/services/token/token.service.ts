@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import constants from "../../shared/constants";
 import {Router} from "@angular/router";
+import Constants from "../../shared/constants";
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,18 @@ export class TokenService {
     localStorage.setItem(constants.FULL_NAME, fullName);
   }
 
-  public getGroupId(): string | null {
+  public setCustomerId(customerId: number){
+    localStorage.setItem(Constants.CUSTOMER_ID, customerId.toString());
+  }
+
+  public getCustomerId(){
+    return localStorage.getItem(Constants.CUSTOMER_ID);
+  }
+
+  public getGroupId() {
      return localStorage.getItem(constants.GROUP_ID);
   }
-  public getFullName(): string | null{
+  public getFullName(){
     return localStorage.getItem(constants.FULL_NAME);
   }
   public getJwtToken(): string {
