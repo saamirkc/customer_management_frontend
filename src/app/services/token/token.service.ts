@@ -25,20 +25,22 @@ export class TokenService {
     localStorage.setItem(constants.FULL_NAME, fullName);
   }
 
-  public setCustomerId(customerId: number){
+  public setCustomerId(customerId: number) {
     localStorage.setItem(Constants.CUSTOMER_ID, customerId.toString());
   }
 
-  public getCustomerId(){
+  public getCustomerId() {
     return localStorage.getItem(Constants.CUSTOMER_ID);
   }
 
   public getGroupId() {
-     return localStorage.getItem(constants.GROUP_ID);
+    return localStorage.getItem(constants.GROUP_ID);
   }
-  public getFullName(){
+
+  public getFullName() {
     return localStorage.getItem(constants.FULL_NAME);
   }
+
   public getJwtToken(): string {
     const encryptedJwtToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
     console.log('ENCRYPTED TOKEN', encryptedJwtToken);
@@ -79,8 +81,7 @@ export class TokenService {
   }
 
   public removeTokens(): void {
-    localStorage.removeItem(constants.JWT_TOKEN_KEY);
-    localStorage.removeItem(constants.REFRESH_TOKEN_KEY);
+    localStorage.clear();
     this.router.navigate(['/login'])
   }
 
@@ -89,7 +90,18 @@ export class TokenService {
   }
 
   private decrypt(value: string): string {
-    return CryptoJS.AES.decrypt(value, constants.SECRET_KEY).toString();
+    const decryptedJwt = CryptoJS.AES.decrypt(value, constants.SECRET_KEY);
+    try {
+      console.log(decryptedJwt);
+      const str = decryptedJwt.toString(CryptoJS.enc.Utf8);
+      console.log("The decrypted string is ", str);
+      if (str.length > 0) {
+        return str;
+      } else {
+        return '';
+      }
+    } catch (e) {
+      return '';
+    }
   }
-
 }

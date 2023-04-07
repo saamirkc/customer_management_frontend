@@ -18,34 +18,30 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (accessToken && this.tokenService.isTokenExpired(accessToken)) {
       // Access token has expired, use refresh token to get new tokens
+      // this.router.navigate(['login'])
+      // return next.handle(request);
+      const refreshToken = this.tokenService.getRefreshToken();
+      if (refreshToken) {
+        const tokenData: TokenData = {
+          token: accessToken,
+          refreshToken: refreshToken
+        };
+        return this.loginService.getTokensAfterJwtExpiry(tokenData).pipe(
+          take(1),
+          switchMap((response) => {
+            // New tokens obtained, add access token to headers and retry the request
+            console.log("REQUEST HEADER1", response);
+            const newAccessToken = response.object.token;
+            const newRefreshToken = response.object.refreshToken;
+            this.tokenService.setTokens(newAccessToken,newRefreshToken)
+            request = this.addToken(request, newAccessToken);
+            return next.handle(request);
+          })
+        );
+      }
       this.router.navigate(['login'])
       return next.handle(request);
-      const refreshToken = this.tokenService.getRefreshToken();
-      const tokenData: TokenData = {
-        token: accessToken,
-        refreshToken: refreshToken
-      };
-      return this.loginService.getTokensAfterJwtExpiry(tokenData).pipe(
-        take(1),
-        switchMap((response) => {
-          // New tokens obtained, add access token to headers and retry the request
-          console.log("REUQST HEADER1", response);
-
-          // const newAccessToken = response.object.token;
-          // const newRefreshToken = response.object.refreshToken;
-          // console.log("REUQST HEADER2", newAccessToken);
-          // console.log("REUQST HEADER3", newRefreshToken);
-          //
-          // this.tokenService.setTokens(newAccessToken,newRefreshToken)
-          // const authRequest = request.clone({
-          //   headers: request.headers.set('Authorization', `Bearer ${newAccessToken}`)
-          // });
-          // console.log("REUQST HEADER1.1", request.headers.get('Authorization'));
-
-          return next.handle(request);
-        })
-      );
-    } else if (accessToken) {
+    } else if (accessToken && !this.tokenService.isTokenExpired(accessToken)) {
       // Access token is valid, add it to the headers and proceed with the request
       request = this.addToken(request, accessToken);
       return next.handle(request);
@@ -55,6 +51,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
   }
+
   private addToken(request: HttpRequest<any>, token: string) {
     return request.clone({
       setHeaders: {
