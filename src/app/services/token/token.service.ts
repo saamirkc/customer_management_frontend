@@ -14,10 +14,10 @@ export class TokenService {
   }
 
   public setTokens(jwtToken: string, refreshToken: string): void {
-    // const encryptedJwtToken = this.encrypt(jwtToken);
-    // const encryptedRefreshToken = this.encrypt(refreshToken);
-    localStorage.setItem(constants.JWT_TOKEN_KEY, jwtToken);
-    localStorage.setItem(constants.REFRESH_TOKEN_KEY, refreshToken);
+    const encryptedJwtToken = this.encrypt(jwtToken);
+    const encryptedRefreshToken = this.encrypt(refreshToken);
+    localStorage.setItem(constants.JWT_TOKEN_KEY, encryptedJwtToken);
+    localStorage.setItem(constants.REFRESH_TOKEN_KEY, encryptedRefreshToken);
   }
 
   public setCustomerNameGroupId(groupId: number, fullName: string): void {
@@ -41,18 +41,24 @@ export class TokenService {
     return localStorage.getItem(constants.FULL_NAME);
   }
 
-  public getJwtToken(): string {
-    const encryptedJwtToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
-    console.log('ENCRYPTED TOKEN', encryptedJwtToken);
-    if (encryptedJwtToken) {
-      return encryptedJwtToken;
-      // return this.decrypt(encryptedJwtToken);
+  public getJwtToken(needDecryptedToken: boolean): string {
+    if (needDecryptedToken) {
+      const encryptedJwtToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
+      if (encryptedJwtToken) {
+        // return encryptedJwtToken;
+        return this.decrypt(encryptedJwtToken);
+      }
+    } else {
+      const accessToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
+      if (accessToken) {
+        return accessToken;
+      }
     }
     return '';
   }
 
-  hasToken(): boolean {
-    return !!this.getJwtToken();
+  hasToken(needDecrptedToken: boolean): boolean {
+    return !!this.getJwtToken(needDecrptedToken);
   }
 
   public getRefreshToken(): string {

@@ -3,8 +3,10 @@
   <mat-card-content>
     <div class="bootstrap-wrapper">
       <div class="container">
-        <div class="container text-center">
-          <img src="./assets/profile_image.jpg" class="profile-image">
+        <div class="container text-center" onclick="document.getElementById('selectedPhoto').click()">
+            <img *ngIf="profileImageView" class="profile-image" [src]="getSantizedUrl(profileImageView)" alt=""/>
+            <img *ngIf="!profileImageView" class="profile-image" src="./assets/profile_image.jpg" alt=""/>
+          <input type="file" (change)="onProfileImageSelected($event)" id="selectedPhoto"  style="display: none;">
           <h1> {{customerDetail.firstName}} {{customerDetail.lastName}}</h1>
         </div>
         <div class="row">
@@ -20,7 +22,7 @@
                 <td> {{customerDetail.address}}</td>
               </tr>
               <tr>
-                <td> Citizenship No. </td>
+                <td> Citizenship No.</td>
                 <td> {{customerDetail.citizenNumber}}</td>
               </tr>
               <tr>
@@ -42,3 +44,4 @@
     </div>
   </mat-card-content>
 </mat-card>
+

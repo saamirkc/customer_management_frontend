@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../env/environment";
 import {RegistrationFormData} from "../../models/registration-form-data";
 import {ApiResponse} from "../../models/api-response";
-import {Observable} from "rxjs";
+import {catchError, map, Observable, throwError} from "rxjs";
 import {CustomerDetails} from "../../models/customer-details";
 import {StatusType} from "../../enums/status-type";
 import {TokenData} from "../../models/token-data";
@@ -42,6 +42,26 @@ export class CustomerService {
       message: ""
     };
     return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update-status/id/${customerId}?status=${StatusType.DELETED}`,messageBody);
+  }
+  getProfileImage(customerId: number){
+    let getProfileImageUrl: string = `${environment.apiBaseUrl}/customer/view/ownprofileimage/id/${customerId}`;
+    let blobObservable = this.http.get<Blob>(getProfileImageUrl ,{responseType: 'blob' as 'json'});
+    blobObservable.pipe(
+      map((res) => {
+        return res;
+      }),
+      catchError((error) => {
+        console.log(error);
+        return throwError(error);
+      })
+    );
+    return blobObservable;
+  }
+  uploadProfileImage(file: File, customerId: string | null | undefined):Observable<ApiResponse>{
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    console.log("before hitting the upload api in the backend", file)
+    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/upload/profile-image/id/${customerId}`,formData);
   }
 
 }

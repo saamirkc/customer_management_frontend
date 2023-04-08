@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit{
   _isAdminDashboard: boolean = false;
   constructor(private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {}
   ngOnInit(): void {
-    if(this.tokenService.hasToken()){
+    if(this.tokenService.hasToken(true)){
       this._isLoggedIn = true;
       this.tokenService.getGroupId()
       this._userName = this.tokenService.getFullName();

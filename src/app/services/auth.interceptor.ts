@@ -12,25 +12,23 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const accessToken = this.tokenService.getJwtToken();
+    const decryptedAccessToken = this.tokenService.getJwtToken(true);
+    const encryptedAccessToken = this.tokenService.getJwtToken(false);
 
-    console.log("ACCESS TOKEN", accessToken);
+    console.log('DECRYPTED TOKEN', decryptedAccessToken);
+    console.log('ENCRYPTED TOKEN', encryptedAccessToken);
 
-    if (accessToken && this.tokenService.isTokenExpired(accessToken)) {
-      // Access token has expired, use refresh token to get new tokens
-      // this.router.navigate(['login'])
-      // return next.handle(request);
+    if (decryptedAccessToken && this.tokenService.isTokenExpired(decryptedAccessToken)) {
       const refreshToken = this.tokenService.getRefreshToken();
       if (refreshToken) {
         const tokenData: TokenData = {
-          token: accessToken,
+          token: decryptedAccessToken,
           refreshToken: refreshToken
         };
         return this.loginService.getTokensAfterJwtExpiry(tokenData).pipe(
           take(1),
           switchMap((response) => {
             // New tokens obtained, add access token to headers and retry the request
-            console.log("REQUEST HEADER1", response);
             const newAccessToken = response.object.token;
             const newRefreshToken = response.object.refreshToken;
             this.tokenService.setTokens(newAccessToken,newRefreshToken)
@@ -41,9 +39,10 @@ export class AuthInterceptor implements HttpInterceptor {
       }
       this.router.navigate(['login'])
       return next.handle(request);
-    } else if (accessToken && !this.tokenService.isTokenExpired(accessToken)) {
+    } else if (decryptedAccessToken && !this.tokenService.isTokenExpired(decryptedAccessToken)) {
       // Access token is valid, add it to the headers and proceed with the request
-      request = this.addToken(request, accessToken);
+      console.log("The decrypted token is ,", decryptedAccessToken)
+      request = this.addToken(request, decryptedAccessToken);
       return next.handle(request);
     } else {
       // No token available, proceed with the request

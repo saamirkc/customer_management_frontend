@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {LoginService} from "../../services/login/login.service";
-import {BehaviorSubject, interval, map, Observable, ReplaySubject, take} from "rxjs";
 import {TokenService} from "../../services/token/token.service";
 import {CustomerService} from "../../services/customer/customer.service";
 import {DataService} from "../../services/data.service";
 import {CustomerDetails} from "../../models/customer-details";
 import Swal from "sweetalert2";
-import Constants from "../../shared/constants";
+import {DomSanitizer} from "@angular/platform-browser";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 export interface PeriodicElement {
   column: string;
@@ -30,7 +30,11 @@ export class ProfileComponent implements OnInit {
   private _customerDetail: CustomerDetails;
   private _customerId?: string | null;
 
-  constructor(private loginService: LoginService, private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService,) {
+  private _profileImageView?: string | ArrayBuffer | null;
+
+  private profileImageMain?: File;
+
+  constructor(private loginService: LoginService, private tokenService: TokenService, private sanitizer: DomSanitizer, private customerService: CustomerService, private dataService: DataService,) {
     this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   }
 
@@ -58,6 +62,14 @@ export class ProfileComponent implements OnInit {
           }
         }
       })
+      // subscribe the view profile Image.
+      this.customerService.getProfileImage(Number(this._customerId)).subscribe({
+        next: value => {
+          this._profileImageView = URL.createObjectURL(value);
+        }, error: err => {
+          console.log("The error is thrown while fetching the profile image", err);
+        }
+      })
     }
   }
 
@@ -68,4 +80,48 @@ export class ProfileComponent implements OnInit {
   get user(): any {
     return null;
   }
+
+  get profileImageView(): string {
+    return <string>this._profileImageView;
+  }
+
+  public getSantizedUrl(url: string) {
+    if (this.sanitizer) {
+      let safeUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+      console.log("Profile image view ", safeUrl)
+      return safeUrl;
+    }
+    return '';
+  }
+
+  onProfileImageSelected(event: any) {
+    console.log("On profile image is clicked", event.target.files[0]);
+    this.profileImageMain = event.target.files[0];
+    if (this.profileImageMain) {
+      this.customerService.uploadProfileImage(this.profileImageMain, this._customerId).subscribe({
+        next: value => {
+          var reader = new FileReader();
+          if (this.profileImageMain) {
+            reader.readAsDataURL(this.profileImageMain);
+            reader.onload = (event) => {
+              if (event.target != null) {
+                this._profileImageView = event.target.result;
+              }
+            }
+          }
+        }, error: err => {
+          console.log("Error while updating the profile image", err)
+        }
+      })
+    }
+  }
+
+  // openFileInput() {
+  //   setTimeout(() => {
+  //     const selectedPhoto = document.getElementById('selectedPhoto');
+  //     if (selectedPhoto) {
+  //       selectedPhoto.click();
+  //     }
+  //   }, 100);
+  // }
 }
