@@ -7,7 +7,7 @@ const constants = {
   JWT_TOKEN_KEY: 'jwt_token',
   REFRESH_TOKEN_KEY: 'refresh_token',
   SECRET_KEY: 'MySecretKey12345', // put your secret key here
-  FULL_NAME: 'full_name'
-
+  FULL_NAME: 'full_name',
+  STATUS_SUCCESS: 'SUCCESS'
 };
 export default constants;

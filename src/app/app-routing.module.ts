@@ -4,12 +4,8 @@ import {SignupComponent} from "./pages/signup/signup.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {HomeComponent} from "./pages/home/home.component";
 import {CustomerDashboardComponent} from "./pages/customer/customer-dashboard/customer-dashboard.component";
-import {AdminGuard} from "./services/authguard/admin.guard";
-import {ProfileComponent} from "./pages/profile/profile.component";
-import {WelcomeComponent} from "./pages/admin/welcome/welcome.component";
-import {ViewCustomerDetailsComponent} from "./pages/admin/view-customer-details/view-customer-details.component";
 import {CustomerGuard} from "./services/authguard/customer.guard";
-import {AdminDashboardComponent} from "./pages/admin/dashboard/admin-dashboard.component";
+import {VerificationComponent} from "./pages/verification/verification.component";
 
 const routes: Routes = [
   {
@@ -24,6 +20,11 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'verification/:verificationLink',
+    component: VerificationComponent,
     pathMatch: 'full'
   },
 

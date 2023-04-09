@@ -52,20 +52,20 @@ export class LoginComponent implements OnInit {
           }).then(res => this._loginForm.reset());
           this.tokenService.setTokens(value.object.token, value.object.refreshToken);
           this.tokenService.setCustomerNameGroupId(value.object.customerGroupId, value.object.fullName);
+          this.tokenService.setCustomerId(value.object.customerId);
           // redirection based on the user roles.
           if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
             // Navigate to the customer dashboard
             console.log("Successfully logged in", value.object.customerGroupId)
-            this.router.navigate(['/customer-dashboard'])
+            this.router.navigate(['/customer-dashboard']).then(r => {})
           } else if (value.object.customerGroupId == constants.ADMIN_GROUP_ID) {
             // Navigate to the customer dashboard
             this.router.navigate(['/admin-dashboard']).then(res => {
               this.dataService.setIsAdminDashboard(true);
-              this.tokenService.setCustomerId(value.object.customerId);
               // this.dataService.setCustomerDetailSubject(value.object.customerId)
             });
           } else {
-            this.loginService.logOut();
+            this.tokenService.removeTokens();
           }
         },
         error: err => {

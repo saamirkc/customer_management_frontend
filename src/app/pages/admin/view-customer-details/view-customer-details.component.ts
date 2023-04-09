@@ -8,6 +8,7 @@ import {CommonService} from "../../../shared/common.service";
 import {CustomerViewPopupComponent} from "../../customer/customer-view-popup/customer-view-popup.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
+import {StatusType} from "../../../enums/status-type";
 
 @Component({
   selector: 'app-view-customer-details',
@@ -45,7 +46,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
   }
   openEditCustomerModal(customerId: number): void {
     this.customerService.viewCustomerById(customerId).subscribe((response) => {
-      const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true});
+      const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true, backdrop: 'static'});
       modalRef.componentInstance.customer = response.object;
       modalRef.componentInstance.customerId = customerId;
     });
@@ -123,7 +124,9 @@ export class ViewCustomerDetailsComponent implements OnInit {
   public decline() {
     this.modalService.dismissAll();
   }
-
+  trackByFn(index: number, customer: any): number {
+    return customer.id; // use customer id as trackBy value
+  }
   deleteCustomer() {
     if (this._customerId != null) {
       this.customerService.deleteCustomerById(this._customerId).subscribe({
@@ -133,7 +136,10 @@ export class ViewCustomerDetailsComponent implements OnInit {
             icon: 'success',
             timer: 4000
           }).then(r => {
-            this.router.navigate([this.router.url]);
+            const deletedCustomerIndex = this.customerList.findIndex(c => c.id === this._customerId);
+            if (deletedCustomerIndex !== -1) {
+              this.customerList[deletedCustomerIndex].status = StatusType.DELETED;
+            }
           })
           // popup or redirect to another uri.
         }, error: err => {

@@ -27,7 +27,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let customer of customerList;index as i">
+          <tr *ngFor="let customer of customerList; trackBy: trackByFn">
             <td>{{ customer.id }}</td>
             <td>{{ customer.userName }}</td>
             <td>{{ customer?.address ? customer.address : 'N/A' }}</td>

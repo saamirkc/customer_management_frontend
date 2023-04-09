@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../env/environment";
 import {RegistrationFormData} from "../../models/registration-form-data";
 import {ApiResponse} from "../../models/api-response";
-import {catchError, map, Observable, throwError} from "rxjs";
+import {catchError, map, Observable, throwError, timeout} from "rxjs";
 import {CustomerDetails} from "../../models/customer-details";
 import {StatusType} from "../../enums/status-type";
 import {TokenData} from "../../models/token-data";
@@ -27,25 +27,29 @@ export class CustomerService {
       .set('search', search)
       .set('orderby', orderby)
       .set('orderdir', orderdir);
-    return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/customer/get-list`, { params });
+    return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/customer/get-list`, {params});
   }
+
   viewCustomerById(customerId: number): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/customer/details/id/${customerId}`);
   }
-  updateCustomerDetail(customer:CustomerDetails, customerId: number): Observable<ApiResponse> {
+
+  updateCustomerDetail(customer: CustomerDetails, customerId: number): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update/id/${customerId}`, customer);
   }
+
   deleteCustomerById(customerId: number): Observable<ApiResponse> {
     const messageBody: StatusRequest = {
       customerId: customerId,
       status: StatusType.DELETED,
       message: ""
     };
-    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update-status/id/${customerId}?status=${StatusType.DELETED}`,messageBody);
+    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update-status/id/${customerId}?status=${StatusType.DELETED}`, messageBody);
   }
-  getProfileImage(customerId: number){
+
+  getProfileImage(customerId: number) {
     let getProfileImageUrl: string = `${environment.apiBaseUrl}/customer/view/ownprofileimage/id/${customerId}`;
-    let blobObservable = this.http.get<Blob>(getProfileImageUrl ,{responseType: 'blob' as 'json'});
+    let blobObservable = this.http.get<Blob>(getProfileImageUrl, {responseType: 'blob' as 'json'});
     blobObservable.pipe(
       map((res) => {
         return res;
@@ -57,11 +61,19 @@ export class CustomerService {
     );
     return blobObservable;
   }
-  uploadProfileImage(file: File, customerId: string | null | undefined):Observable<ApiResponse>{
+
+  uploadProfileImage(file: File, customerId: string | null | undefined): Observable<ApiResponse> {
     const formData: FormData = new FormData();
     formData.append('file', file);
     console.log("before hitting the upload api in the backend", file)
-    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/upload/profile-image/id/${customerId}`,formData);
+    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/upload/profile-image/id/${customerId}`, formData).pipe(
+      timeout(10000)
+    )
   }
 
+  verifyCustomer(verificationCode: string, customerId: string | null) {
+    return this.http.post<any>(`${environment.apiBaseUrl}/public/users/verify/id/${customerId}?verificationCode=${verificationCode}`, {}).pipe(
+      timeout(10000)
+    )
+  }
 }

@@ -4,7 +4,7 @@ import {environment} from "../env/environment";
 import { Router} from "@angular/router";
 import {LoginData} from "../../models/login-data";
 import {ApiResponse} from "../../models/api-response";
-import {Observable} from "rxjs";
+import {Observable, timeout} from "rxjs";
 import {TokenData} from "../../models/token-data";
 import constants from "../../shared/constants";
 @Injectable({
@@ -15,7 +15,9 @@ export class LoginService {
   }
   // generate the token.
   public login(loginData: LoginData): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/public/login`, loginData);
+    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/public/login`, loginData).pipe(
+      timeout(10000)
+    );
   }
 
   public getTokensAfterJwtExpiry(refreshTokenData: TokenData): Observable<ApiResponse> {

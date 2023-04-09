@@ -14,13 +14,16 @@ import {Router} from "@angular/router";
 export class CustomerViewPopupComponent implements OnInit {
   @Input() customerId?: number
   @Input() customer: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
-  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE,StatusType.INACTIVE,StatusType.DISABLED,StatusType.DELETED]
+  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
+
   constructor(private activeModal: NgbActiveModal, private router: Router, private customerService: CustomerService) {
   }
+
   onSave(): void {
     // Handle save logic here
     this.activeModal.close('Saved');
   }
+
   // Make an API call to edit the customer with the given id
   updateCustomerDetailsById() {
     if (this.customerId != null) {
@@ -31,9 +34,9 @@ export class CustomerViewPopupComponent implements OnInit {
             title: value.message,
             icon: 'success',
             timer: 4000
-          }).then(resp=>{
+          }).then(resp => {
             this.activeModal.dismiss();
-            window.location.reload();
+            this.customer = value.object;
           })
         }, error: err => {
           console.error(err)
@@ -54,6 +57,12 @@ export class CustomerViewPopupComponent implements OnInit {
       })
     }
   }
-  ngOnInit(): void {}
+
+  cancelUpdate() {
+    this.activeModal.dismiss();
+  }
+
+  ngOnInit(): void {
+  }
 
 }
