@@ -3,6 +3,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {CustomerService} from "../../services/customer/customer.service";
 import Constants from "../../shared/constants";
 import Swal from "sweetalert2";
+import constants from "../../shared/constants";
+import {StatusType} from "../../enums/status-type";
 
 @Component({
   selector: 'app-verification',
@@ -24,12 +26,10 @@ export class VerificationComponent implements OnInit {
   }
   verifyUser() {
     let customerId = this.activatedRoute.snapshot.queryParamMap.get('customerId')
-    console.log("method invoked before verification", customerId)
     this.customerService
       .verifyCustomer(this._verificationCode, customerId).subscribe({
       next: value => {
-        if (value.status === Constants.STATUS_SUCCESS) {
-          console.log("method invoked after verification", value.success)
+        if (value.status === Constants.STATUS_SUCCESS && JSON.parse(value.object).status == StatusType.ACTIVE ) {
           Swal.fire({
             title: value.message,
             icon: 'success',

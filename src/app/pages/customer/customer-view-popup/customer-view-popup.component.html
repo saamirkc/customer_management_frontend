@@ -6,11 +6,8 @@
           <h2 class="h2-responsive"><strong>Customer Detail Form</strong></h2>
           <p>Update the Customer Detail from here</p>
           <hr class="m-y-2">
-          <!--Naked Form-->
           <div class="card-block">
-            <!--Body-->
             <form action="#">
-              <!-- Basic textbox -->
               <div class="md-form">
                 <label class="">First Name</label>
                 <input type="text" [(ngModel)]="customer.firstName" name="firstName" class="form-control mt-2">
@@ -61,7 +58,6 @@
                   <option *ngFor="let option of statusOptions" [value]="option" [selected]="option == customer.status">{{option}}</option>
                 </select>
               </div>
-
               <div class="text-xs-left mt-2 mb-2">
                 <button (click)="updateCustomerDetailsById()" class="btn btn-primary update-btn"> Update</button>
                 <button (click)="cancelUpdate()" class="btn btn-secondary">Cancel</button>

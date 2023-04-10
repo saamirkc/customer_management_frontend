@@ -22,7 +22,6 @@ export class NavbarComponent implements OnInit{
     } else{
       this._isLoggedIn = false;
     }
-    console.log("The user is logged in??", this._isLoggedIn)
     this.dataService.getIsAdminDashboard().subscribe(value => {
       this._isLoggedIn = true;
       this._userName = this.tokenService.getFullName();

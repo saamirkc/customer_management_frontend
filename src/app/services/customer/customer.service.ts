@@ -6,9 +6,7 @@ import {ApiResponse} from "../../models/api-response";
 import {catchError, map, Observable, throwError, timeout} from "rxjs";
 import {CustomerDetails} from "../../models/customer-details";
 import {StatusType} from "../../enums/status-type";
-import {TokenData} from "../../models/token-data";
 import {StatusRequest} from "../../models/status-request";
-
 @Injectable({
   providedIn: 'root'
 })
@@ -18,6 +16,10 @@ export class CustomerService {
 
   registerUser(user: RegistrationFormData): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/public/users/registration`, user);
+  }
+
+  addCustomerDetails(customerDetails: CustomerDetails): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/customer/save`, customerDetails);
   }
 
   getCustomerList(page: number, size: number, search: string, orderby: string, orderdir: string): Observable<ApiResponse> {

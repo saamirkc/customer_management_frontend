@@ -34,6 +34,7 @@ import {CustomerViewPopupComponent} from "./pages/customer/customer-view-popup/c
 import { DeleteModalComponentComponent } from './pages/admin/delete-modal-component/delete-modal-component.component';
 import { VerificationComponent } from './pages/verification/verification.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import {CommonModule} from "@angular/common";
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,6 +62,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     BrowserAnimationsModule,
     MatButtonModule,
     MatListModule,
+    CommonModule,
     NgbModule,
     MatInputModule,
     MatFormFieldModule,

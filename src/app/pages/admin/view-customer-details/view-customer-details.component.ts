@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Renderer2, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CustomerService} from "../../../services/customer/customer.service";
 import CustomerListResponse from "../../../models/customer-list-response";
 import {CustomerDetails} from "../../../models/customer-details";
@@ -87,6 +87,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
           }
         }
       })
+    console.log("The geta details method is invoked")
   }
   goToPage(page: number) {
     if (page >= 0 && page < this._totalPages) {

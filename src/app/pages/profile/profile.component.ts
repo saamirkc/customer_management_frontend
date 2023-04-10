@@ -5,7 +5,7 @@ import {CustomerService} from "../../services/customer/customer.service";
 import {DataService} from "../../services/data.service";
 import {CustomerDetails} from "../../models/customer-details";
 import Swal from "sweetalert2";
-import {DomSanitizer} from "@angular/platform-browser";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 
 export interface PeriodicElement {
@@ -29,6 +29,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class ProfileComponent implements OnInit {
   private _customerDetail: CustomerDetails;
   private _customerId?: string | null;
+
+  public safeProfileImageUrl?: SafeUrl;
+
 
   private _profileImageView?: string | ArrayBuffer | null;
 
@@ -66,6 +69,8 @@ export class ProfileComponent implements OnInit {
       this.customerService.getProfileImage(Number(this._customerId)).subscribe({
         next: value => {
           this._profileImageView = URL.createObjectURL(value);
+          this.safeProfileImageUrl = this.getSanitizedUrl(this._profileImageView);
+
         }, error: err => {
           console.log("The error is thrown while fetching the profile image", err);
         }
@@ -85,13 +90,13 @@ export class ProfileComponent implements OnInit {
     return <string>this._profileImageView;
   }
 
-  public getSantizedUrl(url: string) {
+  public getSanitizedUrl(url: string): SafeUrl {
     if (this.sanitizer) {
-      let safeUrl = this.sanitizer.bypassSecurityTrustUrl(url);
-      console.log("Profile image view ", safeUrl)
-      return safeUrl;
+      return this.safeProfileImageUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+      console.log("Profile image view ", this.safeProfileImageUrl)
+    } else {
+      return this.safeProfileImageUrl = '';
     }
-    return '';
   }
 
   onProfileImageSelected(event: any) {
@@ -106,6 +111,7 @@ export class ProfileComponent implements OnInit {
             reader.onload = (event) => {
               if (event.target != null) {
                 this._profileImageView = event.target.result;
+                this.safeProfileImageUrl = this.getSanitizedUrl(this.profileImageView);
               }
             }
           }

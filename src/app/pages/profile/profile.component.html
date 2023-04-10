@@ -4,7 +4,7 @@
     <div class="bootstrap-wrapper">
       <div class="container">
         <div class="container text-center" onclick="document.getElementById('selectedPhoto').click()">
-            <img *ngIf="profileImageView" class="profile-image" [src]="getSantizedUrl(profileImageView)" alt=""/>
+          <img *ngIf="profileImageView" class="profile-image" [src]="safeProfileImageUrl" alt=""/>
             <img *ngIf="!profileImageView" class="profile-image" src="./assets/profile_image.jpg" alt=""/>
           <input type="file" (change)="onProfileImageSelected($event)" id="selectedPhoto"  style="display: none;">
           <h1> {{customerDetail.firstName}} {{customerDetail.lastName}}</h1>

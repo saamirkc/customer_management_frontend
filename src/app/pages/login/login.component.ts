@@ -40,11 +40,9 @@ export class LoginComponent implements OnInit {
       return;
     }
     const formData = this._loginForm.value; // extract form data
-    console.log(formData);
     this.loginService.login(formData).subscribe(
       {
         next: value => {
-          console.log(value);
           Swal.fire({
             title: value.message,
             icon: 'success',
@@ -56,12 +54,10 @@ export class LoginComponent implements OnInit {
           // redirection based on the user roles.
           if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
             // Navigate to the customer dashboard
-            console.log("Successfully logged in", value.object.customerGroupId)
             this.router.navigate(['/customer-dashboard']).then(r => {})
           } else if (value.object.customerGroupId == constants.ADMIN_GROUP_ID) {
             // Navigate to the customer dashboard
             this.router.navigate(['/admin-dashboard']).then(res => {
-              this.dataService.setIsAdminDashboard(true);
               // this.dataService.setCustomerDetailSubject(value.object.customerId)
             });
           } else {

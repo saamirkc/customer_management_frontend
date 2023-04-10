@@ -1,1 +1,148 @@
-<p>add-categories works!</p>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"/>
+</head>
+<body class="container bg-light">
+<div class="text-center mt-1">
+  <img src="https://i.ibb.co/8cDgdFX/Logo.png" alt="network-logo" width="72" height="72"/>
+  <h2> Add Customer Detail Form</h2>
+  <p>
+    You can add the new customer details below.
+  </p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="customerDetailsForm" class="needs-validation" autocomplete="off" (ngSubmit)="formSubmit()">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>FirstName</label>
+          <input type="text" class="form-control" id="firstName" formControlName="firstName" name="firstName"
+                 placeholder=" first name" required/>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>LastName</label>
+          <input type="text" class="form-control" id="lastName" formControlName="lastName" name="lastName" placeholder=" last name" required/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label style="display: block">Gender</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" formControlName="gender" type="radio" name="gender" id="inlineRadioMale"
+                   value="MALE">
+            <label class="form-check-label" for="inlineRadioMale"> Male </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" formControlName="gender" name="gender" id="inlineRadioFemale"
+                   value="FEMALE">
+            <label class="form-check-label" for="inlineRadioFemale">Female</label>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label style="display: block">Marital Status</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" formControlName="maritalStatus" type="radio" name="maritalStatus" id="inlineRadioSingle"
+                   value="false">
+            <label class="form-check-label" for="inlineRadioSingle"> Single </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" formControlName="maritalStatus" name="maritalStatus"
+                   id="inlineRadioMarried" value="true">
+            <label class="form-check-label" for="inlineRadioMarried">Married</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Citizen Number</label>
+          <input type="text" class="form-control" formControlName="citizenNumber" id="citizenNumber" name="citizenNumber" placeholder=" Citizen Number"
+                 required/>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Address</label>
+          <input type="text" class="form-control" formControlName="address" id="address" name="address" placeholder="Address" required/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Mobile Number</label>
+          <input type="text" name="mobileNumber" formControlName="mobileNumber" class="form-control mt-2" placeholder="You Mobile Number">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="status">Status</label>
+          <select id="status" name="status" class="form-control mt-2">
+            <option></option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Date of Birth</label>
+          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirth" name="date"/>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Email Address</label>
+          <input type="text" name="emailAddress" formControlName="emailAddress" class="form-control" placeholder=" Email">
+        </div>
+      </div>
+
+
+      <div class="form-row" formGroupName="userLogin">
+        <div class="form-group col-md-6">
+          <label>Username</label>
+          <input type="text" class="form-control" id="userName" formControlName="userName" name="userName" placeholder="Username" required/>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label>Password</label>
+          <input type="password" class="form-control" id="password" formControlName="password" name="password" placeholder="Password" required/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="family">Customer Family</label>
+        <div id="family">
+          <div class="form-row align-items-center">
+            <div class="col-md-3 mb-3">
+              <select class="custom-select" name="relationship">
+                <option value="father">Father</option>
+                <option value="mother">Mother</option>
+                <option value="son">Son</option>
+                <option value="daughter">Daughter</option>
+              </select>
+              <!--              <select name="status" class="form-control mt-2">-->
+              <!--                <option *ngFor="let option of familyMembers" [value]="option.relationship">{{ option.relationship }}</option>-->
+              <!--              </select>-->
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" placeholder="Name">
+            </div>
+            <div class="col-md-3 mb-3">
+              <button type="button" class="btn btn-primary" (click)="addMember()"><i class="fas fa-plus"></i></button>
+              <button type="button" class="btn btn-danger" *ngIf="familyMembers.length > 1"><i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block col-lg-2" type="submit" [disabled]="!customerDetailsForm.valid">Submit</button>
+    </form>
+  </div>
+</div>
+<footer>
+  <div class="my-4 text-muted text-center">
+    <p>© Fone Invest </p>
+  </div>
+</footer>
+
+</body>

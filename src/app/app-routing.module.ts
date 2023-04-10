@@ -1,21 +1,22 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {SignupComponent} from "./pages/signup/signup.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {HomeComponent} from "./pages/home/home.component";
 import {CustomerDashboardComponent} from "./pages/customer/customer-dashboard/customer-dashboard.component";
 import {CustomerGuard} from "./services/authguard/customer.guard";
 import {VerificationComponent} from "./pages/verification/verification.component";
-
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
     pathMatch: 'full',
-  }, {
+  },
+  {
     path: 'signup',
-    component: SignupComponent,
-    pathMatch: 'full'
+    loadChildren: () =>
+      import('./pages/signup/signup.module').then(
+        (m) => m.SignupModule
+      )
   },
   {
     path: 'login',

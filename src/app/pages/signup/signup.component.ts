@@ -32,7 +32,7 @@ export class SignupComponent implements OnInit {
     this.userNameFlag = this.user.username === '';
   }
 
-  constructor(private formBuilder: FormBuilder, private _router: Router, private userService: CustomerService, private _snackBar: MatSnackBar,
+  constructor(private formBuilder: FormBuilder, private _router: Router, private customerService: CustomerService, private _snackBar: MatSnackBar,
               private commonService: CommonService, private _cd: ChangeDetectorRef // add the ChangeDetectorRef
   ) {
     this._registrationForm = this.formBuilder.group({
@@ -49,7 +49,7 @@ export class SignupComponent implements OnInit {
     }
     const formData = this.registrationForm.value; // extract the form data
     this.isLoading = true;
-    this.userService.registerUser(formData).subscribe({
+    this.customerService.registerUser(formData).subscribe({
         next: value => {
           console.log(value);
           Swal.fire({
@@ -98,7 +98,5 @@ export class SignupComponent implements OnInit {
     )
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 }

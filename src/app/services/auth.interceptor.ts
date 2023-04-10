@@ -15,9 +15,6 @@ export class AuthInterceptor implements HttpInterceptor {
     const decryptedAccessToken = this.tokenService.getJwtToken(true);
     const encryptedAccessToken = this.tokenService.getJwtToken(false);
 
-    console.log('DECRYPTED TOKEN', decryptedAccessToken);
-    console.log('ENCRYPTED TOKEN', encryptedAccessToken);
-
     if (decryptedAccessToken && this.tokenService.isTokenExpired(decryptedAccessToken)) {
       const refreshToken = this.tokenService.getRefreshToken();
       if (refreshToken) {
@@ -41,7 +38,6 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(request);
     } else if (decryptedAccessToken && !this.tokenService.isTokenExpired(decryptedAccessToken)) {
       // Access token is valid, add it to the headers and proceed with the request
-      console.log("The decrypted token is ,", decryptedAccessToken)
       request = this.addToken(request, decryptedAccessToken);
       return next.handle(request);
     } else {

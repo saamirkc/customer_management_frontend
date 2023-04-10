@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import constants from "../../shared/constants";
 import {Router} from "@angular/router";
-import Constants from "../../shared/constants";
 
 @Injectable({
   providedIn: 'root'
@@ -26,11 +25,11 @@ export class TokenService {
   }
 
   public setCustomerId(customerId: number) {
-    localStorage.setItem(Constants.CUSTOMER_ID, customerId.toString());
+    localStorage.setItem(constants.CUSTOMER_ID, customerId.toString());
   }
 
   public getCustomerId() {
-    return localStorage.getItem(Constants.CUSTOMER_ID);
+    return localStorage.getItem(constants.CUSTOMER_ID);
   }
 
   public getGroupId() {
@@ -98,9 +97,7 @@ export class TokenService {
   private decrypt(value: string): string {
     const decryptedJwt = CryptoJS.AES.decrypt(value, constants.SECRET_KEY);
     try {
-      console.log(decryptedJwt);
       const str = decryptedJwt.toString(CryptoJS.enc.Utf8);
-      console.log("The decrypted string is ", str);
       if (str.length > 0) {
         return str;
       } else {
