@@ -3,6 +3,8 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import Swal from "sweetalert2";
 import {CustomerService} from "../../../services/customer/customer.service";
 import {CommonService} from "../../../shared/common.service";
+import {StatusType} from "../../../enums/status-type";
+import {FamilyType} from "../../../enums/family-type";
 
 @Component({
   selector: 'app-add-customer-details',
@@ -11,6 +13,9 @@ import {CommonService} from "../../../shared/common.service";
 })
 export class AddCustomerDetailsComponent implements OnInit {
   private readonly _customerDetailsForm: FormGroup;
+
+  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
+  public familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.SON, FamilyType.DAUGHTER]
 
   constructor(private customerService: CustomerService, private commonService: CommonService, private formBuilder: FormBuilder) {
     this._customerDetailsForm = this.formBuilder.group({
@@ -31,12 +36,12 @@ export class AddCustomerDetailsComponent implements OnInit {
       customerFamilyList: this.formBuilder.array([this.createFamilyMember()])
     })
   }
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+  }
+
   get familyMembersList(): FormArray {
     return this._customerDetailsForm.get('customerFamilyList') as FormArray;
-  }
-  addFamilyMember() {
-    this.familyMembers.push(this.createFamilyMember());
   }
 
   get customerDetailsForm(): FormGroup {
@@ -45,26 +50,21 @@ export class AddCustomerDetailsComponent implements OnInit {
 
   createFamilyMember(): FormGroup {
     return this.formBuilder.group({
-      relationship: ['FATHER'],
-      relationshipPersonName: ['Shyam B KC']
+      relationship: ['SON', Validators.required],
+      relationshipPersonName: ['', Validators.required]
     });
   }
 
-  familyMembers: any = [
-    {relationship: 'Father', name: 'Saaagar'},
-    {relationship: 'Mother', name: 'KC'},
-    {relationship: 'Son', name: 'Kunal'},
-    {relationship: 'Daughter', name: 'Shah'}
-  ];
-
-  addMember() {
-    this.familyMembers.push({relationship: '', name: ''});
+  get customerFamilyList() {
+    return this._customerDetailsForm.get('customerFamilyList') as FormArray;
   }
 
-  removeMember(index: number) {
-    this.familyMembers.splice(index, 1);
+  addFamilyMember() {
+    this.customerFamilyList.push(this.createFamilyMember())
   }
-
+  removeFamilyMember(index: number) {
+    this.customerFamilyList.removeAt(index);
+  }
   formSubmit() {
     if (this.customerDetailsForm.invalid) {
       return;
