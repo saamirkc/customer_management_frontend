@@ -1,22 +1,28 @@
 <mat-card>
   <mat-action-list>
-    <div mat-subheader>Menu</div>
+    <h2 class="curly-underline">Menu</h2>
+    <hr>
     <button mat-list-item routerLink="/admin-dashboard">
       <mat-icon> home</mat-icon>
       Home
     </button>
+    <hr>
+    <span class="divider"></span>
     <button mat-list-item routerLink="/admin-dashboard/profile">
       <mat-icon> account_circle</mat-icon>
       Profile
     </button>
+    <hr>
     <button mat-list-item routerLink="/admin-dashboard/customer-details">
       <mat-icon> photo_library</mat-icon>
       Customer Details
     </button>
+    <hr>
     <button mat-list-item routerLink="/admin-dashboard/add-customer">
       <mat-icon> add_circle_outline</mat-icon>
       Add Customers
     </button>
+    <hr>
     <button mat-list-item (click)="logOut()">
       <mat-icon> logout </mat-icon>
       LogOut

@@ -105,29 +105,39 @@ export class ProfileComponent implements OnInit {
     if (this.profileImageMain) {
       this.customerService.uploadProfileImage(this.profileImageMain, this._customerId).subscribe({
         next: value => {
-          var reader = new FileReader();
-          if (this.profileImageMain) {
-            reader.readAsDataURL(this.profileImageMain);
-            reader.onload = (event) => {
-              if (event.target != null) {
-                this._profileImageView = event.target.result;
-                this.safeProfileImageUrl = this.getSanitizedUrl(this.profileImageView);
+          Swal.fire({
+            title: value.message,
+            icon: 'success',
+            timer: 4000
+          }).then(r => {
+            const reader = new FileReader();
+            if (this.profileImageMain) {
+              reader.readAsDataURL(this.profileImageMain);
+              reader.onload = (event) => {
+                if (event.target != null) {
+                  this._profileImageView = event.target.result;
+                  this.safeProfileImageUrl = this.getSanitizedUrl(this.profileImageView);
+                }
               }
             }
-          }
+          })
         }, error: err => {
           console.log("Error while updating the profile image", err)
+          if (err.error.details.length != 0) {
+            Swal.fire({
+              title: err.error.details[0],
+              icon: 'error',
+              timer: 3000
+            });
+          } else {
+            Swal.fire({
+              title: err.error.message,
+              icon: 'error',
+              timer: 3000
+            });
+          }
         }
       })
     }
   }
-
-  // openFileInput() {
-  //   setTimeout(() => {
-  //     const selectedPhoto = document.getElementById('selectedPhoto');
-  //     if (selectedPhoto) {
-  //       selectedPhoto.click();
-  //     }
-  //   }, 100);
-  // }
 }
