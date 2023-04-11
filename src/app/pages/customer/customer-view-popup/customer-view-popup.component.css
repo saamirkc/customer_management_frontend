@@ -16,3 +16,6 @@ body {
 .update-btn{
   margin-right: 3px;
 }
+.disabled-input {
+  background-color: white;
+}

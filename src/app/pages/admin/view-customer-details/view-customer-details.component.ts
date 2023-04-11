@@ -21,10 +21,13 @@ export class ViewCustomerDetailsComponent implements OnInit {
   @ViewChild('deleteModal') deleteModal?: TemplateRef<any>;
 
   _searchTerm: string = '';
+  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
   private _customerList: CustomerListResponse[] = [];
   private _customerDetail: CustomerDetails;
   private readonly _customerDetailForm: FormGroup;
   private _customerId?: number;
+
+  _selectedStatusOption?: string;
 
   _pageSize = 10;
   _pageNumber = 0;
@@ -41,8 +44,15 @@ export class ViewCustomerDetailsComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
     })
   }
+
+
   search(): void {
-      this.getCustomerDetails(this._searchTerm);
+      this.getCustomerDetails(this._searchTerm,'');
+  }
+  searchByStatus(): void {
+    if(this._selectedStatusOption) {
+      this.getCustomerDetails(this._searchTerm, this._selectedStatusOption);
+    }
   }
   openEditCustomerModal(customerId: number): void {
     this.customerService.viewCustomerById(customerId).subscribe((response) => {
@@ -58,11 +68,11 @@ export class ViewCustomerDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCustomerDetails('');
+    this.getCustomerDetails('', '');
   }
 
-  getCustomerDetails(search: string) {
-    this.customerService.getCustomerList(this._pageNumber, this._pageSize, search, 'createdTs', 'desc')
+  getCustomerDetails(search: string, status: string) {
+    this.customerService.getCustomerList(this._pageNumber, this._pageSize,status, search, 'createdTs', 'desc')
       .subscribe({
         next: value => {
           this._customerList = value.object.content;
@@ -92,15 +102,19 @@ export class ViewCustomerDetailsComponent implements OnInit {
   goToPage(page: number) {
     if (page >= 0 && page < this._totalPages) {
       this._pageNumber = page;
-      this.getCustomerDetails('');
+      this.getCustomerDetails('','');
     }
   }
   // Make an API call to view the customer with the given id
   viewCustomerById(id: number) {
     this.customerService.viewCustomerById(id).subscribe({
       next: value => {
-        this._customerDetail = value.object;
-        console.log(this._customerDetail);
+        // this._customerDetail = value.object;
+        // console.log(this._customerDetail);
+        const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true});
+        modalRef.componentInstance.customer = value.object;
+        modalRef.componentInstance.customerId = id;
+        modalRef.componentInstance.viewOnly = true;
         // popup or redirect to another uri.
       }, error: err => {
         console.error(err)

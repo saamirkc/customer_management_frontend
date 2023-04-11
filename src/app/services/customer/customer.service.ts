@@ -17,15 +17,14 @@ export class CustomerService {
   registerUser(user: RegistrationFormData): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/public/users/registration`, user);
   }
-
   addCustomerDetails(customerDetails: CustomerDetails): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/customer/save`, customerDetails);
   }
-
-  getCustomerList(page: number, size: number, search: string, orderby: string, orderdir: string): Observable<ApiResponse> {
+  getCustomerList(page: number, size: number, status: string, search: string, orderby: string, orderdir: string): Observable<ApiResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
+      .set('status', status)
       .set('search', search)
       .set('orderby', orderby)
       .set('orderdir', orderdir);

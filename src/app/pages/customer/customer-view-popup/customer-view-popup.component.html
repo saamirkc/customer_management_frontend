@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12 m-x-auto pull-xs-none">
-        <div class="jumbotron">
+        <div class="jumbotron" *ngIf="!viewOnly; else viewable">
           <h2 class="h2-responsive"><strong>Customer Detail Form</strong></h2>
           <p>Update the Customer Detail from here</p>
           <hr class="m-y-2">
           <div class="card-block">
-            <form action="#">
+            <form>
               <div class="md-form">
                 <label class="">First Name</label>
                 <input type="text" [(ngModel)]="customer.firstName" name="firstName" class="form-control mt-2">
@@ -54,8 +54,9 @@
               </div>
               <div class="md-form">
                 <label for="status">Status</label>
-                <select id="status" name="status" [(ngModel)]="customer.status"  class="form-control mt-2">
-                  <option *ngFor="let option of statusOptions" [value]="option" [selected]="option == customer.status">{{option}}</option>
+                <select name="status" [(ngModel)]="customer.status" class="form-control mt-2">
+                  <option *ngFor="let option of statusOptions" [value]="option"
+                          [selected]="option == customer.status">{{option}}</option>
                 </select>
               </div>
               <div class="text-xs-left mt-2 mb-2">
@@ -65,6 +66,76 @@
             </form>
           </div>
         </div>
+                            <!-- View component -->
+        <ng-template #viewable>
+          <div class="jumbotron" >
+            <h2 class="h2-responsive"><strong>Customer Detail Form</strong></h2>
+            <p>View the Customer Detail from here</p>
+            <hr class="m-y-2">
+            <div class="card-block">
+              <form style="cursor: pointer">
+                <div class="md-form">
+                  <label class="">First Name</label>
+                  <input type="text" [(ngModel)]="customer.firstName" name="firstName"
+                         class="form-control mt-2 disabled-input" disabled>
+                </div>
+
+                <div class="md-form">
+                  <label>Last Name</label>
+                  <input type="text" [(ngModel)]="customer.lastName" name="lastName" class="form-control mt-2 disabled-input" disabled>
+                </div>
+
+                <div class="md-form">
+                  <label>Gender</label>
+                  <input type="text" [(ngModel)]="customer.gender" name="gender" class="form-control mt-2 disabled-input" disabled>
+                </div>
+
+                <div class="md-form">
+                  <label>Date Of Birth </label>
+                  <input type="text" [(ngModel)]="customer.dateOfBirth" name="dateOfBirth" class="form-control mt-2 disabled-input"
+                         disabled>
+
+                </div>
+                <div class="md-form">
+                  <label>Citizen Number </label>
+                  <input type="text" [(ngModel)]="customer.citizenNumber" name="citizenNumber"
+                         class="form-control mt-2 disabled-input" disabled>
+                </div>
+
+                <div class="md-form">
+                  <label>Address</label>
+                  <input type="text" [(ngModel)]="customer.address" name="address" class="form-control mt-2 disabled-input" disabled>
+                </div>
+
+                <div class="md-form">
+                  <label>Marital Status</label>
+                  <input type="text" [(ngModel)]="customer.maritalStatus" name="maritalStatus"
+                         class="form-control mt-2 disabled-input" disabled>
+                </div>
+
+                <div class="md-form">
+                  <label>Email Address</label>
+                  <input type="text" [(ngModel)]="customer.emailAddress" name="emailAddress" class="form-control mt-2 disabled-input" disabled>
+                </div>
+
+                <div class="md-form">
+                  <label>Mobile Number</label>
+                  <input type="text" [(ngModel)]="customer.mobileNumber" name="mobileNumber" class="form-control mt-2 disabled-input" disabled>
+                </div>
+                <div class="md-form">
+                  <label for="status">Status</label>
+                  <select id="status" name="status" [(ngModel)]="customer.status" class="form-control mt-2 disabled-input" disabled>
+                    <option *ngFor="let option of statusOptions" [value]="option"
+                            [selected]="option == customer.status">{{option}}</option>
+                  </select>
+                </div>
+                <div class="text-xs-right mt-2 mb-2">
+                  <button (click)="cancelUpdate()" class="btn btn-secondary">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

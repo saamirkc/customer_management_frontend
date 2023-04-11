@@ -15,6 +15,11 @@ export class NavbarComponent implements OnInit{
   _isAdminDashboard: boolean = false;
   constructor(private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {}
   ngOnInit(): void {
+    this.dataService.getIsAdminDashboard().subscribe(value => {
+      this._isLoggedIn = value;
+      this._userName = this.tokenService.getFullName();
+      console.log("The user is logged in?????", this._isLoggedIn)
+    })
     if(this.tokenService.hasToken(true)){
       this._isLoggedIn = true;
       this.tokenService.getGroupId()
@@ -22,11 +27,7 @@ export class NavbarComponent implements OnInit{
     } else{
       this._isLoggedIn = false;
     }
-    this.dataService.getIsAdminDashboard().subscribe(value => {
-      this._isLoggedIn = true;
-      this._userName = this.tokenService.getFullName();
-      console.log("The user is logged in?????", this._isLoggedIn)
-    })
+
   }
   logOut(){
     console.log("logout is triggered")

@@ -42,11 +42,10 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(request);
     } else {
       // No token available, proceed with the request
-      // this.router.navigate(['login'])
+      this.router.navigate(['login'])
       return next.handle(request);
     }
   }
-
   private addToken(request: HttpRequest<any>, token: string) {
     return request.clone({
       setHeaders: {

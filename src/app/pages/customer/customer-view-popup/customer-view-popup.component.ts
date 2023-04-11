@@ -5,6 +5,7 @@ import {CustomerService} from "../../../services/customer/customer.service";
 import Swal from "sweetalert2";
 import {StatusType} from "../../../enums/status-type";
 import {Router} from "@angular/router";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-customer-view-popup',
@@ -13,6 +14,7 @@ import {Router} from "@angular/router";
 })
 export class CustomerViewPopupComponent implements OnInit {
   @Input() customerId?: number
+  @Input() viewOnly?: boolean
   @Input() customer: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
 

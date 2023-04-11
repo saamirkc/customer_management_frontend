@@ -58,6 +58,7 @@ export class LoginComponent implements OnInit {
           } else if (value.object.customerGroupId == constants.ADMIN_GROUP_ID) {
             // Navigate to the customer dashboard
             this.router.navigate(['/admin-dashboard']).then(res => {
+              this.dataService.setIsAdminDashboard(true);
               // this.dataService.setCustomerDetailSubject(value.object.customerId)
             });
           } else {

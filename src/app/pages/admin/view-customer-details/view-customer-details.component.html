@@ -6,13 +6,26 @@
         <div class="table-title">
           <div class="row">
             <div class="col-sm-7"><h2>Customer <b>Details</b></h2></div>
-            <div class="col-sm-5">
-              <div class="search-box">
-                <i class="material-icons">&#xE8B6;</i>
-                <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="_searchTerm" (keyup)="search()">
+          </div>
+          <div class="main-section">
+            <div class="search-section  col-md-12">
+              <form>
+                <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="_searchTerm"
+                       name="_searchTerm" (keyup)="search()">
+                <mat-select [(ngModel)]="_selectedStatusOption" class="form-control select-type"
+                             name="_selectedStatusOption" ngDefaultControl
+                            [disableOptionCentering]="false" placeholder="Select Status">
+                  <mat-option>Select Status</mat-option>
+                  <mat-option *ngFor="let option of statusOptions" [value]="option">{{option}}</mat-option>
+                </mat-select>
+              </form>
+              <div class="main-button-holder">
+                <button class="btn search-btn" (click)="searchByStatus()">Search</button>
+                <button class="btn reset-btn">Reset</button>
               </div>
             </div>
           </div>
+
         </div>
         <table class="table table-striped table-hover table-bordered">
           <thead>
@@ -41,7 +54,7 @@
                 class="material-icons">&#xE417;</i></a>
               <a class="edit" (click)="openEditCustomerModal(customer.id)" title="Edit" data-toggle="tooltip"><i
                 class="material-icons">&#xE254;</i></a>
-              <a (click)="showDeleteModal(customer.id)"  class="delete" title="Delete"
+              <a (click)="showDeleteModal(customer.id)" class="delete" title="Delete"
                  data-toggle="tooltip"><i
                 class="material-icons">&#xE872;</i></a>
             </td>
@@ -51,7 +64,7 @@
         <ng-template #deleteModal>
           <div class="modal-header">
             <h2 class="modal-title" style="font-weight: bold">Please confirm..</h2>
-            <button style="border: none" type="button"  class="close" aria-label="Close" (click)="decline()">
+            <button style="border: none" type="button" class="close" aria-label="Close" (click)="decline()">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -59,16 +72,18 @@
             Do you really want to delete the customer ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK </button>
+            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK</button>
             <button type="button" class="btn btn-primary" (click)="decline()">Cancel</button>
           </div>
         </ng-template>
 
         <div class="clearfix">
-          <div class="hint-text">Showing <b>{{_pageSize * _pageNumber + 1}}</b> to <b>{{_pageSize * (_pageNumber + 1)}}</b> of <b>{{_totalElements}}</b> entries</div>
+          <div class="hint-text">Showing <b>{{_pageSize * _pageNumber + 1}}</b> to
+            <b>{{_pageSize * (_pageNumber + 1)}}</b> of <b>{{_totalElements}}</b> entries
+          </div>
           <ul class="pagination">
             <li class="page-item {{_pageNumber == 0 ? 'disabled' : ''}}">
-              <a  class="page-link" (click)="goToPage(_pageNumber - 1)">
+              <a class="page-link" (click)="goToPage(_pageNumber - 1)">
                 <i class="fa fa-angle-double-left"></i>
               </a>
             </li>
@@ -78,7 +93,7 @@
               </li>
             </ng-container>
             <li class="page-item {{_pageNumber == _totalPages - 1 ? 'disabled' : ''}}">
-              <a  class="page-link" (click)="goToPage(_pageNumber + 1)">
+              <a class="page-link" (click)="goToPage(_pageNumber + 1)">
                 <i class="fa fa-angle-double-right"></i>
               </a>
             </li>

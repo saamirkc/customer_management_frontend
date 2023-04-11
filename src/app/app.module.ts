@@ -35,6 +35,7 @@ import { DeleteModalComponentComponent } from './pages/admin/delete-modal-compon
 import { VerificationComponent } from './pages/verification/verification.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import {CommonModule} from "@angular/common";
+import {MatSelectModule} from "@angular/material/select";
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,26 +57,27 @@ import {CommonModule} from "@angular/common";
     VerificationComponent,
     SpinnerComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatListModule,
-    CommonModule,
-    NgbModule,
-    MatInputModule,
-    MatFormFieldModule,
-    FormsModule,
-    MatCardModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSnackBarModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatLineModule,
-    ReactiveFormsModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatListModule,
+        CommonModule,
+        NgbModule,
+        MatInputModule,
+        MatFormFieldModule,
+        FormsModule,
+        MatCardModule,
+        MatTableModule,
+        HttpClientModule,
+        MatSnackBarModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatLineModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+    ],
   providers: [authInterceptProviders],
   bootstrap: [AppComponent]
 })

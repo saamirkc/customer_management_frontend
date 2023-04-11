@@ -9,7 +9,7 @@ import {DataService} from "../../../services/data.service";
 export class AdminDashboardComponent implements OnInit{
   constructor(private dataService: DataService) {}
   ngOnInit(): void {
-    console.log("admin ngonit is called here..")
-    this.dataService.setIsAdminDashboard(true);
+    // console.log("admin ngonit is called here..")
+    // this.dataService.setIsAdminDashboard(true);
   }
 }

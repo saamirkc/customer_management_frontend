@@ -5,6 +5,7 @@ import {HomeComponent} from "./pages/home/home.component";
 import {CustomerDashboardComponent} from "./pages/customer/customer-dashboard/customer-dashboard.component";
 import {CustomerGuard} from "./services/authguard/customer.guard";
 import {VerificationComponent} from "./pages/verification/verification.component";
+import {AdminGuard} from "./services/authguard/admin.guard";
 const routes: Routes = [
   {
     path: '',
@@ -31,7 +32,8 @@ const routes: Routes = [
 
   {
     path: 'admin-dashboard',
-    loadChildren: () => import('./pages/admin/dashboard/admin-dashboard.module').then(m => m.AdminDashboardModule)
+    loadChildren: () => import('./pages/admin/dashboard/admin-dashboard.module').then(m => m.AdminDashboardModule),
+    canActivate: [AdminGuard]
   },
   {
     path: 'customer-dashboard',

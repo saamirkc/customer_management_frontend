@@ -59,7 +59,6 @@ export class TokenService {
   hasToken(needDecrptedToken: boolean): boolean {
     return !!this.getJwtToken(needDecrptedToken);
   }
-
   public getRefreshToken(): string {
     const encryptedRefreshToken = localStorage.getItem(constants.REFRESH_TOKEN_KEY);
     if (encryptedRefreshToken) {
