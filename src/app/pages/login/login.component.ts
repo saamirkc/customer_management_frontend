@@ -8,6 +8,7 @@ import {CommonService} from "../../shared/common.service";
 import {TokenService} from "../../services/token/token.service";
 import Swal from "sweetalert2";
 import constants from "../../shared/constants";
+import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 
 
 @Component({
@@ -23,12 +24,12 @@ export class LoginComponent implements OnInit {
   }
 
   constructor(private formBuilder: FormBuilder, private commonService: CommonService,
-              private _snackBar: MatSnackBar, private loginService: LoginService, private router: Router,
+              private _snackBar: MatSnackBar, private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
               private dataService: DataService, private tokenService: TokenService) {
     this._loginForm = this.formBuilder.group({
       userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      loginType: ['']
+      loginType: ['', Validators.required]
     })
   }
 
@@ -56,7 +57,7 @@ export class LoginComponent implements OnInit {
             // Navigate to the customer dashboard
             this.router.navigate(['/customer-dashboard']).then(r => {})
           } else if (value.object.customerGroupId == constants.ADMIN_GROUP_ID) {
-            // Navigate to the customer dashboard
+            // Navigate to the admin dashboard
             this.router.navigate(['/admin-dashboard']).then(res => {
               this.dataService.setIsAdminDashboard(true);
               // this.dataService.setCustomerDetailSubject(value.object.customerId)
@@ -66,22 +67,8 @@ export class LoginComponent implements OnInit {
           }
         },
         error: err => {
-          console.error(err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
-        },
-        complete: () => console.log('Observable Subscription completed')
+          this.errorHandlerService.handleError(err);
+        }
       }
     )
   }

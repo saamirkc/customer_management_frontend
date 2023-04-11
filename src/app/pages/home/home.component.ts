@@ -11,12 +11,7 @@ export class HomeComponent implements OnInit{
   constructor(private tokenService:TokenService, private dataService: DataService) {
   }
   ngOnInit(): void {
-    this.clearLocalStorage();
   }
 
-  clearLocalStorage(){
-    if(!this.tokenService.hasToken(true)){
-      this.dataService.setIsAdminDashboard(false);
-    }
-  }
+
 }

@@ -5,6 +5,7 @@ import {CustomerService} from "../../../services/customer/customer.service";
 import {CommonService} from "../../../shared/common.service";
 import {StatusType} from "../../../enums/status-type";
 import {FamilyType} from "../../../enums/family-type";
+import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
 
 @Component({
   selector: 'app-add-customer-details',
@@ -17,7 +18,7 @@ export class AddCustomerDetailsComponent implements OnInit {
   public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
   public familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.SON, FamilyType.DAUGHTER]
 
-  constructor(private customerService: CustomerService, private commonService: CommonService, private formBuilder: FormBuilder) {
+  constructor(private customerService: CustomerService, private errorHandlerService: ErrorhandlerService, private commonService: CommonService, private formBuilder: FormBuilder) {
     this._customerDetailsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -62,9 +63,11 @@ export class AddCustomerDetailsComponent implements OnInit {
   addFamilyMember() {
     this.customerFamilyList.push(this.createFamilyMember())
   }
+
   removeFamilyMember(index: number) {
     this.customerFamilyList.removeAt(index);
   }
+
   formSubmit() {
     if (this.customerDetailsForm.invalid) {
       return;
@@ -82,20 +85,7 @@ export class AddCustomerDetailsComponent implements OnInit {
             this._customerDetailsForm.reset())
         },
         error: err => {
-          console.error(err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
+          this.errorHandlerService.handleError(err);
         }
       }
     )

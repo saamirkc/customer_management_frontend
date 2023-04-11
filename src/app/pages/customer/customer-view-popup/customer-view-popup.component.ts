@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import {StatusType} from "../../../enums/status-type";
 import {Router} from "@angular/router";
 import {FormControl, FormGroup} from "@angular/forms";
+import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
 
 @Component({
   selector: 'app-customer-view-popup',
@@ -18,7 +19,7 @@ export class CustomerViewPopupComponent implements OnInit {
   @Input() customer: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
 
-  constructor(private activeModal: NgbActiveModal, private router: Router, private customerService: CustomerService) {
+  constructor(private activeModal: NgbActiveModal,private errorHandlerService: ErrorhandlerService, private router: Router, private customerService: CustomerService) {
   }
 
   onSave(): void {
@@ -41,20 +42,7 @@ export class CustomerViewPopupComponent implements OnInit {
             this.customer = value.object;
           })
         }, error: err => {
-          console.error(err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
+        this.errorHandlerService.handleError(err);
         }
       })
     }

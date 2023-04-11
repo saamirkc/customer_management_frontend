@@ -49,7 +49,7 @@ export class CustomerService {
   }
 
   getProfileImage(customerId: number) {
-    let getProfileImageUrl: string = `${environment.apiBaseUrl}/customer/view/ownprofileimage/id/${customerId}`;
+    let getProfileImageUrl: string = `${environment.apiBaseUrl}/customer/view/own-profile-image/id/${customerId}`;
     let blobObservable = this.http.get<Blob>(getProfileImageUrl, {responseType: 'blob' as 'json'});
     blobObservable.pipe(
       map((res) => {

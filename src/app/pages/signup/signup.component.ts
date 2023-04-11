@@ -5,6 +5,7 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/form
 import {CommonService} from "../../shared/common.service";
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
+import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 
 @Component({
   selector: 'app-signup',
@@ -32,7 +33,7 @@ export class SignupComponent implements OnInit {
     this.userNameFlag = this.user.username === '';
   }
 
-  constructor(private formBuilder: FormBuilder, private _router: Router, private customerService: CustomerService, private _snackBar: MatSnackBar,
+  constructor(private formBuilder: FormBuilder,private errorHandlerService:ErrorhandlerService, private _router: Router, private customerService: CustomerService, private _snackBar: MatSnackBar,
               private commonService: CommonService, private _cd: ChangeDetectorRef // add the ChangeDetectorRef
   ) {
     this._registrationForm = this.formBuilder.group({
@@ -73,20 +74,7 @@ export class SignupComponent implements OnInit {
           }
         },
         error: err => {
-          console.error(err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
+          this.errorHandlerService.handleError(err);
           this.isLoading = false; // hide the spinner
           this._cd.detectChanges(); // force Angular to update the view
         },

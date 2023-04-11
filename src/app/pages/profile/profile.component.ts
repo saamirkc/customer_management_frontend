@@ -6,20 +6,7 @@ import {DataService} from "../../services/data.service";
 import {CustomerDetails} from "../../models/customer-details";
 import Swal from "sweetalert2";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {error} from "@angular/compiler-cli/src/transformers/util";
-
-export interface PeriodicElement {
-  column: string;
-  data: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {column: "Username", data: "Saagar KC"},
-  {column: "Userid", data: "SKC123"},
-  {column: "Phone", data: "9816190656"},
-  {column: "Role", data: "ADMIN"},
-  {column: "Status", data: "Active"},
-];
+import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 
 @Component({
   selector: 'app-profile',
@@ -37,7 +24,7 @@ export class ProfileComponent implements OnInit {
 
   private profileImageMain?: File;
 
-  constructor(private loginService: LoginService, private tokenService: TokenService, private sanitizer: DomSanitizer, private customerService: CustomerService, private dataService: DataService,) {
+  constructor(private loginService: LoginService, private errorHandlerService: ErrorhandlerService, private tokenService: TokenService, private sanitizer: DomSanitizer, private customerService: CustomerService, private dataService: DataService,) {
     this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   }
 
@@ -49,20 +36,7 @@ export class ProfileComponent implements OnInit {
           console.log("View customer by id is called")
           this._customerDetail = value.object;
         }, error: err => {
-          console.error(err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
+          this.errorHandlerService.handleError(err);
         }
       })
       // subscribe the view profile Image.
@@ -122,20 +96,7 @@ export class ProfileComponent implements OnInit {
             }
           })
         }, error: err => {
-          console.log("Error while updating the profile image", err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
+          this.errorHandlerService.handleError(err);
         }
       })
     }

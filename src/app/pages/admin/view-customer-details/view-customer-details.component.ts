@@ -9,6 +9,8 @@ import {CustomerViewPopupComponent} from "../../customer/customer-view-popup/cus
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {StatusType} from "../../../enums/status-type";
+import {catchError} from "rxjs";
+import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
 
 @Component({
   selector: 'app-view-customer-details',
@@ -35,7 +37,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
   _totalElements = 0;
   _pages: number[] = [];
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
+  constructor(private formBuilder: FormBuilder, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
     this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
     this._customerDetailForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -47,13 +49,15 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
 
   search(): void {
-      this.getCustomerDetails(this._searchTerm,'');
+    this.getCustomerDetails(this._searchTerm, '');
   }
+
   searchByStatus(): void {
-    if(this._selectedStatusOption) {
+    if (this._selectedStatusOption) {
       this.getCustomerDetails(this._searchTerm, this._selectedStatusOption);
     }
   }
+
   openEditCustomerModal(customerId: number): void {
     this.customerService.viewCustomerById(customerId).subscribe((response) => {
       const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true, backdrop: 'static'});
@@ -72,39 +76,28 @@ export class ViewCustomerDetailsComponent implements OnInit {
   }
 
   getCustomerDetails(search: string, status: string) {
-    this.customerService.getCustomerList(this._pageNumber, this._pageSize,status, search, 'createdTs', 'desc')
+    this.customerService.getCustomerList(this._pageNumber, this._pageSize, status, search, 'createdTs', 'desc')
       .subscribe({
         next: value => {
           this._customerList = value.object.content;
           this._totalPages = value.object.totalPages;
-          this._totalElements=value.object._totalElements;
+          this._totalElements = value.object._totalElements;
           this._pages = Array.from(Array(this._totalPages).keys());
 
         }, error: err => {
-          console.error(err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
+          this.errorHandlerService.handleError(err);
         }
       })
     console.log("The geta details method is invoked")
   }
+
   goToPage(page: number) {
     if (page >= 0 && page < this._totalPages) {
       this._pageNumber = page;
-      this.getCustomerDetails('','');
+      this.getCustomerDetails('', '');
     }
   }
+
   // Make an API call to view the customer with the given id
   viewCustomerById(id: number) {
     this.customerService.viewCustomerById(id).subscribe({
@@ -117,20 +110,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
         modalRef.componentInstance.viewOnly = true;
         // popup or redirect to another uri.
       }, error: err => {
-        console.error(err)
-        if (err.error.details.length != 0) {
-          Swal.fire({
-            title: err.error.details[0],
-            icon: 'error',
-            timer: 3000
-          });
-        } else {
-          Swal.fire({
-            title: err.error.message,
-            icon: 'error',
-            timer: 3000
-          });
-        }
+        this.errorHandlerService.handleError(err);
       }
     })
   }
@@ -139,9 +119,11 @@ export class ViewCustomerDetailsComponent implements OnInit {
   public decline() {
     this.modalService.dismissAll();
   }
+
   trackByFn(index: number, customer: any): number {
     return customer.id; // use customer id as trackBy value
   }
+
   deleteCustomer() {
     if (this._customerId != null) {
       this.customerService.deleteCustomerById(this._customerId).subscribe({
@@ -158,20 +140,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
           })
           // popup or redirect to another uri.
         }, error: err => {
-          console.error(err)
-          if (err.error.details.length != 0) {
-            Swal.fire({
-              title: err.error.details[0],
-              icon: 'error',
-              timer: 3000
-            });
-          } else {
-            Swal.fire({
-              title: err.error.message,
-              icon: 'error',
-              timer: 3000
-            });
-          }
+          this.errorHandlerService.handleError(err);
         }
       })
     }
@@ -181,6 +150,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
   get customerList(): CustomerListResponse[] {
     return this._customerList;
   }
+
   get customerDetail(): CustomerDetails {
     return this._customerDetail;
   }

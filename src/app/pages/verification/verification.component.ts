@@ -5,6 +5,7 @@ import Constants from "../../shared/constants";
 import Swal from "sweetalert2";
 import constants from "../../shared/constants";
 import {StatusType} from "../../enums/status-type";
+import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 
 @Component({
   selector: 'app-verification',
@@ -15,10 +16,9 @@ export class VerificationComponent implements OnInit {
 
   private _verificationCode: string = '';
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  constructor(private _router: Router, private activatedRoute: ActivatedRoute, private customerService: CustomerService) {
+  constructor(private _router: Router, private errorHandlerService: ErrorhandlerService, private activatedRoute: ActivatedRoute, private customerService: CustomerService) {
   }
   setVerificationCode(event: Event) {
     const value = (event.target as HTMLInputElement).value;
@@ -29,7 +29,7 @@ export class VerificationComponent implements OnInit {
     this.customerService
       .verifyCustomer(this._verificationCode, customerId).subscribe({
       next: value => {
-        if (value.status === Constants.STATUS_SUCCESS && JSON.parse(value.object).status == StatusType.ACTIVE ) {
+        if (value.status === Constants.STATUS_SUCCESS && JSON.parse(value.object).status == StatusType.ACTIVE) {
           Swal.fire({
             title: value.message,
             icon: 'success',
@@ -39,22 +39,7 @@ export class VerificationComponent implements OnInit {
           });
         }
       }, error: err => {
-        console.error(err)
-        if (err.error.details.length != 0) {
-          Swal.fire({
-            title: err.error.details[0],
-            icon: 'error',
-            timer: 3000
-          }).then(r => {
-            this._router.navigate(['/login'])
-          });
-        } else {
-          Swal.fire({
-            title: err.error.message,
-            icon: 'error',
-            timer: 3000
-          });
-        }
+        this.errorHandlerService.handleError(err);
       },
     })
   }

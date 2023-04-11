@@ -1,0 +1,41 @@
+import {ErrorHandler, Injectable} from '@angular/core';
+import {throwError} from "rxjs";
+import Swal from "sweetalert2";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ErrorhandlerService implements ErrorHandler {
+  constructor() {}
+
+  handleError(err: any) {
+    let errorMessage = '';
+    if (err.error.details.length != 0) {
+      Swal.fire({
+        title: err.error.details[0],
+        icon: 'error',
+        timer: 3000
+      });
+      errorMessage = `Error: ${err.error.message}`;
+    } else {
+      Swal.fire({
+        title: err.error.message,
+        icon: 'error',
+        timer: 3000
+      });
+      errorMessage = `Error: ${err.error.message}`;
+    }
+    if (err.error instanceof ErrorEvent) {
+      this.logError(errorMessage);
+    }
+    // Return an observable with a user-facing error message.
+    //   return throwError(()=>{
+    //     throw new Error('Something bad happened; please try again later.')
+    //   });
+  };
+
+  private logError(errorMessage: string) {
+    // log the error to the server
+    // return this.http.post('/api/error-log-backend', error);
+  }
+}
