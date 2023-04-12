@@ -13,7 +13,7 @@
                 <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="_searchTerm"
                        name="_searchTerm" (keyup)="search()">
                 <mat-select [(ngModel)]="_selectedStatusOption" class="form-control select-type"
-                             name="_selectedStatusOption" ngDefaultControl
+                            name="_selectedStatusOption" ngDefaultControl
                             [disableOptionCentering]="false" placeholder="Select Status">
                   <mat-option>Select Status</mat-option>
                   <mat-option *ngFor="let option of statusOptions" [value]="option">{{option}}</mat-option>
@@ -25,9 +25,11 @@
               </div>
             </div>
           </div>
-
+          <div *ngIf="customerList.length === 0">
+            No user details found.
+          </div>
         </div>
-        <table class="table table-striped table-hover table-bordered">
+        <table *ngIf="customerList.length > 0" class="table table-striped table-hover table-bordered">
           <thead>
           <tr>
             <th>Customer Id</th>

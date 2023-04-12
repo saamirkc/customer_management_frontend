@@ -6,10 +6,10 @@ import {DataService} from "../../../services/data.service";
   styleUrls: ['./customer-dashboard.component.css']
 })
 export class CustomerDashboardComponent implements OnInit{
-  constructor(private dataService: DataService) {
+  constructor() {
   }
   ngOnInit(): void {
-    console.log("ng onit is called in the customer component")
-    this.dataService.setIsAdminDashboard(false);
+    // console.log("ng onit is called in the customer component")
+    // this.dataService.setIsAdminDashboard(false);
   }
 }

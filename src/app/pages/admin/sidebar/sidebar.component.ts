@@ -11,7 +11,7 @@ export class SidebarComponent  {
   constructor(private tokenService: TokenService, private dataService: DataService) {
   }
   logOut(){
-    this.dataService.setIsAdminDashboard(false);
+    this.dataService.setLoginStatus(false);
     this.tokenService.removeTokens();
   }
 }

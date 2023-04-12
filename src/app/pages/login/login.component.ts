@@ -56,11 +56,15 @@ export class LoginComponent implements OnInit {
           // redirection based on the user roles.
           if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
             // Navigate to the customer dashboard
-            this.router.navigate(['/customer-dashboard']).then(r => {})
+            this.router.navigate(['/customer-dashboard']).then(r => {
+              // this.tokenService.setLoginStatus(true)
+              this.dataService.setLoginStatus(true);
+            })
           } else if (value.object.customerGroupId == constants.ADMIN_GROUP_ID) {
             // Navigate to the admin dashboard
             this.router.navigate(['/admin-dashboard']).then(res => {
-              this.dataService.setIsAdminDashboard(true);
+              // this.tokenService.setLoginStatus(true)
+              this.dataService.setLoginStatus(true);
               // this.dataService.setCustomerDetailSubject(value.object.customerId)
             });
           } else {

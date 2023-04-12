@@ -23,7 +23,12 @@ export class TokenService {
     localStorage.setItem(constants.GROUP_ID, groupId.toString());
     localStorage.setItem(constants.FULL_NAME, fullName);
   }
-
+  // public setLoginStatus(isLoggedIn: boolean) {
+  //   localStorage.setItem(constants.IS_LOGGED_IN, String(isLoggedIn));
+  // }
+  // public getLoggedInStatus() {
+  //   return localStorage.getItem(constants.IS_LOGGED_IN);
+  // }
   public setCustomerId(customerId: number) {
     localStorage.setItem(constants.CUSTOMER_ID, customerId.toString());
   }

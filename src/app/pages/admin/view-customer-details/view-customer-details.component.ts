@@ -87,7 +87,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
           this.errorHandlerService.handleError(err);
         }
       })
-    console.log("The geta details method is invoked")
   }
 
   goToPage(page: number) {

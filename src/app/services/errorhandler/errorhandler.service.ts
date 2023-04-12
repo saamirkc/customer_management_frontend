@@ -11,12 +11,22 @@ export class ErrorhandlerService implements ErrorHandler {
   handleError(err: any) {
     let errorMessage = '';
     if (err.error.details.length != 0) {
-      Swal.fire({
-        title: err.error.details[0],
-        icon: 'error',
-        timer: 3000
-      });
-      errorMessage = `Error: ${err.error.message}`;
+      if(err.error.details[0] == ""){
+        Swal.fire({
+          title: err.error.details[1],
+          icon: 'error',
+          timer: 3000
+        });
+        errorMessage = `Error: ${err.error.details[1]}`;
+      } else {
+        Swal.fire({
+          title: err.error.details[0],
+          icon: 'error',
+          timer: 3000
+        });
+        errorMessage = `Error: ${err.error.details[0]}`;
+      }
+      console.log("Error details ->", errorMessage)
     } else {
       Swal.fire({
         title: err.error.message,
@@ -24,7 +34,8 @@ export class ErrorhandlerService implements ErrorHandler {
         timer: 3000
       });
       errorMessage = `Error: ${err.error.message}`;
-      throw err;
+      console.log("Error ->", errorMessage)
+      // throw err;
     }
     if (err.error instanceof ErrorEvent) {
       this.logError(errorMessage);

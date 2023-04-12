@@ -1,6 +1,7 @@
 const constants = {
   GROUP_ID: 'group_id',
   CUSTOMER_ID: 'customer_id',
+  IS_LOGGED_IN: 'is_logged_in',
   ADMIN_GROUP_ID: 1,
   CUSTOMER_GROUP_ID: 2,
   DEFAULT_LOCALE: 'en-US',

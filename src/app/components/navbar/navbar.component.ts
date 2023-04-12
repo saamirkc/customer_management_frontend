@@ -9,28 +9,31 @@ import {CustomerService} from "../../services/customer/customer.service";
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit{
-  _isLoggedIn: boolean = false;
-  _userName? : string | null;
+export class NavbarComponent implements OnInit {
+  _isLoggedIn: boolean = true;
+  _userName?: string | null;
   _isAdminDashboard: boolean = false;
-  constructor(private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {}
+
+  constructor(private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {
+  }
   ngOnInit(): void {
-    this.dataService.getIsAdminDashboard().subscribe(value => {
-      this._isLoggedIn = value;
-      this._userName = this.tokenService.getFullName();
-      console.log("The user is logged in?????", this._isLoggedIn)
+    this.dataService.getLoginStatus().subscribe({
+      next: value => {
+        this._isLoggedIn = value;
+        this._userName = this.tokenService.getFullName();
+        console.log("The user is logged on subscription ", value)
+      }, error: err => {
+        console.log("Error on logged on subscription ", err);
+      }
     })
-    if(this.tokenService.hasToken(true)){
+    if (this.tokenService.hasToken(true)) {
       this._isLoggedIn = true;
-      this.tokenService.getGroupId()
       this._userName = this.tokenService.getFullName();
-    } else{
+    } else {
       this._isLoggedIn = false;
     }
-
   }
-  logOut(){
-    console.log("logout is triggered")
+  logOut() {
     this._isLoggedIn = false;
     this.tokenService.removeTokens();
   }

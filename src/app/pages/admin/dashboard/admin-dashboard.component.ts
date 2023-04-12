@@ -8,8 +8,6 @@ import {DataService} from "../../../services/data.service";
 })
 export class AdminDashboardComponent implements OnInit {
   constructor(private dataService: DataService) {}
-
   ngOnInit(): void {
-    this.dataService.setIsAdminDashboard(true);
   }
 }

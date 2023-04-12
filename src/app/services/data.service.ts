@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
   providedIn: 'root'
 })
 export class DataService {
-  private loginStatusSubject = new BehaviorSubject<boolean>(true)
+  private loginStatusSubject = new Subject<boolean>;
   private userNameSubject = new BehaviorSubject<string>('')
   private _customerIdSubject = new Subject<number>();
 
@@ -24,11 +24,13 @@ export class DataService {
   constructor(private customerService: CustomerService) {
   }
 
-  getIsAdminDashboard(): Observable<boolean> {
-    return this.loginStatusSubject.asObservable();
+  getLoginStatus(): Subject<boolean> {
+    console.log("get is admin dashboard is invoked")
+    return this.loginStatusSubject;
   }
 
-  setIsAdminDashboard(value: boolean) {
+  setLoginStatus(value: boolean) {
+    console.log("set admin dashboard is invoked", value)
     this.loginStatusSubject.next(value);
   }
 
