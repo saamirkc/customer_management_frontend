@@ -8,7 +8,6 @@ import {MatButtonModule} from "@angular/material/button";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { SignupComponent } from './pages/signup/signup.component';
 import { LoginComponent } from './pages/login/login.component';
 import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -33,8 +32,6 @@ import {AdminDashboardComponent} from "./pages/admin/dashboard/admin-dashboard.c
 import {CustomerViewPopupComponent} from "./pages/customer/customer-view-popup/customer-view-popup.component";
 import { DeleteModalComponentComponent } from './pages/admin/delete-modal-component/delete-modal-component.component';
 import { VerificationComponent } from './pages/verification/verification.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
-import {CommonModule} from "@angular/common";
 import {MatSelectModule} from "@angular/material/select";
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 @NgModule({
@@ -42,7 +39,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
     AppComponent,
     NavbarComponent,
     FooterComponent,
-    SignupComponent,
+    // SignupComponent,
     LoginComponent,
     HomeComponent,
     AdminDashboardComponent,
@@ -56,7 +53,6 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
     CustomerViewPopupComponent,
     DeleteModalComponentComponent,
     VerificationComponent,
-    SpinnerComponent,
     PageNotFoundComponent,
   ],
     imports: [
@@ -65,7 +61,6 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
         BrowserAnimationsModule,
         MatButtonModule,
         MatListModule,
-        CommonModule,
         NgbModule,
         MatInputModule,
         MatFormFieldModule,

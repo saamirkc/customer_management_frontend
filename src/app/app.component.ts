@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("ng onit of app component is invoked")
   }
 
 }

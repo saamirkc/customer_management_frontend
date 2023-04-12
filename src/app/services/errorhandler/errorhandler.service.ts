@@ -1,5 +1,4 @@
 import {ErrorHandler, Injectable} from '@angular/core';
-import {throwError} from "rxjs";
 import Swal from "sweetalert2";
 
 @Injectable({

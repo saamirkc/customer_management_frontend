@@ -30,7 +30,6 @@ const routes: Routes = [
     component: VerificationComponent,
     pathMatch: 'full'
   },
-
   {
     path: 'admin-dashboard',
     loadChildren: () => import('./pages/admin/dashboard/admin-dashboard.module').then(m => m.AdminDashboardModule),

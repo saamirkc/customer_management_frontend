@@ -1,12 +1,10 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CustomerService} from "../../services/customer/customer.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../shared/common.service";
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
-import {TokenService} from "../../services/token/token.service";
 import {DataService} from "../../services/data.service";
 
 @Component({
@@ -39,7 +37,7 @@ export class SignupComponent implements OnInit {
     this.userNameFlag = this.user.username === '';
   }
 
-  constructor(private formBuilder: FormBuilder,private errorHandlerService:ErrorhandlerService, private _router: Router, private customerService: CustomerService, private _snackBar: MatSnackBar,
+  constructor(private formBuilder: FormBuilder,private errorHandlerService:ErrorhandlerService, private _router: Router, private customerService: CustomerService,
               private commonService: CommonService,private dataService: DataService, private _cd: ChangeDetectorRef // add the ChangeDetectorRef
   ) {
     this._registrationForm = this.formBuilder.group({
