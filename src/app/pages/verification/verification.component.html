@@ -2,14 +2,13 @@
   <div class="card m-auto w-50 p-5 mt-5">
     <div class="verification-holder">
       <h2>CONFIRMATION</h2>
-      <p>Please type the verification code sent to <strong> 9816190656 </strong></p>
-      <!-- <input matInput appearance="outline" type="text" class="form-control" [(ngModel)]="mobileVerificationCode"> -->
+      <p>Please type the verification code sent to <strong> {{userName}} </strong></p>
       <mat-form-field class="example-full-width">
         <mat-label>OTP</mat-label>
         <input autocomplete="off" (input)="setVerificationCode($event)" appearance="outline" matInput #otp
                placeholder="Enter OTP">
       </mat-form-field>
-      <p>Didn't recieve a code?
+      <p>Didn't receive a code?
         <button style="height: 25px;font-size: 8px;" class="btn btn-xs btn-secondary">Resend</button>
       </p>
       <button (click)="verifyUser()" class="verification-btn mt-0" type="submit">Verify</button>

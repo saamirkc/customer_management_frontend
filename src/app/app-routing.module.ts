@@ -6,6 +6,7 @@ import {CustomerDashboardComponent} from "./pages/customer/customer-dashboard/cu
 import {CustomerGuard} from "./services/authguard/customer.guard";
 import {VerificationComponent} from "./pages/verification/verification.component";
 import {AdminGuard} from "./services/authguard/admin.guard";
+import {PageNotFoundComponent} from "./pages/page-not-found/page-not-found.component";
 const routes: Routes = [
   {
     path: '',
@@ -40,7 +41,8 @@ const routes: Routes = [
     component: CustomerDashboardComponent,
     pathMatch: 'full',
     canActivate: [CustomerGuard]
-  }
+  },
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

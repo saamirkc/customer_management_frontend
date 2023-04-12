@@ -15,7 +15,7 @@ export class CustomerService {
   }
 
   registerUser(user: RegistrationFormData): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/public/users/registration`, user);
+    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/public/users/registration`, user).pipe(timeout(10000));
   }
   addCustomerDetails(customerDetails: CustomerDetails): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/customer/save`, customerDetails);
@@ -32,6 +32,7 @@ export class CustomerService {
   }
 
   viewCustomerById(customerId: number): Observable<ApiResponse> {
+    console.log("view customer by id is invoked", customerId)
     return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/customer/details/id/${customerId}`);
   }
 

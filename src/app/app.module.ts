@@ -36,6 +36,7 @@ import { VerificationComponent } from './pages/verification/verification.compone
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import {CommonModule} from "@angular/common";
 import {MatSelectModule} from "@angular/material/select";
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,6 +57,7 @@ import {MatSelectModule} from "@angular/material/select";
     DeleteModalComponentComponent,
     VerificationComponent,
     SpinnerComponent,
+    PageNotFoundComponent,
   ],
     imports: [
         BrowserModule,

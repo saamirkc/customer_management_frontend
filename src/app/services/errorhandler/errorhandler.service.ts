@@ -24,6 +24,7 @@ export class ErrorhandlerService implements ErrorHandler {
         timer: 3000
       });
       errorMessage = `Error: ${err.error.message}`;
+      throw err;
     }
     if (err.error instanceof ErrorEvent) {
       this.logError(errorMessage);

@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
           this.tokenService.setTokens(value.object.token, value.object.refreshToken);
           this.tokenService.setCustomerNameGroupId(value.object.customerGroupId, value.object.fullName);
           this.tokenService.setCustomerId(value.object.customerId);
+          // this.dataService.setCustomerIdSubject(value.object.customerId);
           // redirection based on the user roles.
           if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
             // Navigate to the customer dashboard

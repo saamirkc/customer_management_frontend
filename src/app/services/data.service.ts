@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject, Subject} from "rxjs";
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {CustomerDetails} from "../models/customer-details";
 import {LoginService} from "./login/login.service";
@@ -10,18 +10,50 @@ import Swal from "sweetalert2";
   providedIn: 'root'
 })
 export class DataService {
-  private loginStatusSubject = new Subject<boolean>()
-  private _customerDetailSubject =new BehaviorSubject <CustomerDetails>({customerFamilyList: [], maritalStatus: false, status: "", userName: ""});
-  constructor(private customerService: CustomerService) { }
-  getIsAdminDashboard(): Subject<boolean> {
-    return this.loginStatusSubject;
+  private loginStatusSubject = new BehaviorSubject<boolean>(true)
+  private userNameSubject = new BehaviorSubject<string>('')
+  private _customerIdSubject = new Subject<number>();
+
+  private _customerDetailSubject = new BehaviorSubject<CustomerDetails>({
+    customerFamilyList: [],
+    maritalStatus: false,
+    status: "",
+    userName: ""
+  });
+
+  constructor(private customerService: CustomerService) {
   }
+
+  getIsAdminDashboard(): Observable<boolean> {
+    return this.loginStatusSubject.asObservable();
+  }
+
   setIsAdminDashboard(value: boolean) {
     this.loginStatusSubject.next(value);
+  }
+
+  setUserName(value: string) {
+    console.log("set username is invoked", value)
+    this.userNameSubject.next(value);
+  }
+
+  getUserName(): Observable<string> {
+    console.log("get username is invoked", this.userNameSubject)
+    return this.userNameSubject.asObservable();
+  }
+
+  getCustomerIdSubject(): Subject<number> {
+    return this._customerIdSubject;
+  }
+
+  setCustomerIdSubject(value: number) {
+    console.log("setter customer id is invoked", value)
+    this._customerIdSubject.next(value);
   }
   getCustomerDetailSubject(): BehaviorSubject<CustomerDetails> {
     return this._customerDetailSubject;
   }
+
   setCustomerDetailSubject(customerId: number) {
     this.customerService.viewCustomerById(customerId).subscribe({
       next: value => {

@@ -1,11 +1,13 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CustomerService} from "../../services/customer/customer.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../shared/common.service";
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
+import {TokenService} from "../../services/token/token.service";
+import {DataService} from "../../services/data.service";
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +17,7 @@ import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.serv
 export class SignupComponent implements OnInit {
   private readonly _registrationForm: FormGroup;
 
-  isLoading = false;
+  private _isLoading = false;
 
   get registrationForm(): FormGroup {
     return this._registrationForm;
@@ -29,12 +31,16 @@ export class SignupComponent implements OnInit {
     mobileNumber: '',
   }
 
+  get isLoading(): boolean {
+    return this._isLoading;
+  }
+
   onUserInputChange(): void {
     this.userNameFlag = this.user.username === '';
   }
 
   constructor(private formBuilder: FormBuilder,private errorHandlerService:ErrorhandlerService, private _router: Router, private customerService: CustomerService, private _snackBar: MatSnackBar,
-              private commonService: CommonService, private _cd: ChangeDetectorRef // add the ChangeDetectorRef
+              private commonService: CommonService,private dataService: DataService, private _cd: ChangeDetectorRef // add the ChangeDetectorRef
   ) {
     this._registrationForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -49,7 +55,7 @@ export class SignupComponent implements OnInit {
       return;
     }
     const formData = this.registrationForm.value; // extract the form data
-    this.isLoading = true;
+    this._isLoading = true;
     this.customerService.registerUser(formData).subscribe({
         next: value => {
           console.log(value);
@@ -60,6 +66,7 @@ export class SignupComponent implements OnInit {
           }).then(r =>
             this._registrationForm.reset());
           if (value.object.verificationCodeSent) {
+            this.dataService.setUserName(formData.userName);
             this._router.navigate(
               ['/verification/', value.object.verificationLink],
               {
@@ -68,23 +75,18 @@ export class SignupComponent implements OnInit {
                 },
               }
             ).then(r => {
-              this.isLoading = false;
+              this._isLoading = false;
               this._cd.detectChanges(); // force Angular to update the view
             });
           }
         },
         error: err => {
           this.errorHandlerService.handleError(err);
-          this.isLoading = false; // hide the spinner
-          this._cd.detectChanges(); // force Angular to update the view
-        },
-        complete: () => {
-          this.isLoading = false; // hide the spinner
+          this._isLoading = false; // hide the spinner
           this._cd.detectChanges(); // force Angular to update the view
         }
-      }
+     }
     )
   }
-
   ngOnInit(): void {}
 }

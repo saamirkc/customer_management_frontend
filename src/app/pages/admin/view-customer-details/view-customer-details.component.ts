@@ -9,7 +9,6 @@ import {CustomerViewPopupComponent} from "../../customer/customer-view-popup/cus
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {StatusType} from "../../../enums/status-type";
-import {catchError} from "rxjs";
 import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
 
 @Component({
