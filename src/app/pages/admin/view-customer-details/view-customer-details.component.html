@@ -50,11 +50,11 @@
             <td>{{ customer?.mobileNumber ? customer.mobileNumber : 'N/A' }}</td>
             <td>{{ customer?.status }}</td>
             <td>
-              <a class="add" title="Add" data-toggle="tooltip"><i
+              <a class="add" routerLink="/admin-dashboard/add-customer" title="Add" data-toggle="tooltip"><i
                 class="material-icons">&#xe147;</i></a>
               <a (click)="viewCustomerById(customer.id)" class="view" title="View" data-toggle="tooltip"><i
                 class="material-icons">&#xE417;</i></a>
-              <a class="edit" (click)="openEditCustomerModal(customer.id)" title="Edit" data-toggle="tooltip"><i
+              <a class="edit" (click)="openEditCustomerModal(customer.id)"  title="Edit" data-toggle="tooltip"><i
                 class="material-icons">&#xE254;</i></a>
               <a (click)="showDeleteModal(customer.id)" class="delete" title="Delete"
                  data-toggle="tooltip"><i

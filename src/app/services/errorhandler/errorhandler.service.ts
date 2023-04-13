@@ -9,7 +9,7 @@ export class ErrorhandlerService implements ErrorHandler {
 
   handleError(err: any) {
     let errorMessage = '';
-    if (err.error.details.length != 0) {
+    if (err.error.details != null && err.error.details.length != 0) {
       if(err.error.details[0] == ""){
         Swal.fire({
           title: err.error.details[1],
