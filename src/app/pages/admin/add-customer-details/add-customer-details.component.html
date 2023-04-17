@@ -18,21 +18,31 @@
     <form [formGroup]="customerDetailsForm" class="needs-validation" autocomplete="off" (ngSubmit)="formSubmit()">
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label>FirstName</label>
+          <label for="firstName">FirstName <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="firstName" formControlName="firstName" name="firstName"
-                 placeholder=" first name" required/>
+                 placeholder="Enter your first name" [class.is-invalid]="customerDetailsForm?.get('firstName')?.invalid && customerDetailsForm?.get('firstName')?.touched">
+          <span
+            *ngIf="customerDetailsForm?.get('firstName')?.invalid && (customerDetailsForm.get('firstName')?.dirty || customerDetailsForm.get('firstName')?.touched)"
+            class="text-danger">
+            First Name is required
+          </span>
         </div>
 
         <div class="form-group col-md-6">
-          <label>LastName</label>
+          <label>LastName <span class="text-danger"> *</span></label>
           <input type="text" class="form-control" id="lastName" formControlName="lastName" name="lastName"
-                 placeholder=" last name" required/>
+                 placeholder=" last name" [class.is-invalid]="customerDetailsForm?.get('lastName')?.invalid && customerDetailsForm?.get('lastName')?.touched"/>
+          <span
+            *ngIf="customerDetailsForm?.get('lastName')?.invalid && (customerDetailsForm.get('lastName')?.dirty || customerDetailsForm.get('lastName')?.touched)"
+            class="text-danger">
+            Last Name is required
+          </span>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label style="display: block">Gender</label>
+          <label style="display: block">Gender<span class="text-danger"> *</span></label>
           <div class="form-check form-check-inline">
             <input class="form-check-input" formControlName="gender" type="radio" name="gender" id="inlineRadioMale"
                    value="MALE">
@@ -43,19 +53,23 @@
                    value="FEMALE">
             <label class="form-check-label" for="inlineRadioFemale">Female</label>
           </div>
+
+          <div *ngIf="customerDetailsForm?.get('gender')?.invalid && (customerDetailsForm?.get('gender')?.dirty || customerDetailsForm?.get('gender')?.touched)" class="text-danger">
+            Gender is required
+          </div>
+
         </div>
 
         <div class="form-group col-md-6">
-          <label style="display: block">Marital Status</label>
+          <label style="display: block">Marital Status <span class="text-danger"> *</span></label>
           <div class="form-check form-check-inline">
             <input class="form-check-input" formControlName="maritalStatus" type="radio" name="maritalStatus"
-                   id="inlineRadioSingle"
-                   value="false">
+                   id="inlineRadioSingle" value="false" (change)="onMaritalStatusChange($event)">
             <label class="form-check-label" for="inlineRadioSingle"> Single </label>
           </div>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" formControlName="maritalStatus" name="maritalStatus"
-                   id="inlineRadioMarried" value="true">
+                   id="inlineRadioMarried" value="true" (change)="onMaritalStatusChange($event)">
             <label class="form-check-label" for="inlineRadioMarried">Married</label>
           </div>
         </div>
@@ -119,17 +133,20 @@
       </div>
       <label>Customer's Family</label>
       <div formArrayName="customerFamilyList">
-        <div *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
-          <select name="relationship" formControlName="relationship" class="form-control col-md-6 mt-2">
+        <div  *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
+          <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2">
             <option *ngFor="let option of familyOptions"
                     [value]="option">{{ option }}</option>
           </select>
-          <input class="form-control col-md-5" placeholder="Enter the Name"  type="text" formControlName="relationshipPersonName" style="margin-left: 51%; margin-top: -4.5%">
-          <button class="btn btn-danger" style="margin-left: 93%; margin-top: -7.8%; padding: 6px"  type="button" (click)="removeFamilyMember(i)">Remove</button>
+          <input class="form-control col-md-5" placeholder="Enter the Name" type="text"
+                 formControlName="relationshipPersonName" style="margin-left: 51%; margin-top: -3.6%"/>
+          <button *ngIf="customerDetailsForm?.get('maritalStatus')?.value == 'true' && i > 3 || customerDetailsForm?.get('maritalStatus')?.value == 'false' && i > 2"
+                  class="btn btn-danger" style="margin-left: 90%; position: absolute; margin-top: -3.7%;  padding: 6px" type="button"
+                  (click)="removeFamilyMember(i)">Remove
+          </button>
         </div>
       </div>
-      <button class="btn btn-primary mb-4" type="button" (click)="addFamilyMember()">Add</button>
-
+      <button class="btn btn-primary mb-4 mt-2" type="button" (click)="addFamilyMember()">Add</button>
       <button class="btn btn-primary btn-block col-lg-2" type="submit" [disabled]="!customerDetailsForm.valid">Submit
       </button>
     </form>

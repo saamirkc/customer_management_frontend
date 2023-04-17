@@ -34,9 +34,10 @@
           <tr>
             <th>Customer Id</th>
             <th>UserName <i class="fa fa-sort"></i></th>
-            <th>Address</th>
             <th>EmailAddress <i class="fa fa-sort"></i></th>
             <th>Mobile Number</th>
+            <th>Added Time</th>
+            <th>Modified Time</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -45,9 +46,10 @@
           <tr *ngFor="let customer of customerList; trackBy: trackByFn">
             <td>{{ customer.id }}</td>
             <td>{{ customer.userName }}</td>
-            <td>{{ customer?.address ? customer.address : 'N/A' }}</td>
             <td>{{ customer?.emailAddress ? customer.emailAddress : 'N/A' }}</td>
             <td>{{ customer?.mobileNumber ? customer.mobileNumber : 'N/A' }}</td>
+            <td>{{ customer?.createdTs ? customer.createdTs</td>
+            <td>{{ customer?.modifiedTs ? customer.modifiedTs </td>
             <td>{{ customer?.status }}</td>
             <td>
               <a class="add" routerLink="/admin-dashboard/add-customer" title="Add" data-toggle="tooltip"><i

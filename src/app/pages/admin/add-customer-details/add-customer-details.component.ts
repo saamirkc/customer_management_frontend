@@ -13,12 +13,17 @@ import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.s
   styleUrls: ['./add-customer-details.component.css']
 })
 export class AddCustomerDetailsComponent implements OnInit {
-  private readonly _customerDetailsForm: FormGroup;
+   _customerDetailsForm!: FormGroup;
+
+  submitted = false;
+
 
   public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
-  public familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.SON, FamilyType.DAUGHTER]
+  public familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER]
 
   constructor(private customerService: CustomerService, private errorHandlerService: ErrorhandlerService, private commonService: CommonService, private formBuilder: FormBuilder) {
+  }
+  ngOnInit(): void {
     this._customerDetailsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -36,11 +41,10 @@ export class AddCustomerDetailsComponent implements OnInit {
       mobileNumber: [''],
       customerFamilyList: this.formBuilder.array([this.createFamilyMember()])
     })
+    for (let i = 0; i < 2; i++) {
+      this.customerFamilyList.push(this.createFamilyMember())
+    }
   }
-
-  ngOnInit(): void {
-  }
-
   get familyMembersList(): FormArray {
     return this._customerDetailsForm.get('customerFamilyList') as FormArray;
   }
@@ -48,12 +52,15 @@ export class AddCustomerDetailsComponent implements OnInit {
   get customerDetailsForm(): FormGroup {
     return this._customerDetailsForm;
   }
-
+  get customerDetailsFormControls() {
+    return this._customerDetailsForm.controls;
+  }
   createFamilyMember(): FormGroup {
     return this.formBuilder.group({
-      relationship: ['SON', Validators.required],
-      relationshipPersonName: ['', Validators.required]
-    });
+        relationship: [FamilyType.FATHER, Validators.required],
+        relationshipPersonName: ['', Validators.required]
+      }
+    );
   }
 
   get customerFamilyList() {
@@ -67,7 +74,20 @@ export class AddCustomerDetailsComponent implements OnInit {
   removeFamilyMember(index: number) {
     this.customerFamilyList.removeAt(index);
   }
-
+  onMaritalStatusChange(event: any): void {
+    if (event.target.value === 'true') {
+      this.customerFamilyList.push(this.createFamilyMember())
+      this.familyOptions.push(FamilyType.SPOUSE);
+    } else {
+      const index = this.familyOptions.indexOf(FamilyType.SPOUSE);
+      if (index > -1) {
+        this.familyOptions.splice(index, 1);
+      }
+      while (this.customerFamilyList.length > 3) {
+        this.customerFamilyList.removeAt(this.customerFamilyList.length - 1);
+      }
+    }
+  }
   formSubmit() {
     if (this.customerDetailsForm.invalid) {
       return;

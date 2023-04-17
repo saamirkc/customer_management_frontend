@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {environment} from "../env/environment";
 import {RegistrationFormData} from "../../models/registration-form-data";
 import {ApiResponse} from "../../models/api-response";
@@ -7,10 +7,13 @@ import {catchError, map, Observable, throwError, timeout} from "rxjs";
 import {CustomerDetails} from "../../models/customer-details";
 import {StatusType} from "../../enums/status-type";
 import {StatusRequest} from "../../models/status-request";
+import {PagingData} from "../../models/paging-data";
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
+
+  private pagingData?: PagingData;
   constructor(private http: HttpClient) {
   }
 
@@ -20,15 +23,9 @@ export class CustomerService {
   addCustomerDetails(customerDetails: CustomerDetails): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/customer/save`, customerDetails);
   }
-  getCustomerList(page: number, size: number, status: string, search: string, orderby: string, orderdir: string): Observable<ApiResponse> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString())
-      .set('status', status)
-      .set('search', search)
-      .set('orderby', orderby)
-      .set('orderdir', orderdir);
-    return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/customer/get-list`, {params});
+  getCustomerList(pageNo: number, sizeNo: number, status: string, search: string, orderBy: string, orderDir: string): Observable<ApiResponse> {
+    this.pagingData = {page: pageNo, size: sizeNo, orderBy: orderBy, orderDir:orderDir}
+    return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/customer/get-list?search=${search}&status=${status}`,this.pagingData);
   }
 
   viewCustomerById(customerId: number): Observable<ApiResponse> {

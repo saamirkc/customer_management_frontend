@@ -82,7 +82,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
           this._totalPages = value.object.totalPages;
           this._totalElements = value.object._totalElements;
           this._pages = Array.from(Array(this._totalPages).keys());
-
         }, error: err => {
           this.errorHandlerService.handleError(err);
         }

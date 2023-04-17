@@ -6,4 +6,6 @@ export default interface CustomerListResponse {
   emailAddress?: string;
   mobileNumber?: string;
   createdBy?: number;
+  createdTs?: string;
+  modifiedTs?: string;
 }
