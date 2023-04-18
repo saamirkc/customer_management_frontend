@@ -7,68 +7,112 @@
           <p>Update the Customer Detail from here</p>
           <hr class="m-y-2">
           <div class="card-block">
-            <form>
+            <form [formGroup]="customerDetailForm">
               <div class="md-form">
                 <label class="">First Name</label>
-                <input type="text" [(ngModel)]="customer.firstName" name="firstName" class="form-control mt-2">
+                <input type="text" formControlName="firstName" name="firstName" class="form-control mt-2">
               </div>
 
               <div class="md-form">
                 <label>Last Name</label>
-                <input type="text" [(ngModel)]="customer.lastName" name="lastName" class="form-control mt-2">
+                <input type="text" formControlName="lastName" name="lastName" class="form-control mt-2">
               </div>
 
-              <div class="md-form">
-                <label>Gender</label>
-                <input type="text" [(ngModel)]="customer.gender" name="gender" class="form-control mt-2">
-              </div>
-
-              <div class="md-form">
-                <label>Date Of Birth </label>
-                <input type="text" [(ngModel)]="customer.dateOfBirth" name="dateOfBirth" class="form-control mt-2">
-
-              </div>
-              <div class="md-form">
-                <label>Citizen Number </label>
-                <input type="text" [(ngModel)]="customer.citizenNumber" name="citizenNumber" class="form-control mt-2">
+              <div class="form-row mt-2">
+                <div class="col-md-6">
+                <label style="display: block">Gender<span class="text-danger"> *</span></label>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender"
+                           id="inlineRadioMale"
+                           value="MALE" [checked]="customer.gender=='MALE'">
+                    <label class="form-check-label" for="inlineRadioMale"> Male </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender"
+                           id="inlineRadioFemale"
+                           value="FEMALE" [checked]="customer.gender=='FEMALE'">
+                    <label class="form-check-label" for="inlineRadioFemale">Female</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                <label style="display: block" class="mb-1">Marital Status <span class="text-danger"> *</span></label>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="maritalStatus"
+                           id="inlineRadioSingle" value="false" (change)="onMaritalStatusChange($event)" [checked]="customer.maritalStatus==false">
+                    <label class="form-check-label" for="inlineRadioSingle"> Single </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="maritalStatus"
+                           id="inlineRadioMarried" value="true" (change)="onMaritalStatusChange($event)" [checked]="customer.maritalStatus==true">
+                    <label class="form-check-label" for="inlineRadioMarried">Married</label>
+                  </div>
+                </div>
               </div>
 
               <div class="md-form">
                 <label>Address</label>
-                <input type="text" [(ngModel)]="customer.address" name="address" class="form-control mt-2">
+                <input type="text" formControlName="address" name="address" class="form-control mt-2">
               </div>
-
               <div class="md-form">
-                <label>Marital Status</label>
-                <input type="text" [(ngModel)]="customer.maritalStatus" name="maritalStatus" class="form-control mt-2">
+                <label>Date Of Birth </label>
+                <input type="text" formControlName="dateOfBirth" name="dateOfBirth" class="form-control mt-2">
+
+              </div>
+              <div class="md-form">
+                <label>Citizen Number </label>
+                <input type="text" formControlName="citizenNumber" name="citizenNumber" class="form-control mt-2">
               </div>
 
               <div class="md-form">
                 <label>Email Address</label>
-                <input type="text" [(ngModel)]="customer.emailAddress" name="emailAddress" class="form-control mt-2">
+                <input type="text" formControlName="emailAddress" name="emailAddress" class="form-control mt-2">
               </div>
 
               <div class="md-form">
                 <label>Mobile Number</label>
-                <input type="text" [(ngModel)]="customer.mobileNumber" name="mobileNumber" class="form-control mt-2">
+                <input type="text" formControlName="mobileNumber" name="mobileNumber" class="form-control mt-2">
               </div>
               <div class="md-form">
                 <label for="status">Status</label>
-                <select name="status" [(ngModel)]="customer.status" class="form-control mt-2">
+                <select name="status" formControlName="status" class="form-select mt-2">
                   <option *ngFor="let option of statusOptions" [value]="option"
                           [selected]="option == customer.status">{{option}}</option>
                 </select>
               </div>
+              <label>Customer's Family</label>
+
+              <div formArrayName="customerFamilyList">
+                <div  *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
+                  <div class="form-row">
+                    <div class="col-md-5">
+                      <select formControlName="relationship" class="form-select d-inline-block w-100">
+                        <option *ngFor="let option of familyOptions" [value]="option">{{ option }}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <input formControlName="relationshipPersonName" class="form-control d-inline-block w-100"
+                             placeholder="Enter the Name" type="text"/>
+                      <button *ngIf="customerDetailForm?.get('maritalStatus')?.value == true && i > 3 || customerDetailForm?.get('maritalStatus')?.value == false && i > 2"
+                        class="btn-remove btn btn-danger" type="button"
+                              (click)="removeFamilyMember(i)"> X
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-primary mb-4 mt-2" type="button" (click)="addFamilyMember()">Add</button>
               <div class="text-xs-left mt-2 mb-2">
-                <button (click)="updateCustomerDetailsById()" class="btn btn-primary update-btn"> Update</button>
+                <button (click)="updateCustomerDetailsById()" class="btn btn-primary update-btn"
+                        [disabled]="!customerDetailForm.valid"> Update
+                </button>
                 <button (click)="cancelUpdate()" class="btn btn-secondary">Cancel</button>
               </div>
             </form>
           </div>
         </div>
-                            <!-- View component -->
+        <!-- View component -->
         <ng-template #viewable>
-          <div class="jumbotron" >
+          <div class="jumbotron">
             <h2 class="h2-responsive"><strong>Customer Detail Form</strong></h2>
             <p>View the Customer Detail from here</p>
             <hr class="m-y-2">
@@ -82,17 +126,20 @@
 
                 <div class="md-form">
                   <label>Last Name</label>
-                  <input type="text" [(ngModel)]="customer.lastName" name="lastName" class="form-control mt-2 disabled-input" disabled>
+                  <input type="text" [(ngModel)]="customer.lastName" name="lastName"
+                         class="form-control mt-2 disabled-input" disabled>
                 </div>
 
                 <div class="md-form">
                   <label>Gender</label>
-                  <input type="text" [(ngModel)]="customer.gender" name="gender" class="form-control mt-2 disabled-input" disabled>
+                  <input type="text" [(ngModel)]="customer.gender" name="gender"
+                         class="form-control mt-2 disabled-input" disabled>
                 </div>
 
                 <div class="md-form">
                   <label>Date Of Birth </label>
-                  <input type="text" [(ngModel)]="customer.dateOfBirth" name="dateOfBirth" class="form-control mt-2 disabled-input"
+                  <input type="text" [(ngModel)]="customer.dateOfBirth" name="dateOfBirth"
+                         class="form-control mt-2 disabled-input"
                          disabled>
 
                 </div>
@@ -104,7 +151,8 @@
 
                 <div class="md-form">
                   <label>Address</label>
-                  <input type="text" [(ngModel)]="customer.address" name="address" class="form-control mt-2 disabled-input" disabled>
+                  <input type="text" [(ngModel)]="customer.address" name="address"
+                         class="form-control mt-2 disabled-input" disabled>
                 </div>
 
                 <div class="md-form">
@@ -115,16 +163,19 @@
 
                 <div class="md-form">
                   <label>Email Address</label>
-                  <input type="text" [(ngModel)]="customer.emailAddress" name="emailAddress" class="form-control mt-2 disabled-input" disabled>
+                  <input type="text" [(ngModel)]="customer.emailAddress" name="emailAddress"
+                         class="form-control mt-2 disabled-input" disabled>
                 </div>
 
                 <div class="md-form">
                   <label>Mobile Number</label>
-                  <input type="text" [(ngModel)]="customer.mobileNumber" name="mobileNumber" class="form-control mt-2 disabled-input" disabled>
+                  <input type="text" [(ngModel)]="customer.mobileNumber" name="mobileNumber"
+                         class="form-control mt-2 disabled-input" disabled>
                 </div>
                 <div class="md-form">
                   <label for="status">Status</label>
-                  <select id="status" name="status" [(ngModel)]="customer.status" class="form-control mt-2 disabled-input" disabled>
+                  <select id="status" name="status" [(ngModel)]="customer.status"
+                          class="form-control mt-2 disabled-input" disabled>
                     <option *ngFor="let option of statusOptions" [value]="option"
                             [selected]="option == customer.status">{{option}}</option>
                   </select>

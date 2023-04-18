@@ -1,3 +1,5 @@
+import {FamilyType} from "../enums/family-type";
+
 export interface CustomerDetails {
   firstName?: string;
   lastName?: string;
@@ -14,6 +16,6 @@ export interface CustomerDetails {
 }
 interface CustomerFamily {
   id: number;
-  relationship?: string;
+  relationship?: FamilyType;
   relationshipPersonName?: string;
 }

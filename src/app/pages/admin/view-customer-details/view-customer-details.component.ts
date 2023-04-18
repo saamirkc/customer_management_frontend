@@ -46,17 +46,14 @@ export class ViewCustomerDetailsComponent implements OnInit {
     })
   }
 
-
   search(): void {
     this.getCustomerDetails(this._searchTerm, '');
   }
-
   searchByStatus(): void {
     if (this._selectedStatusOption) {
       this.getCustomerDetails(this._searchTerm, this._selectedStatusOption);
     }
   }
-
   openEditCustomerModal(customerId: number): void {
     this.customerService.viewCustomerById(customerId).subscribe((response) => {
       const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true, backdrop: 'static'});

@@ -19,3 +19,32 @@ body {
 .disabled-input {
   background-color: white;
 }
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row > div[class^="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.form-select,
+.form-control {
+  margin-top: 5px;
+  width: 100%;
+}
+.btn-remove {
+  position: absolute;
+  margin-left: 1%;
+  margin-top: 1%;
+  padding: 0;
+  width: 33px;
+  height: 33px;
+  border: 1px solid red;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1;
+}

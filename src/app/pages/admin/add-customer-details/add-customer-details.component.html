@@ -20,9 +20,9 @@
         <div class="form-group col-md-6">
           <label for="firstName">FirstName <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="firstName" formControlName="firstName" name="firstName"
-                 placeholder="Enter your first name" [class.is-invalid]="customerDetailsForm?.get('firstName')?.invalid && customerDetailsForm?.get('firstName')?.touched">
+                 placeholder="Enter your first name" [class.is-invalid]="customerDetailsForm.get('firstName')?.invalid && customerDetailsForm.get('firstName')?.touched">
           <span
-            *ngIf="customerDetailsForm?.get('firstName')?.invalid && (customerDetailsForm.get('firstName')?.dirty || customerDetailsForm.get('firstName')?.touched)"
+            *ngIf="customerDetailsForm.get('firstName')?.invalid && (customerDetailsForm.get('firstName')?.dirty || customerDetailsForm.get('firstName')?.touched)"
             class="text-danger">
             First Name is required
           </span>
@@ -31,9 +31,9 @@
         <div class="form-group col-md-6">
           <label>LastName <span class="text-danger"> *</span></label>
           <input type="text" class="form-control" id="lastName" formControlName="lastName" name="lastName"
-                 placeholder=" last name" [class.is-invalid]="customerDetailsForm?.get('lastName')?.invalid && customerDetailsForm?.get('lastName')?.touched"/>
+                 placeholder=" last name" [class.is-invalid]="customerDetailsForm.get('lastName')?.invalid && customerDetailsForm.get('lastName')?.touched"/>
           <span
-            *ngIf="customerDetailsForm?.get('lastName')?.invalid && (customerDetailsForm.get('lastName')?.dirty || customerDetailsForm.get('lastName')?.touched)"
+            *ngIf="customerDetailsForm.get('lastName')?.invalid && (customerDetailsForm.get('lastName')?.dirty || customerDetailsForm.get('lastName')?.touched)"
             class="text-danger">
             Last Name is required
           </span>
