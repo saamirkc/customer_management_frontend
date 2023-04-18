@@ -6,6 +6,7 @@ import {WelcomeComponent} from "../welcome/welcome.component";
 import {ProfileComponent} from "../../profile/profile.component";
 import {ViewCustomerDetailsComponent} from "../view-customer-details/view-customer-details.component";
 import {AddCustomerDetailsComponent} from "../add-customer-details/add-customer-details.component";
+import {UniqueItemsPipe} from "../../../shared/unique-items.pipe";
 
 const routes: Routes = [
   {
@@ -32,7 +33,8 @@ const routes: Routes = [
   }
 ];
 @NgModule({
+  declarations:[UniqueItemsPipe],
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule, UniqueItemsPipe]
 })
 export class AdminDashboardModule { }

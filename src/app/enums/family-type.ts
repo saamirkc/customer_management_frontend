@@ -1,8 +1,6 @@
 export enum FamilyType {
   FATHER  = 'FATHER',
   MOTHER = 'MOTHER',
-  SON = 'SON',
-  DAUGHTER = 'DAUGHTER',
   GRANDFATHER = 'GRANDFATHER',
   SPOUSE = 'SPOUSE'
 }

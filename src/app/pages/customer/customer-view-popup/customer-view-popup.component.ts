@@ -66,7 +66,6 @@ export class CustomerViewPopupComponent implements OnInit {
     );
   }
   addFamilyMember() {
-    console.log(this.createFamilyMember())
     this.customerFamilyList.push(this.createFamilyMember())
   }
   removeFamilyMember(index: number) {
@@ -81,15 +80,11 @@ export class CustomerViewPopupComponent implements OnInit {
   }
   onMaritalStatusChange(event: any): void {
     if (event.target.value === 'true') {
-      console.log("true is invoked")
       this.customerDetailForm.patchValue({maritalStatus: true});
-      console.log(this.customerDetailForm?.get('maritalStatus')?.value)
       this.customerFamilyList.push(this.createFamilyMember())
       this.familyOptions.push(FamilyType.SPOUSE);
     } else {
-      console.log("false is invoked")
       this.customerDetailForm.patchValue({maritalStatus: false});
-      console.log(this.customerDetailForm?.get('maritalStatus')?.value)
       const index = this.familyOptions.indexOf(FamilyType.SPOUSE);
       if (index > -1) {
         this.familyOptions.splice(index, 1);

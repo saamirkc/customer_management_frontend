@@ -132,20 +132,19 @@
         </div>
       </div>
       <label>Customer's Family</label>
-      <div formArrayName="customerFamilyList">
-        <div  *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
-          <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2">
-            <option *ngFor="let option of familyOptions"
-                    [value]="option">{{ option }}</option>
-          </select>
-          <input class="form-control col-md-5" placeholder="Enter the Name" type="text"
-                 formControlName="relationshipPersonName" style="margin-left: 51%; margin-top: -3.6%"/>
-          <button *ngIf="customerDetailsForm?.get('maritalStatus')?.value == 'true' && i > 3 || customerDetailsForm?.get('maritalStatus')?.value == 'false' && i > 2"
-                  class="btn btn-danger" style="margin-left: 90%; position: absolute; margin-top: -3.7%;  padding: 6px" type="button"
-                  (click)="removeFamilyMember(i)">Remove
-          </button>
+        <div formArrayName="customerFamilyList">
+          <div  *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
+            <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2">
+              <option *ngFor="let option of familyOptions" [value]="option">{{ option }}</option>
+            </select>
+            <input class="form-control col-md-5" placeholder="Enter the Name" type="text"
+                   formControlName="relationshipPersonName" style="margin-left: 51%; margin-top: -3.6%"/>
+            <button *ngIf="customerDetailsForm?.get('maritalStatus')?.value == 'true' && i > 3 || customerDetailsForm?.get('maritalStatus')?.value == 'false' && i > 2"
+                    class="btn btn-danger" style="margin-left: 90%; position: absolute; margin-top: -3.7%;  padding: 6px" type="button"
+                    (click)="removeFamilyMember(i)">Remove
+            </button>
+          </div>
         </div>
-      </div>
       <button class="btn btn-primary mb-4 mt-2" type="button" (click)="addFamilyMember()">Add</button>
       <button class="btn btn-primary btn-block col-lg-2" type="submit" [disabled]="!customerDetailsForm.valid">Submit
       </button>

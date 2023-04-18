@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import Swal from "sweetalert2";
 import {CustomerService} from "../../../services/customer/customer.service";
 import {CommonService} from "../../../shared/common.service";
@@ -13,16 +13,18 @@ import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.s
   styleUrls: ['./add-customer-details.component.css']
 })
 export class AddCustomerDetailsComponent implements OnInit {
-   _customerDetailsForm!: FormGroup;
+  _customerDetailsForm!: FormGroup;
 
   submitted = false;
 
 
   public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
   public familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER]
+  selectedFamilyOptions: string[] = [];
 
   constructor(private customerService: CustomerService, private errorHandlerService: ErrorhandlerService, private commonService: CommonService, private formBuilder: FormBuilder) {
   }
+
   ngOnInit(): void {
     this._customerDetailsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -39,12 +41,13 @@ export class AddCustomerDetailsComponent implements OnInit {
       citizenNumber: ['', Validators.required],
       emailAddress: [''],
       mobileNumber: [''],
-      customerFamilyList: this.formBuilder.array([this.createFamilyMember()])
+      customerFamilyList: this.formBuilder.array([this.createFamilyMember(0)])
     })
-    for (let i = 0; i < 2; i++) {
-      this.customerFamilyList.push(this.createFamilyMember())
+    for (let i = 1; i < 3; i++) {
+      this.customerFamilyList.push(this.createFamilyMember(i))
     }
   }
+
   get familyMembersList(): FormArray {
     return this._customerDetailsForm.get('customerFamilyList') as FormArray;
   }
@@ -52,12 +55,14 @@ export class AddCustomerDetailsComponent implements OnInit {
   get customerDetailsForm(): FormGroup {
     return this._customerDetailsForm;
   }
+
   get customerDetailsFormControls() {
     return this._customerDetailsForm.controls;
   }
-  createFamilyMember(): FormGroup {
+
+  createFamilyMember(index: number): FormGroup {
     return this.formBuilder.group({
-        relationship: [FamilyType.FATHER, Validators.required],
+        relationship: [this.familyOptions[index], Validators.required],
         relationshipPersonName: ['', Validators.required]
       }
     );
@@ -68,16 +73,17 @@ export class AddCustomerDetailsComponent implements OnInit {
   }
 
   addFamilyMember() {
-    this.customerFamilyList.push(this.createFamilyMember())
+    this.customerFamilyList.push(this.createFamilyMember(0))
   }
 
   removeFamilyMember(index: number) {
     this.customerFamilyList.removeAt(index);
   }
+
   onMaritalStatusChange(event: any): void {
     if (event.target.value === 'true') {
-      this.customerFamilyList.push(this.createFamilyMember())
       this.familyOptions.push(FamilyType.SPOUSE);
+      this.customerFamilyList.push(this.createFamilyMember(this.familyOptions.length-1))
     } else {
       const index = this.familyOptions.indexOf(FamilyType.SPOUSE);
       if (index > -1) {
@@ -88,6 +94,7 @@ export class AddCustomerDetailsComponent implements OnInit {
       }
     }
   }
+
   formSubmit() {
     if (this.customerDetailsForm.invalid) {
       return;
@@ -109,5 +116,13 @@ export class AddCustomerDetailsComponent implements OnInit {
         }
       }
     )
+  }
+  onSelectOption(event: Event, index: number) {
+    const selectedOption = (event.target as HTMLSelectElement).value;
+    this.selectedFamilyOptions[index] = selectedOption;
+  }
+  filteredFamilyOptions(index: number) {
+    return this.familyOptions.filter(option => !this.selectedFamilyOptions.includes(option)
+      || this.selectedFamilyOptions.indexOf(option) === index);
   }
 }

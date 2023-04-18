@@ -34,12 +34,12 @@ import { DeleteModalComponentComponent } from './pages/admin/delete-modal-compon
 import { VerificationComponent } from './pages/verification/verification.component';
 import {MatSelectModule} from "@angular/material/select";
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import {AdminDashboardModule} from "./pages/admin/dashboard/admin-dashboard.module";
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     FooterComponent,
-    // SignupComponent,
     LoginComponent,
     HomeComponent,
     AdminDashboardComponent,
@@ -55,26 +55,27 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
     VerificationComponent,
     PageNotFoundComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatListModule,
-        NgbModule,
-        MatInputModule,
-        MatFormFieldModule,
-        FormsModule,
-        MatCardModule,
-        MatTableModule,
-        HttpClientModule,
-        MatSnackBarModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatLineModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatListModule,
+    NgbModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatCardModule,
+    MatTableModule,
+    HttpClientModule,
+    MatSnackBarModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatLineModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    AdminDashboardModule,
+  ],
   providers: [authInterceptProviders],
   bootstrap: [AppComponent]
 })
