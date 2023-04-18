@@ -132,6 +132,8 @@ export class CustomerViewPopupComponent implements OnInit {
         this.familyOptions?.push(customerFamily.relationship);
       }
     });
+    if (this.viewOnly){
+      this.customerDetailForm.disable();
+    }
   }
-
 }
