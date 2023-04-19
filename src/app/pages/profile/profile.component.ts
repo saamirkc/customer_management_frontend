@@ -17,8 +17,7 @@ export class ProfileComponent implements OnInit {
   private _customerDetail: CustomerDetails;
   private _customerId?: string | null;
 
-  public safeProfileImageUrl?: SafeUrl;
-
+  private _safeProfileImageUrl?: SafeUrl;
 
   private _profileImageView?: string | ArrayBuffer | null;
 
@@ -33,7 +32,6 @@ export class ProfileComponent implements OnInit {
     if (this._customerId) {
       this.customerService.viewCustomerById(Number(this._customerId)).subscribe({
         next: value => {
-          console.log("View customer by id is called")
           this._customerDetail = value.object;
         }, error: err => {
           this.errorHandlerService.handleError(err);
@@ -43,7 +41,7 @@ export class ProfileComponent implements OnInit {
       this.customerService.getProfileImage(Number(this._customerId)).subscribe({
         next: value => {
           this._profileImageView = URL.createObjectURL(value);
-          this.safeProfileImageUrl = this.getSanitizedUrl(this._profileImageView);
+          this._safeProfileImageUrl = this.getSanitizedUrl(this._profileImageView);
 
         }, error: err => {
           console.log("The error is thrown while fetching the profile image", err);
@@ -66,10 +64,10 @@ export class ProfileComponent implements OnInit {
 
   public getSanitizedUrl(url: string): SafeUrl {
     if (this.sanitizer) {
-      return this.safeProfileImageUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+      return this._safeProfileImageUrl = this.sanitizer.bypassSecurityTrustUrl(url);
       console.log("Profile image view ", this.safeProfileImageUrl)
     } else {
-      return this.safeProfileImageUrl = '';
+      return this._safeProfileImageUrl = '';
     }
   }
 
@@ -90,7 +88,7 @@ export class ProfileComponent implements OnInit {
               reader.onload = (event) => {
                 if (event.target != null) {
                   this._profileImageView = event.target.result;
-                  this.safeProfileImageUrl = this.getSanitizedUrl(this.profileImageView);
+                  this._safeProfileImageUrl = this.getSanitizedUrl(this.profileImageView);
                 }
               }
             }
@@ -100,5 +98,9 @@ export class ProfileComponent implements OnInit {
         }
       })
     }
+  }
+
+  get safeProfileImageUrl(): SafeUrl {
+    return <SafeUrl>this._safeProfileImageUrl;
   }
 }

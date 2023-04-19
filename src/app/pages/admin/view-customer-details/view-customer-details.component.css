@@ -160,6 +160,7 @@ mat-select {
 form .select-type{
   margin-left: 20px;
 }
-
-
+.teal-color {
+  color:teal;
+}
 

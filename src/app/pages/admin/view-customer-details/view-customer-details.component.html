@@ -10,8 +10,7 @@
           <div class="main-section">
             <div class="search-section  col-md-12">
               <form>
-                <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="_searchTerm"
-                       name="_searchTerm" (keyup)="search()">
+                <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="_searchTerm" name="_searchTerm" (keyup)="search(_searchTerm)" #searchInput>
                 <mat-select [(ngModel)]="_selectedStatusOption" class="form-control select-type"
                             name="_selectedStatusOption" ngDefaultControl
                             [disableOptionCentering]="false" placeholder="Select Status">
@@ -21,7 +20,7 @@
               </form>
               <div class="main-button-holder">
                 <button class="btn search-btn" (click)="searchByStatus()">Search</button>
-                <button class="btn reset-btn" (click)="search()">Reset</button>
+                <button class="btn reset-btn" (click)="resetSearch(searchInput)">Reset</button>
               </div>
             </div>
           </div>
@@ -56,12 +55,12 @@
                 class="material-icons">&#xE417;</i></a>
               <a class="edit" (click)="openEditCustomerModal(customer.id)"  title="Edit" data-toggle="tooltip"><i
                 class="material-icons">&#xE254;</i></a>
-              <a *ngIf="customer.status != deletedStatus" (click)="showStatusModal(customer.id,customer.status)" class="delete" title="Delete"
+              <a *ngIf="customer.status != deletedStatus" (click)="showStatusModal(customer.id,deleteStatusConst)" class="delete" title="Delete"
                  data-toggle="tooltip"><i
                 class="material-icons">&#xE872;</i></a>
-              <a *ngIf="customer.status == activeStatus || customer.status == pendingStatus" class="add" (click)="showStatusModal(customer.id, blockStatus)" title="Block" data-toggle="tooltip">
+              <a *ngIf="customer.status == activeStatus || customer.status == pendingStatus" class="add" (click)="showStatusModal(customer.id, blockStatusConst)" title="Block" data-toggle="tooltip">
                 <i class="material-icons">remove_circle_outline</i></a>
-              <a *ngIf="customer.status == inactiveStatus || customer.status == deletedStatus" class="add" (click)="showStatusModal(customer.id, unblockStatus)" title="UnBlock" data-toggle="tooltip">
+              <a *ngIf="customer.status == inactiveStatus || customer.status == deletedStatus" class="add" (click)="showStatusModal(customer.id, unblockStatusConst)" title="UnBlock" data-toggle="tooltip">
                 <i class="material-icons">replay</i></a>
             </td>
           </tr>
@@ -74,11 +73,11 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body text-bg-light">
             Do you really want to delete the customer ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK</button>
+            <button type="button" class="btn btn-danger" (click)="updateCustomerStatus(deletedStatus)"> OK</button>
             <button type="button" class="btn btn-primary" (click)="decline()">Cancel</button>
           </div>
         </ng-template>
@@ -90,11 +89,11 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body text-bg-light">
             Do you really want to block the customer ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK</button>
+            <button type="button" class="btn btn-danger" (click)="updateCustomerStatus(inactiveStatus)"> OK</button>
             <button type="button" class="btn btn-primary" (click)="decline()">Cancel</button>
           </div>
         </ng-template>
@@ -107,11 +106,11 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body text-bg-light">
             Do you really want to unblock the customer ?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK</button>
+            <button type="button" class="btn btn-danger" (click)="updateCustomerStatus(activeStatus)"> OK</button>
             <button type="button" class="btn btn-primary" (click)="decline()">Cancel</button>
           </div>
         </ng-template>

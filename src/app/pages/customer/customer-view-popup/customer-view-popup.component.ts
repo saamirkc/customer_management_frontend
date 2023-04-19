@@ -19,7 +19,7 @@ export class CustomerViewPopupComponent implements OnInit {
   @Input() customerId?: number
   @Input() viewOnly?: boolean
   @Input() customer: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
-  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
+  private _statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
   private _familyOptions: FamilyType[] = [];
   private _customerDetailForm?: FormGroup;
 
@@ -43,6 +43,7 @@ export class CustomerViewPopupComponent implements OnInit {
           this.successHandlerService.handleSuccessEvent(value.message)
           this.activeModal.dismiss();
           this.customer = value.object;
+          window.location.reload();
         }, error: err => {
           this.errorHandlerService.handleError(err);
         }
@@ -133,5 +134,9 @@ export class CustomerViewPopupComponent implements OnInit {
     if (this.viewOnly) {
       this.customerDetailForm.disable();
     }
+  }
+
+  get statusOptions(): StatusType[] {
+    return this._statusOptions;
   }
 }

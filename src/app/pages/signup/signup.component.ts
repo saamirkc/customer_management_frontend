@@ -14,27 +14,19 @@ import {SuccessHandlerService} from "../../services/successhandler/success-handl
 })
 export class SignupComponent implements OnInit {
   private readonly _registrationForm: FormGroup;
-
   private _isLoading = false;
-
   get registrationForm(): FormGroup {
     return this._registrationForm;
   }
-
   userNameFlag: boolean = true;
-  user = {
-    username: '',
-    password: '',
-    email: '',
-    mobileNumber: '',
-  }
+
+  userNameErrors = {
+    required: 'Username is required',
+    invalid: 'Please enter a valid email or phone number'
+  };
 
   get isLoading(): boolean {
     return this._isLoading;
-  }
-
-  onUserInputChange(): void {
-    this.userNameFlag = this.user.username === '';
   }
 
   constructor(private formBuilder: FormBuilder, private errorHandlerService: ErrorhandlerService, private _router: Router, private customerService: CustomerService,
@@ -81,7 +73,5 @@ export class SignupComponent implements OnInit {
       }
     )
   }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

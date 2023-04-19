@@ -56,9 +56,16 @@ export class ViewCustomerDetailsComponent implements OnInit {
     })
   }
 
-  search(): void {
-    this.getCustomerDetails(this._searchTerm, '');
+  search(search: string): void {
+    this.getCustomerDetails(search, '');
   }
+  resetSearch(searchInput: HTMLInputElement) {
+    this._searchTerm = '';
+    searchInput.value = '';
+    this._selectedStatusOption = "Select Status";
+    this.getCustomerDetails('', '');
+  }
+
   searchByStatus(): void {
     if (this._selectedStatusOption) {
       this.getCustomerDetails(this._searchTerm, this._selectedStatusOption);
@@ -72,14 +79,14 @@ export class ViewCustomerDetailsComponent implements OnInit {
     });
   }
 
-  showStatusModal(customerId: number, status: StatusType): void {
+  showStatusModal(customerId: number, status: string): void {
     this._customerId = customerId;
     console.log("show status in invoked", status);
-    if (status == StatusType.DELETED){
+    if (status == this.deleteStatusConst){
       this.modalService.open(this.deleteModal, {centered: true})
-    } else if (status == StatusType.ACTIVE){
+    } else if (status == this.unblockStatusConst){
       this.modalService.open(this.unblockModal, {centered: true})
-    }else if (status == StatusType.INACTIVE){
+    }else if (status == this.blockStatusConst){
       this.modalService.open(this.blockModal, {centered: true})
     };
 
@@ -136,14 +143,14 @@ export class ViewCustomerDetailsComponent implements OnInit {
     return customer.id; // use customer id as trackBy value
   }
 
-  deleteCustomer() {
+  updateCustomerStatus(status: StatusType) {
     if (this._customerId != null) {
-      this.customerService.deleteCustomerById(this._customerId).subscribe({
+      this.customerService.updateCustomerStatusById(this._customerId,status).subscribe({
         next: value => {
           this.successhandlerService.handleSuccessEvent(value.message);
-          const deletedCustomerIndex = this.customerList.findIndex(c => c.id === this._customerId);
-          if (deletedCustomerIndex !== -1) {
-            this.customerList[deletedCustomerIndex].status = StatusType.DELETED;
+          const customerIndex = this.customerList.findIndex(c => c.id === this._customerId);
+          if (customerIndex !== -1) {
+            this.customerList[customerIndex].status = status;
           }
           // popup or redirect to another uri.
         }, error: err => {

@@ -14,23 +14,21 @@ import {Subscription} from "rxjs";
   styleUrls: ['./verification.component.css']
 })
 export class VerificationComponent implements OnInit, OnDestroy {
-
   private _verificationCode: string = '';
   private customerId?: string | null;
   private _userName: string = '';
-
   private userNameSubscription?: Subscription;
-
 
   ngOnInit(): void {
     this.userNameSubscription = this.dataService.getUserName().subscribe({
       next: value => {
         this._userName = value;
-      }, error:err => {
+      }, error: err => {
         console.log("The error thrown is ", err);
       }
     })
   }
+
   get userName(): string {
     return this._userName;
   }
@@ -42,7 +40,7 @@ export class VerificationComponent implements OnInit, OnDestroy {
     if (this.userNameSubscription) {
       this.userNameSubscription.unsubscribe();
     }
-    }
+  }
 
   setVerificationCode(event: Event) {
     const value = (event.target as HTMLInputElement).value;

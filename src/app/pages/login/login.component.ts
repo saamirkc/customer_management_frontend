@@ -24,6 +24,11 @@ export class LoginComponent implements OnInit {
     return this._loginForm;
   }
 
+  userNameErrors = {
+    required: 'Username is required',
+    invalid: 'Please enter a valid email or phone number'
+  };
+
   constructor(private formBuilder: FormBuilder, private commonService: CommonService, private successHandlerService: SuccessHandlerService,
               private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
               private dataService: DataService, private tokenService: TokenService) {

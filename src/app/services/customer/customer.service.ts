@@ -37,13 +37,13 @@ export class CustomerService {
     return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update/id/${customerId}`, customer);
   }
 
-  deleteCustomerById(customerId: number): Observable<ApiResponse> {
+  updateCustomerStatusById(customerId: number, status: StatusType): Observable<ApiResponse> {
     const messageBody: StatusRequest = {
       customerId: customerId,
-      status: StatusType.DELETED,
+      status: status,
       message: ""
     };
-    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update-status/id/${customerId}?status=${StatusType.DELETED}`, messageBody);
+    return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/update-status/id/${customerId}?status=${status}`, messageBody);
   }
 
   getProfileImage(customerId: number) {
