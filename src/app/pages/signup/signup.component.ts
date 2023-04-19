@@ -2,10 +2,10 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CustomerService} from "../../services/customer/customer.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../shared/common.service";
-import Swal from "sweetalert2";
 import {Router} from "@angular/router";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 import {DataService} from "../../services/data.service";
+import {SuccessHandlerService} from "../../services/successhandler/success-handler.service";
 
 @Component({
   selector: 'app-signup',
@@ -37,8 +37,8 @@ export class SignupComponent implements OnInit {
     this.userNameFlag = this.user.username === '';
   }
 
-  constructor(private formBuilder: FormBuilder,private errorHandlerService:ErrorhandlerService, private _router: Router, private customerService: CustomerService,
-              private commonService: CommonService,private dataService: DataService, private _cd: ChangeDetectorRef // add the ChangeDetectorRef
+  constructor(private formBuilder: FormBuilder, private errorHandlerService: ErrorhandlerService, private _router: Router, private customerService: CustomerService,
+              private successHandlerService: SuccessHandlerService, private commonService: CommonService, private dataService: DataService, private _cd: ChangeDetectorRef // add the ChangeDetectorRef
   ) {
     this._registrationForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -56,13 +56,8 @@ export class SignupComponent implements OnInit {
     this._isLoading = true;
     this.customerService.registerUser(formData).subscribe({
         next: value => {
-          console.log(value);
-          Swal.fire({
-            title: value.message,
-            icon: 'success',
-            timer: 4000
-          }).then(r =>
-            this._registrationForm.reset());
+          this.successHandlerService.handleSuccessEvent(value.message)
+          this._registrationForm.reset();
           if (value.object.verificationCodeSent) {
             this.dataService.setUserName(formData.userName);
             this._router.navigate(
@@ -83,8 +78,10 @@ export class SignupComponent implements OnInit {
           this._isLoading = false; // hide the spinner
           this._cd.detectChanges(); // force Angular to update the view
         }
-     }
+      }
     )
   }
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+  }
 }

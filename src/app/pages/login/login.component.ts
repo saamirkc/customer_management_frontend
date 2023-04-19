@@ -9,6 +9,7 @@ import {TokenService} from "../../services/token/token.service";
 import Swal from "sweetalert2";
 import constants from "../../shared/constants";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
+import {SuccessHandlerService} from "../../services/successhandler/success-handler.service";
 
 
 @Component({
@@ -23,8 +24,8 @@ export class LoginComponent implements OnInit {
     return this._loginForm;
   }
 
-  constructor(private formBuilder: FormBuilder, private commonService: CommonService,
-              private _snackBar: MatSnackBar, private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
+  constructor(private formBuilder: FormBuilder, private commonService: CommonService, private successHandlerService: SuccessHandlerService,
+              private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
               private dataService: DataService, private tokenService: TokenService) {
     this._loginForm = this.formBuilder.group({
       userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
@@ -44,11 +45,8 @@ export class LoginComponent implements OnInit {
     this.loginService.login(formData).subscribe(
       {
         next: value => {
-          Swal.fire({
-            title: value.message,
-            icon: 'success',
-            timer: 4000
-          }).then(res => this._loginForm.reset());
+          this.successHandlerService.handleSuccessEvent(value.message)
+          this._loginForm.reset();
           this.tokenService.setTokens(value.object.token, value.object.refreshToken);
           this.tokenService.setCustomerNameGroupId(value.object.customerGroupId, value.object.fullName);
           this.tokenService.setCustomerId(value.object.customerId);

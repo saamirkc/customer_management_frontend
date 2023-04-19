@@ -1,6 +1,12 @@
 body {
   background:#ededed;
+  overflow: hidden;
 }
+main {
+  overflow: hidden;
+  max-width: 100%;
+}
+
 .panel {
   display:block;
   height:278px;
@@ -36,16 +42,21 @@ body {
   margin-top: 5px;
   width: 100%;
 }
-.btn-remove {
+.family-member {
+  position: relative;
+}
+.family-member .btn-remove {
   position: absolute;
-  margin-left: 1%;
-  margin-top: 1%;
+  bottom: 0;
+  right: 0;
+  margin: 4px;
   padding: 0;
-  width: 33px;
+  width: 2rem;
   height: 33px;
   border: 1px solid red;
   text-align: center;
   font-size: 20px;
   line-height: 1;
 }
+
 

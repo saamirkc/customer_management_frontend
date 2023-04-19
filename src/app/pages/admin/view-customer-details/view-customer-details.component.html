@@ -52,15 +52,17 @@
             <td>{{ customer?.modifiedTs ? (customer.modifiedTs | date :'short') : 'N/A' }}</td>
             <td>{{ customer?.status }}</td>
             <td>
-              <a class="add" routerLink="/admin-dashboard/add-customer" title="Add" data-toggle="tooltip"><i
-                class="material-icons">&#xe147;</i></a>
               <a (click)="viewCustomerById(customer.id)" class="view" title="View" data-toggle="tooltip"><i
                 class="material-icons">&#xE417;</i></a>
               <a class="edit" (click)="openEditCustomerModal(customer.id)"  title="Edit" data-toggle="tooltip"><i
                 class="material-icons">&#xE254;</i></a>
-              <a (click)="showDeleteModal(customer.id)" class="delete" title="Delete"
+              <a *ngIf="customer.status != deletedStatus" (click)="showStatusModal(customer.id,customer.status)" class="delete" title="Delete"
                  data-toggle="tooltip"><i
                 class="material-icons">&#xE872;</i></a>
+              <a *ngIf="customer.status == activeStatus || customer.status == pendingStatus" class="add" (click)="showStatusModal(customer.id, blockStatus)" title="Block" data-toggle="tooltip">
+                <i class="material-icons">remove_circle_outline</i></a>
+              <a *ngIf="customer.status == inactiveStatus || customer.status == deletedStatus" class="add" (click)="showStatusModal(customer.id, unblockStatus)" title="UnBlock" data-toggle="tooltip">
+                <i class="material-icons">replay</i></a>
             </td>
           </tr>
           </tbody>
@@ -74,6 +76,39 @@
           </div>
           <div class="modal-body">
             Do you really want to delete the customer ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK</button>
+            <button type="button" class="btn btn-primary" (click)="decline()">Cancel</button>
+          </div>
+        </ng-template>
+
+        <ng-template #blockModal>
+          <div class="modal-header">
+            <h2 class="modal-title" style="font-weight: bold">Please confirm..</h2>
+            <button style="border: none" type="button" class="close" aria-label="Close" (click)="decline()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Do you really want to block the customer ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK</button>
+            <button type="button" class="btn btn-primary" (click)="decline()">Cancel</button>
+          </div>
+        </ng-template>
+
+
+        <ng-template #unblockModal>
+          <div class="modal-header">
+            <h2 class="modal-title" style="font-weight: bold">Please confirm..</h2>
+            <button style="border: none" type="button" class="close" aria-label="Close" (click)="decline()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Do you really want to unblock the customer ?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" (click)="deleteCustomer()"> OK</button>

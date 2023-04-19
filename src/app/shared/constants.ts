@@ -9,6 +9,9 @@ const constants = {
   REFRESH_TOKEN_KEY: 'refresh_token',
   SECRET_KEY: 'MySecretKey12345', // put your secret key here
   FULL_NAME: 'full_name',
-  STATUS_SUCCESS: 'SUCCESS'
+  STATUS_SUCCESS: 'SUCCESS',
+  BLOCK_STATUS: 'BLOCK',
+  UNBLOCK_STATUS:'UNBLOCK',
+  DELETE_STATUS:'DELETE'
 };
 export default constants;

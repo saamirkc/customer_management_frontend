@@ -1,6 +1,7 @@
 import {FamilyType} from "../enums/family-type";
 
 export interface CustomerDetails {
+  id?: number;
   firstName?: string;
   lastName?: string;
   gender?: string;

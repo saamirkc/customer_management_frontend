@@ -20,7 +20,8 @@
         <div class="form-group col-md-6">
           <label for="firstName">FirstName <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="firstName" formControlName="firstName" name="firstName"
-                 placeholder="Enter your first name" [class.is-invalid]="customerDetailsForm.get('firstName')?.invalid && customerDetailsForm.get('firstName')?.touched">
+                 placeholder="Enter your first name"
+                 [class.is-invalid]="customerDetailsForm.get('firstName')?.invalid && customerDetailsForm.get('firstName')?.touched">
           <span
             *ngIf="customerDetailsForm.get('firstName')?.invalid && (customerDetailsForm.get('firstName')?.dirty || customerDetailsForm.get('firstName')?.touched)"
             class="text-danger">
@@ -31,7 +32,8 @@
         <div class="form-group col-md-6">
           <label>LastName <span class="text-danger"> *</span></label>
           <input type="text" class="form-control" id="lastName" formControlName="lastName" name="lastName"
-                 placeholder=" last name" [class.is-invalid]="customerDetailsForm.get('lastName')?.invalid && customerDetailsForm.get('lastName')?.touched"/>
+                 placeholder=" last name"
+                 [class.is-invalid]="customerDetailsForm.get('lastName')?.invalid && customerDetailsForm.get('lastName')?.touched"/>
           <span
             *ngIf="customerDetailsForm.get('lastName')?.invalid && (customerDetailsForm.get('lastName')?.dirty || customerDetailsForm.get('lastName')?.touched)"
             class="text-danger">
@@ -54,8 +56,10 @@
             <label class="form-check-label" for="inlineRadioFemale">Female</label>
           </div>
 
-          <div *ngIf="customerDetailsForm?.get('gender')?.invalid && (customerDetailsForm?.get('gender')?.dirty || customerDetailsForm?.get('gender')?.touched)" class="text-danger">
-            Gender is required
+          <div
+            *ngIf="customerDetailsForm?.get('gender')?.invalid && (customerDetailsForm?.get('gender')?.dirty || customerDetailsForm?.get('gender')?.touched)"
+            class="text-danger">
+            Please select a gender
           </div>
 
         </div>
@@ -77,29 +81,47 @@
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label>Citizen Number</label>
+          <label>Citizen Number <span class="text-danger">*</span></label>
           <input type="text" class="form-control" formControlName="citizenNumber" id="citizenNumber"
                  name="citizenNumber" placeholder=" Citizen Number"
-                 required/>
+                 required
+                 [class.is-invalid]="customerDetailsForm.get('citizenNumber')?.invalid && customerDetailsForm.get('citizenNumber')?.touched"/>
+          <span
+            *ngIf="customerDetailsForm.get('citizenNumber')?.invalid && (customerDetailsForm.get('citizenNumber')?.dirty || customerDetailsForm.get('citizenNumber')?.touched)"
+            class="text-danger">
+            Citizen Number is required
+          </span>
         </div>
 
         <div class="form-group col-md-6">
-          <label>Address</label>
+          <label>Address <span class="text-danger">*</span></label>
           <input type="text" class="form-control" formControlName="address" id="address" name="address"
-                 placeholder="Address" required/>
+                 placeholder="Address" required
+                 [class.is-invalid]="customerDetailsForm.get('address')?.invalid && customerDetailsForm.get('address')?.touched"/>
+          <span
+            *ngIf="customerDetailsForm.get('address')?.invalid && (customerDetailsForm.get('address')?.dirty || customerDetailsForm.get('address')?.touched)"
+            class="text-danger">
+            Address is required
+          </span>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label>Mobile Number</label>
+          <label>Mobile Number <span class="text-danger">*</span></label>
           <input type="text" name="mobileNumber" formControlName="mobileNumber" class="form-control mt-2"
-                 placeholder="You Mobile Number">
+                 placeholder="You Mobile Number" required
+                 [class.is-invalid]="customerDetailsForm.get('mobileNumber')?.invalid && customerDetailsForm.get('mobileNumber')?.touched">
+          <span
+            *ngIf="customerDetailsForm.get('mobileNumber')?.invalid && (customerDetailsForm.get('mobileNumber')?.dirty || customerDetailsForm.get('mobileNumber')?.touched)"
+            class="text-danger">
+            Mobile Number is required
+          </span>
         </div>
 
         <div class="form-group col-md-6">
-          <label for="status">Status</label>
-          <select id="status" name="status" formControlName="status" class="form-control mt-2">
+          <label for="status">Status <span class="text-danger">*</span></label>
+          <select id="status" name="status" formControlName="status" class="form-select mt-2">
             <option *ngFor="let option of statusOptions" [value]="option">{{option}}</option>
           </select>
         </div>
@@ -107,8 +129,14 @@
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label>Date of Birth</label>
-          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirth" name="date"/>
+          <label>Date of Birth <span class="text-danger">*</span></label>
+          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirth" name="date" required
+                 [class.is-invalid]="customerDetailsForm.get('dateOfBirth')?.invalid && customerDetailsForm.get('dateOfBirth')?.touched"/>
+          <span
+            *ngIf="customerDetailsForm.get('dateOfBirth')?.invalid && (customerDetailsForm.get('dateOfBirth')?.dirty || customerDetailsForm.get('dateOfBirth')?.touched)"
+            class="text-danger">
+            Date of birth is required
+          </span>
         </div>
         <div class="form-group col-md-6">
           <label>Email Address</label>
@@ -120,31 +148,54 @@
 
       <div class="form-row" formGroupName="userLogin">
         <div class="form-group col-md-6">
-          <label>Username</label>
+          <label>Username <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="userName" formControlName="userName" name="userName"
-                 placeholder="Username" required/>
+                 placeholder="Username" required
+                 [class.is-invalid]="customerDetailsForm.get('userLogin.userName')?.invalid && customerDetailsForm.get('userLogin.userName')?.touched"/>
+
+          <span
+            *ngIf="customerDetailsForm.get('userLogin.userName')?.invalid && (customerDetailsForm.get('userLogin.userName')?.dirty || customerDetailsForm.get('userLogin.userName')?.touched)"
+            class="text-danger">Username is required
+          </span>
+
         </div>
 
         <div class="form-group col-md-6">
-          <label>Password</label>
+          <label>Password <span class="text-danger">*</span></label>
           <input type="password" class="form-control" id="password" formControlName="password" name="password"
-                 placeholder="Password" required/>
+                 placeholder="Password" required
+                 [class.is-invalid]="customerDetailsForm.get('userLogin.password')?.invalid && customerDetailsForm.get('userLogin.password')?.touched"/>
+          <span
+            *ngIf="customerDetailsForm.get('userLogin.password')?.invalid && (customerDetailsForm.get('userLogin.password')?.dirty || customerDetailsForm.get('userLogin.password')?.touched)"
+            class="text-danger">Password is required
+          </span>
         </div>
       </div>
-      <label>Customer's Family</label>
-        <div formArrayName="customerFamilyList">
-          <div  *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
-            <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2">
-              <option *ngFor="let option of familyOptions" [value]="option">{{ option }}</option>
-            </select>
-            <input class="form-control col-md-5" placeholder="Enter the Name" type="text"
-                   formControlName="relationshipPersonName" style="margin-left: 51%; margin-top: -3.6%"/>
-            <button *ngIf="customerDetailsForm?.get('maritalStatus')?.value == 'true' && i > 3 || customerDetailsForm?.get('maritalStatus')?.value == 'false' && i > 2"
-                    class="btn btn-danger" style="margin-left: 90%; position: absolute; margin-top: -3.7%;  padding: 6px" type="button"
-                    (click)="removeFamilyMember(i)">Remove
-            </button>
-          </div>
+      <label>Customer's Family <span class="text-danger">*</span></label>
+
+      <div formArrayName="customerFamilyList">
+        <div *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
+
+          <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2">
+            <option *ngFor="let option of familyOptions" [value]="option">{{ option }}</option>
+          </select>
+
+          <input class="form-control col-md-5" placeholder="Enter the Name" type="text"
+                 formControlName="relationshipPersonName" style="margin-left: 51%; margin-top: -3.6%" required
+                 [class.is-invalid]="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid && customerFamilyList.controls[i].get('relationshipPersonName')?.touched"/>
+
+          <div *ngIf="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid && (customerFamilyList.controls[i].get('relationshipPersonName')?.dirty
+          || customerFamilyList.controls[i].get('relationshipPersonName')?.touched)" class="invalid-feedback d-block" style="margin-left: 51%">Relationship Person Name is required</div>
+
+          <button
+            *ngIf="customerDetailsForm?.get('maritalStatus')?.value == 'true' && i > 3 || customerDetailsForm?.get('maritalStatus')?.value == 'false' && i > 2"
+            class="btn btn-danger" style="margin-left: 90%; position: absolute; margin-top: -3.7%;  padding: 6px"
+            type="button"
+            (click)="removeFamilyMember(i)">Remove
+          </button>
+
         </div>
+      </div>
       <button class="btn btn-primary mb-4 mt-2" type="button" (click)="addFamilyMember()">Add</button>
       <button class="btn btn-primary btn-block col-lg-2" type="submit" [disabled]="!customerDetailsForm.valid">Submit
       </button>

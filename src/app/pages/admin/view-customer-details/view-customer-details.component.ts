@@ -2,7 +2,6 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CustomerService} from "../../../services/customer/customer.service";
 import CustomerListResponse from "../../../models/customer-list-response";
 import {CustomerDetails} from "../../../models/customer-details";
-import Swal from "sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../../shared/common.service";
 import {CustomerViewPopupComponent} from "../../customer/customer-view-popup/customer-view-popup.component";
@@ -10,6 +9,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {StatusType} from "../../../enums/status-type";
 import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
+import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
+import Constants from "../../../shared/constants";
 
 @Component({
   selector: 'app-view-customer-details',
@@ -20,9 +21,18 @@ export class ViewCustomerDetailsComponent implements OnInit {
   @ViewChild('editCustomerModalTemplate') editCustomerModalTemplate: any;
 
   @ViewChild('deleteModal') deleteModal?: TemplateRef<any>;
+  @ViewChild('blockModal') blockModal?: TemplateRef<any>;
+  @ViewChild('unblockModal') unblockModal?: TemplateRef<any>;
 
   _searchTerm: string = '';
-  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
+  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
+  private _pendingStatus = StatusType.PENDING;
+  private _activeStatus = StatusType.ACTIVE;
+  private _inactiveStatus = StatusType.INACTIVE;
+  private _deletedStatus = StatusType.DELETED;
+  private _blockStatusConst = Constants.BLOCK_STATUS;
+  private _unblockStatusConst = Constants.UNBLOCK_STATUS;
+  private _deleteStatusConst = Constants.DELETE_STATUS;
   private _customerList: CustomerListResponse[] = [];
   private _customerDetail: CustomerDetails;
   private readonly _customerDetailForm: FormGroup;
@@ -36,7 +46,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
   _totalElements = 0;
   _pages: number[] = [];
 
-  constructor(private formBuilder: FormBuilder, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
+  constructor(private formBuilder: FormBuilder, private successhandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
     this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
     this._customerDetailForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -62,9 +72,17 @@ export class ViewCustomerDetailsComponent implements OnInit {
     });
   }
 
-  showDeleteModal(customerId: number): void {
-    this.modalService.open(this.deleteModal, {centered: true});
+  showStatusModal(customerId: number, status: StatusType): void {
     this._customerId = customerId;
+    console.log("show status in invoked", status);
+    if (status == StatusType.DELETED){
+      this.modalService.open(this.deleteModal, {centered: true})
+    } else if (status == StatusType.ACTIVE){
+      this.modalService.open(this.unblockModal, {centered: true})
+    }else if (status == StatusType.INACTIVE){
+      this.modalService.open(this.blockModal, {centered: true})
+    };
+
   }
 
   ngOnInit(): void {
@@ -122,16 +140,11 @@ export class ViewCustomerDetailsComponent implements OnInit {
     if (this._customerId != null) {
       this.customerService.deleteCustomerById(this._customerId).subscribe({
         next: value => {
-          Swal.fire({
-            title: value.message,
-            icon: 'success',
-            timer: 4000
-          }).then(r => {
-            const deletedCustomerIndex = this.customerList.findIndex(c => c.id === this._customerId);
-            if (deletedCustomerIndex !== -1) {
-              this.customerList[deletedCustomerIndex].status = StatusType.DELETED;
-            }
-          })
+          this.successhandlerService.handleSuccessEvent(value.message);
+          const deletedCustomerIndex = this.customerList.findIndex(c => c.id === this._customerId);
+          if (deletedCustomerIndex !== -1) {
+            this.customerList[deletedCustomerIndex].status = StatusType.DELETED;
+          }
           // popup or redirect to another uri.
         }, error: err => {
           this.errorHandlerService.handleError(err);
@@ -148,5 +161,29 @@ export class ViewCustomerDetailsComponent implements OnInit {
   get customerDetail(): CustomerDetails {
     return this._customerDetail;
   }
+  get pendingStatus(): StatusType {
+    return this._pendingStatus;
+  }
 
+  get activeStatus(): StatusType {
+    return this._activeStatus;
+  }
+
+  get inactiveStatus(): StatusType {
+    return this._inactiveStatus;
+  }
+  get deletedStatus(): StatusType {
+    return this._deletedStatus;
+  }
+  get blockStatusConst(): string {
+    return this._blockStatusConst;
+  }
+
+  get unblockStatusConst(): string {
+    return this._unblockStatusConst;
+  }
+
+  get deleteStatusConst(): string {
+    return this._deleteStatusConst;
+  }
 }

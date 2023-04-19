@@ -18,7 +18,7 @@ export class AddCustomerDetailsComponent implements OnInit {
   submitted = false;
 
 
-  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DISABLED, StatusType.DELETED]
+  public statusOptions = [StatusType.ACTIVE]
   public familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER]
   selectedFamilyOptions: string[] = [];
 
