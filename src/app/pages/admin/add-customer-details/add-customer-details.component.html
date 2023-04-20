@@ -68,7 +68,7 @@
           <label style="display: block">Marital Status <span class="text-danger"> *</span></label>
           <div class="form-check form-check-inline">
             <input class="form-check-input" formControlName="maritalStatus" type="radio" name="maritalStatus"
-                   id="inlineRadioSingle" value="false" (change)="onMaritalStatusChange($event)">
+                   id="inlineRadioSingle" value="false"  (change)="onMaritalStatusChange($event)">
             <label class="form-check-label" for="inlineRadioSingle"> Single </label>
           </div>
           <div class="form-check form-check-inline">
@@ -112,11 +112,10 @@
           <input type="text" name="mobileNumber" formControlName="mobileNumber" class="form-control mt-2"
                  placeholder="You Mobile Number" required
                  [class.is-invalid]="customerDetailsForm.get('mobileNumber')?.invalid && customerDetailsForm.get('mobileNumber')?.touched">
-          <span
-            *ngIf="customerDetailsForm.get('mobileNumber')?.invalid && (customerDetailsForm.get('mobileNumber')?.dirty || customerDetailsForm.get('mobileNumber')?.touched)"
-            class="text-danger">
-            Mobile Number is required
-          </span>
+          <span *ngIf="customerDetailsForm.get('mobileNumber')?.invalid && customerDetailsForm.get('mobileNumber')?.touched"
+                class="text-danger">
+                {{ customerDetailsForm.get('mobileNumber')?.errors?.['required'] ? mobileNumberErrors.required : mobileNumberErrors.invalid }}
+              </span>
         </div>
 
         <div class="form-group col-md-6">
@@ -140,8 +139,14 @@
         </div>
         <div class="form-group col-md-6">
           <label>Email Address</label>
-          <input type="text" name="emailAddress" formControlName="emailAddress" class="form-control"
+          <input type="email" name="emailAddress" formControlName="emailAddress" class="form-control"
                  placeholder=" Email">
+          <span
+            *ngIf="customerDetailsForm.get('emailAddress')?.invalid && (customerDetailsForm.get('emailAddress')?.dirty || customerDetailsForm.get('emailAddress')?.touched)"
+            class="text-danger">
+          {{ emailErrors.invalid }}
+          </span>
+
         </div>
       </div>
 
@@ -154,9 +159,10 @@
                  [class.is-invalid]="customerDetailsForm.get('userLogin.userName')?.invalid && customerDetailsForm.get('userLogin.userName')?.touched"/>
 
           <span
-            *ngIf="customerDetailsForm.get('userLogin.userName')?.invalid && (customerDetailsForm.get('userLogin.userName')?.dirty || customerDetailsForm.get('userLogin.userName')?.touched)"
-            class="text-danger">Username is required
-          </span>
+            *ngIf="customerDetailsForm.get('userLogin.userName')?.invalid && customerDetailsForm.get('userLogin.userName')?.touched"
+            class="text-danger">
+                {{ customerDetailsForm.get('userLogin.userName')?.errors?.['required'] ? userNameErrors.required : userNameErrors.invalid }}
+              </span>
 
         </div>
 
@@ -166,26 +172,29 @@
                  placeholder="Password" required
                  [class.is-invalid]="customerDetailsForm.get('userLogin.password')?.invalid && customerDetailsForm.get('userLogin.password')?.touched"/>
           <span
-            *ngIf="customerDetailsForm.get('userLogin.password')?.invalid && (customerDetailsForm.get('userLogin.password')?.dirty || customerDetailsForm.get('userLogin.password')?.touched)"
-            class="text-danger">Password is required
-          </span>
+            *ngIf="customerDetailsForm.get('userLogin.password')?.invalid && customerDetailsForm.get('userLogin.password')?.touched"
+            class="text-danger">
+                {{ customerDetailsForm.get('userLogin.password')?.errors?.['required'] ? passwordErrors.required : passwordErrors.invalid }}
+              </span>
         </div>
       </div>
       <label>Customer's Family <span class="text-danger">*</span></label>
 
       <div formArrayName="customerFamilyList">
         <div *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
-
-          <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2">
-            <option *ngFor="let option of familyOptions" [value]="option">{{ option }}</option>
+          <select name="relationship"  formControlName="relationship" class="form-select col-md-6 mt-2 relation-select" #selectBox>
+            <option *ngFor="let option of familyOptions" [value]="option"  >{{ option }}</option>
           </select>
 
           <input class="form-control col-md-5" placeholder="Enter the Name" type="text"
                  formControlName="relationshipPersonName" style="margin-left: 51%; margin-top: -3.6%" required
-                 [class.is-invalid]="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid && customerFamilyList.controls[i].get('relationshipPersonName')?.touched"/>
+                 [class.is-invalid]="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid
+                 && customerFamilyList.controls[i].get('relationshipPersonName')?.touched"/>
 
           <div *ngIf="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid && (customerFamilyList.controls[i].get('relationshipPersonName')?.dirty
-          || customerFamilyList.controls[i].get('relationshipPersonName')?.touched)" class="invalid-feedback d-block" style="margin-left: 51%">Relationship Person Name is required</div>
+          || customerFamilyList.controls[i].get('relationshipPersonName')?.touched)" class="invalid-feedback d-block"
+               style="margin-left: 51%">Relationship Person Name is required
+          </div>
 
           <button
             *ngIf="customerDetailsForm?.get('maritalStatus')?.value == 'true' && i > 3 || customerDetailsForm?.get('maritalStatus')?.value == 'false' && i > 2"

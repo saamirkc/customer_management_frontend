@@ -33,13 +33,17 @@
             </div>
             <div class="form-group mt-1">
               <label>UserName <span class="text-danger">*</span></label>
-              <input type="email" name="email" class="form-control" formControlName="userName" id="email"
-                     placeholder="Email or Mobile Number"
+              <input type="text" name="userName" class="form-control" formControlName="userName" id="userName"
+                     placeholder="Email or Mobile Number" required
                      [class.is-invalid]="registrationForm.get('userName')?.invalid && registrationForm.get('userName')?.touched"/>
+              <div *ngIf="registrationForm.get('userName')?.valid && registrationForm.get('userName')?.touched && isPhoneNumber(registrationForm.get('userName')?.value)"
+                    class="feedback-valid">Mobile Number as the username cannot be self verified!
+              </div>
               <span *ngIf="registrationForm.get('userName')?.invalid && registrationForm.get('userName')?.touched"
                     class="invalid-feedback">
                 {{ registrationForm.get('userName')?.errors?.['required'] ? userNameErrors.required : userNameErrors.invalid }}
               </span>
+
 
             </div>
             <div class="form-group mt-1">
@@ -47,9 +51,9 @@
               <input type="password" name="password" id="password" formControlName="password" class="form-control"
                      placeholder="Enter Password"
                      [class.is-invalid]="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched"/>
-              <span
-                *ngIf="registrationForm.get('password')?.invalid && (registrationForm.get('password')?.dirty || registrationForm.get('password')?.touched)"
-                class="invalid-feedback"> Password is required
+              <span *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched"
+                    class="invalid-feedback">
+                {{ registrationForm.get('password')?.errors?.['required'] ? passwordErrors.required : passwordErrors.invalid }}
               </span>
             </div>
             <div class="col-md-12 text-center mb-3">

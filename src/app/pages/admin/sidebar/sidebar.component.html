@@ -4,28 +4,28 @@
     <hr>
     <button mat-list-item routerLink="/admin-dashboard">
       <mat-icon> home</mat-icon>
-      Home
+     <span>Home</span>
     </button>
     <hr>
     <span class="divider"></span>
     <button mat-list-item routerLink="/admin-dashboard/profile">
       <mat-icon> account_circle</mat-icon>
-      Profile
+      <span>Profile</span>
     </button>
     <hr>
     <button mat-list-item routerLink="/admin-dashboard/customer-details">
       <mat-icon> photo_library</mat-icon>
-      Customer Details
+      <span>Customer Details </span>
     </button>
     <hr>
     <button mat-list-item routerLink="/admin-dashboard/add-customer">
-      <mat-icon> add_circle_outline</mat-icon>
-      Add Customers
+      <mat-icon> add_circle</mat-icon>
+      <span>Add Customers</span>
     </button>
     <hr>
     <button mat-list-item (click)="logOut()">
       <mat-icon> logout </mat-icon>
-      LogOut
+      <span>Log Out</span>
     </button>
   </mat-action-list>
 </mat-card>

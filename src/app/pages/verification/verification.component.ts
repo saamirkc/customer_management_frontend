@@ -2,11 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {CustomerService} from "../../services/customer/customer.service";
 import Constants from "../../shared/constants";
-import Swal from "sweetalert2";
 import {StatusType} from "../../enums/status-type";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 import {DataService} from "../../services/data.service";
 import {Subscription} from "rxjs";
+import {SuccessHandlerService} from "../../services/successhandler/success-handler.service";
 
 @Component({
   selector: 'app-verification',
@@ -33,7 +33,8 @@ export class VerificationComponent implements OnInit, OnDestroy {
     return this._userName;
   }
 
-  constructor(private _router: Router, private dataService: DataService, private errorHandlerService: ErrorhandlerService, private activatedRoute: ActivatedRoute, private customerService: CustomerService) {
+  constructor(private _router: Router, private dataService: DataService, private errorHandlerService: ErrorhandlerService,
+              private successHandlerService: SuccessHandlerService, private activatedRoute: ActivatedRoute, private customerService: CustomerService) {
   }
 
   ngOnDestroy(): void {
@@ -53,13 +54,8 @@ export class VerificationComponent implements OnInit, OnDestroy {
       .verifyCustomer(this._verificationCode, customerId).subscribe({
       next: value => {
         if (value.status === Constants.STATUS_SUCCESS && JSON.parse(value.object).status == StatusType.ACTIVE) {
-          Swal.fire({
-            title: value.message,
-            icon: 'success',
-            timer: 4000
-          }).then(res => {
-            this._router.navigate(['/login'])
-          });
+          this.successHandlerService.handleSuccessEvent(value.message);
+          this._router.navigate(['/login'])
         }
       }, error: err => {
         this.errorHandlerService.handleError(err);

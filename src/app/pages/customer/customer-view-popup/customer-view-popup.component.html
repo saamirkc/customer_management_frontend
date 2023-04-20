@@ -14,7 +14,7 @@
                        [class.is-invalid]="customerDetailForm.get('firstName')?.invalid && customerDetailForm.get('firstName')?.touched">
                 <span
                   *ngIf="customerDetailForm.get('firstName')?.invalid && (customerDetailForm.get('firstName')?.dirty || customerDetailForm.get('firstName')?.touched)"
-                  class="invalid-feedback"> First Name is required
+                  class="text-danger"> First Name is required
                 </span>
               </div>
 
@@ -24,7 +24,7 @@
                        [class.is-invalid]="customerDetailForm.get('lastName')?.invalid && customerDetailForm.get('lastName')?.touched">
                 <span
                   *ngIf="customerDetailForm.get('lastName')?.invalid && (customerDetailForm.get('lastName')?.dirty || customerDetailForm.get('lastName')?.touched)"
-                  class="invalid-feedback"> Last Name is required
+                  class="text-danger"> Last Name is required
                 </span>
               </div>
 
@@ -67,7 +67,7 @@
                        [class.is-invalid]="customerDetailForm.get('address')?.invalid && customerDetailForm.get('address')?.touched">
                 <span
                   *ngIf="customerDetailForm.get('address')?.invalid && (customerDetailForm.get('address')?.dirty || customerDetailForm.get('address')?.touched)"
-                  class="invalid-feedback"> Address is required
+                  class="text-danger"> Address is required
                 </span>
               </div>
               <div class="md-form">
@@ -87,33 +87,42 @@
                        [class.is-invalid]="customerDetailForm.get('citizenNumber')?.invalid && customerDetailForm.get('citizenNumber')?.touched">
                 <span
                   *ngIf="customerDetailForm.get('citizenNumber')?.invalid && (customerDetailForm.get('citizenNumber')?.dirty || customerDetailForm.get('citizenNumber')?.touched)"
-                  class="invalid-feedback"> Citizenship Number is required
+                  class="text-danger"> Citizenship Number is required
                 </span>
               </div>
 
               <div class="md-form" formGroupName="userLogin">
                 <label>UserName </label>
                 <input type="text" formControlName="userName" name="userName" class="form-control mt-2"
-                       required [class.is-invalid]="customerDetailForm.get('userLogin.userName')?.invalid && customerDetailForm.get('userLogin.userName')?.touched"/>
+                       required
+                       [class.is-invalid]="customerDetailForm.get('userLogin.userName')?.invalid && customerDetailForm.get('userLogin.userName')?.touched"/>
                 <span
-                  *ngIf="customerDetailForm.get('userLogin.userName')?.invalid && (customerDetailForm.get('userLogin.userName')?.dirty || customerDetailForm.get('userLogin.userName')?.touched)"
-                  class="text-danger">Username is required
+                  *ngIf=" customerDetailForm.get('userLogin.userName')?.invalid && customerDetailForm.get('userLogin.userName')?.touched"
+                  class="text-danger">
+                {{ customerDetailForm.get('userLogin.userName')?.errors?.['required'] ? userNameErrors.required : userNameErrors.invalid }}
               </span>
               </div>
 
               <div class="md-form">
                 <label>Email Address</label>
                 <input type="text" formControlName="emailAddress" name="emailAddress" class="form-control mt-2">
+                <span
+                  *ngIf="(customerDetailForm.get('emailAddress')?.dirty || customerDetailForm.get('emailAddress')?.touched)"
+                  class="text-danger">
+                      {{ emailErrors.invalid }}
+                </span>
               </div>
 
               <div class="md-form">
                 <label>Mobile Number</label>
                 <input type="text" formControlName="mobileNumber" name="mobileNumber" class="form-control mt-2"
+                       required
                        [class.is-invalid]="customerDetailForm.get('mobileNumber')?.invalid && customerDetailForm.get('mobileNumber')?.touched">
                 <span
-                  *ngIf="customerDetailForm.get('mobileNumber')?.invalid && (customerDetailForm.get('mobileNumber')?.dirty || customerDetailForm.get('mobileNumber')?.touched)"
-                  class="invalid-feedback"> Mobile Number is required
-                </span>
+                  *ngIf="customerDetailForm.get('mobileNumber')?.invalid && customerDetailForm.get('mobileNumber')?.touched"
+                  class="text-danger">
+                {{ customerDetailForm.get('mobileNumber')?.errors?.['required'] ? mobileNumberErrors.required : mobileNumberErrors.invalid }}
+              </span>
               </div>
 
               <div class="md-form">
@@ -140,7 +149,7 @@
 
                       <div *ngIf="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid && (customerFamilyList.controls[i].get('relationshipPersonName')?.dirty
                           || customerFamilyList.controls[i].get('relationshipPersonName')?.touched)"
-                           class="invalid-feedback" >Relationship Person Name is required
+                           class="invalid-feedback">Relationship Person Name is required
                       </div>
 
                       <button

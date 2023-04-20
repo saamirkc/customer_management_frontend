@@ -3,4 +3,8 @@
 }
 .user-name{
   text-underline: none;
+  font-family: 'Material Symbols Outlined', serif;
+}
+.title{
+  font-family: 'Material Symbols Outlined', serif;
 }

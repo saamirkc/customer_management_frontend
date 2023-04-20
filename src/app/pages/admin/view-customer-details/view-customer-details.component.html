@@ -14,7 +14,6 @@
                 <mat-select [(ngModel)]="_selectedStatusOption" class="form-control select-type"
                             name="_selectedStatusOption" ngDefaultControl
                             [disableOptionCentering]="false" placeholder="Select Status">
-                  <mat-option>Select Status</mat-option>
                   <mat-option *ngFor="let option of statusOptions" [value]="option">{{option}}</mat-option>
                 </mat-select>
               </form>

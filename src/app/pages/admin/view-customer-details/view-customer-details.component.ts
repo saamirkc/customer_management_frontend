@@ -62,7 +62,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
   resetSearch(searchInput: HTMLInputElement) {
     this._searchTerm = '';
     searchInput.value = '';
-    this._selectedStatusOption = "Select Status";
+    this._selectedStatusOption = StatusType.PENDING;
     this.getCustomerDetails('', '');
   }
 

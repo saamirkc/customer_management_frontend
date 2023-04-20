@@ -22,5 +22,28 @@ export class CommonService {
       return {invalidEmailOrPhone: true};
     }
   }
-
+  emailValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    if (emailRegex.test(value)) {
+      return null;
+    } else {
+      return {invalidEmail: true};
+    }
+  }
+  mobileNumberValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const phoneRegex = /^\d{10}$/;
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    if (phoneRegex.test(value)) {
+      return null;
+    } else {
+      return {invalidMobileNumber: true};
+    }
+  }
 }

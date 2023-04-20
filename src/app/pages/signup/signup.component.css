@@ -1,7 +1,24 @@
 a{
   text-decoration:none !important;
 }
+label{
+  font-family: 'Kaushan Script', cursive;
+}
+input::placeholder {
+  font: 17px/3 sans-serif;
+}
+
 h1,h2,h3{
+  font-family: 'Kaushan Script', cursive;
+}
+.feedback-valid {
+  display: block;
+  font-size: 80%;
+  margin-top: .25rem;
+  color: #28a745;
+  font-family: 'Kaushan Script', cursive;
+}
+.invalid-feedback{
   font-family: 'Kaushan Script', cursive;
 }
 .myform{

@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import constants from "../../shared/constants";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 import {SuccessHandlerService} from "../../services/successhandler/success-handler.service";
+import {ErrorsValidation} from "../../models/errors-validation";
 
 
 @Component({
@@ -23,10 +24,13 @@ export class LoginComponent implements OnInit {
   get loginForm(): FormGroup {
     return this._loginForm;
   }
-
-  userNameErrors = {
+  private _userNameErrors: ErrorsValidation = {
     required: 'Username is required',
     invalid: 'Please enter a valid email or phone number'
+  };
+  private _passwordErrors: ErrorsValidation = {
+    required: 'Password is required',
+    invalid: 'Password length must be minimum 6'
   };
 
   constructor(private formBuilder: FormBuilder, private commonService: CommonService, private successHandlerService: SuccessHandlerService,
@@ -79,5 +83,12 @@ export class LoginComponent implements OnInit {
         }
       }
     )
+  }
+  get passwordErrors(): ErrorsValidation {
+    return this._passwordErrors;
+  }
+
+  get userNameErrors(): ErrorsValidation {
+    return this._userNameErrors;
   }
 }

@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 import {DataService} from "../../services/data.service";
 import {SuccessHandlerService} from "../../services/successhandler/success-handler.service";
+import {ErrorsValidation} from "../../models/errors-validation";
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +21,11 @@ export class SignupComponent implements OnInit {
   }
   userNameFlag: boolean = true;
 
-  userNameErrors = {
+  private _passwordErrors: ErrorsValidation = {
+    required: 'Password is required',
+    invalid: 'Password length must be minimum 6'
+  };
+  private _userNameErrors: ErrorsValidation = {
     required: 'Username is required',
     invalid: 'Please enter a valid email or phone number'
   };
@@ -38,6 +43,10 @@ export class SignupComponent implements OnInit {
       userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     })
+  }
+  isPhoneNumber(value: string) {
+    const phoneRegex = /^\d{10}$/; // regex to match a 10-digit phone number
+    return phoneRegex.test(value);
   }
 
   formSubmit() {
@@ -73,5 +82,11 @@ export class SignupComponent implements OnInit {
       }
     )
   }
+  get passwordErrors(): ErrorsValidation {
+    return this._passwordErrors;
+  }
   ngOnInit(): void {}
+  get userNameErrors(): ErrorsValidation {
+    return this._userNameErrors;
+  }
 }

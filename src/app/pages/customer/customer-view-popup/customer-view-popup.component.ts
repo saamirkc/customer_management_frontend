@@ -9,6 +9,7 @@ import {FamilyType} from "../../../enums/family-type";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../../shared/common.service";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
+import {ErrorsValidation} from "../../../models/errors-validation";
 
 @Component({
   selector: 'app-customer-view-popup',
@@ -22,6 +23,18 @@ export class CustomerViewPopupComponent implements OnInit {
   private _statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
   private _familyOptions: FamilyType[] = [];
   private _customerDetailForm?: FormGroup;
+  private _userNameErrors: ErrorsValidation = {
+    required: 'Username is required',
+    invalid: 'Please enter a valid email or phone number'
+  };
+  private _mobileNumberErrors: ErrorsValidation = {
+    required: 'Mobile Number is required',
+    invalid: 'Please enter a valid mobile number'
+  };
+  private _emailErrors: ErrorsValidation = {
+    required: '',
+    invalid: 'Please enter a valid email'
+  };
 
   constructor(private formBuilder: FormBuilder, private successHandlerService: SuccessHandlerService, private commonService: CommonService, private activeModal: NgbActiveModal, private errorHandlerService: ErrorhandlerService, private router: Router, private customerService: CustomerService) {
   }
@@ -115,8 +128,8 @@ export class CustomerViewPopupComponent implements OnInit {
       status: [this.customer.status, Validators.required],
       address: [this.customer.address, Validators.required],
       citizenNumber: [this.customer.citizenNumber, Validators.required],
-      emailAddress: this.customer.emailAddress,
-      mobileNumber: [this.customer.mobileNumber, Validators.required],
+      emailAddress: [this.customer.emailAddress,[this.commonService.emailValidator]],
+      mobileNumber: [this.customer.mobileNumber, [Validators.required, this.commonService.mobileNumberValidator]],
       customerFamilyList: this.formBuilder.array([])
     })
 
@@ -138,5 +151,17 @@ export class CustomerViewPopupComponent implements OnInit {
 
   get statusOptions(): StatusType[] {
     return this._statusOptions;
+  }
+
+  get userNameErrors(): ErrorsValidation {
+    return this._userNameErrors;
+  }
+
+  get mobileNumberErrors(): ErrorsValidation {
+    return this._mobileNumberErrors;
+  }
+
+  get emailErrors(): ErrorsValidation {
+    return this._emailErrors;
   }
 }

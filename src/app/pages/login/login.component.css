@@ -4,6 +4,15 @@ a{
 h1,h2,h3{
   font-family: 'Kaushan Script', cursive;
 }
+.invalid-feedback{
+  font-family: 'Kaushan Script', cursive;
+}
+label{
+  font-family: 'Kaushan Script', cursive;
+}
+input::placeholder {
+  font: 17px/3 sans-serif;
+}
 .myform{
   position: relative;
   display: -ms-flexbox;
