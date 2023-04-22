@@ -11,7 +11,7 @@ const constants = {
   FULL_NAME: 'full_name',
   STATUS_SUCCESS: 'SUCCESS',
   BLOCK_STATUS: 'BLOCK',
-  UNBLOCK_STATUS:'UNBLOCK',
+  ACTIVE_STATUS:'ACTIVE',
   DELETE_STATUS:'DELETE'
 };
 export default constants;

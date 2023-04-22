@@ -72,16 +72,16 @@ export class CustomerViewPopupComponent implements OnInit {
     return this.customerDetailForm.get('customerFamilyList') as FormArray;
   }
 
-  createFamilyMember(): FormGroup {
+  createFamilyMember(index: number): FormGroup {
     return this.formBuilder.group({
-        relationship: [FamilyType.FATHER, Validators.required],
+        relationship: [this.familyOptions[index], Validators.required],
         relationshipPersonName: ['', Validators.required]
       }
     );
   }
 
   addFamilyMember() {
-    this.customerFamilyList.push(this.createFamilyMember())
+    this.customerFamilyList.push(this.createFamilyMember(0))
   }
 
   removeFamilyMember(index: number) {
@@ -97,9 +97,25 @@ export class CustomerViewPopupComponent implements OnInit {
   }
 
   onMaritalStatusChange(event: any): void {
+    let isFamilyGroupPushed: boolean = false;
     if (event.target.value === 'true') {
+      if (this.customer.maritalStatus) {
+        this.customer.customerFamilyList.forEach((customerFamily) => {
+          const familyFormGroup = this.formBuilder.group({
+            id: [customerFamily.id],
+            relationship: [customerFamily.relationship, Validators.required],
+            relationshipPersonName: [customerFamily.relationshipPersonName, Validators.required]
+          });
+          if (customerFamily.relationship == FamilyType.SPOUSE) {
+            (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(familyFormGroup);
+            isFamilyGroupPushed = true;
+          }
+        })
+      }
       this.customerDetailForm.patchValue({maritalStatus: true});
-      this.customerFamilyList.push(this.createFamilyMember())
+      if (!isFamilyGroupPushed) {
+        this.customerFamilyList.push(this.createFamilyMember(0))
+      }
       this.familyOptions.push(FamilyType.SPOUSE);
     } else {
       this.customerDetailForm.patchValue({maritalStatus: false});
@@ -115,7 +131,7 @@ export class CustomerViewPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this._customerDetailForm = this.formBuilder.group({
-      id:[this.customerId],
+      id: [this.customerId],
       firstName: [this.customer.firstName, Validators.required],
       lastName: [this.customer.lastName, Validators.required],
       gender: [this.customer.gender, Validators.required],
@@ -128,14 +144,14 @@ export class CustomerViewPopupComponent implements OnInit {
       status: [this.customer.status, Validators.required],
       address: [this.customer.address, Validators.required],
       citizenNumber: [this.customer.citizenNumber, Validators.required],
-      emailAddress: [this.customer.emailAddress,[this.commonService.emailValidator]],
+      emailAddress: [this.customer.emailAddress, [this.commonService.emailValidator]],
       mobileNumber: [this.customer.mobileNumber, [Validators.required, this.commonService.mobileNumberValidator]],
       customerFamilyList: this.formBuilder.array([])
     })
 
     this.customer.customerFamilyList.forEach((customerFamily) => {
       const familyFormGroup = this.formBuilder.group({
-        id:[customerFamily.id],
+        id: [customerFamily.id],
         relationship: [customerFamily.relationship, Validators.required],
         relationshipPersonName: [customerFamily.relationshipPersonName, Validators.required]
       });
@@ -144,6 +160,12 @@ export class CustomerViewPopupComponent implements OnInit {
         this.familyOptions?.push(customerFamily.relationship);
       }
     });
+    if (this.customer.customerFamilyList.length == 0){
+      for (let i = 0; i < 3; i++) {
+        this._familyOptions = [FamilyType.FATHER,FamilyType.MOTHER,FamilyType.GRANDFATHER];
+        (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(this.createFamilyMember(i));
+      }
+    }
     if (this.viewOnly) {
       this.customerDetailForm.disable();
     }

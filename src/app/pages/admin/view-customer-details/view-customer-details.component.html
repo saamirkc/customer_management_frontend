@@ -30,7 +30,7 @@
         <table *ngIf="customerList.length > 0" class="table table-striped table-hover table-bordered">
           <thead>
           <tr>
-            <th>Customer Id</th>
+            <th>#</th>
             <th>UserName <i class="fa fa-sort"></i></th>
             <th>Address <i class="fa fa-sort"></i></th>
             <th>Mobile Number</th>
@@ -41,8 +41,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let customer of customerList; trackBy: trackByFn">
-            <td>{{ customer.id }}</td>
+          <tr *ngFor="let customer of customerList; trackBy: trackByFn; let i = index">
+            <td>{{ i+1 }}</td>
             <td>{{ customer.userName }}</td>
             <td>{{ customer?.address ? customer.address : 'N/A' }}</td>
             <td>{{ customer?.mobileNumber ? customer.mobileNumber : 'N/A' }}</td>
@@ -59,7 +59,7 @@
                 class="material-icons">&#xE872;</i></a>
               <a *ngIf="customer.status == activeStatus || customer.status == pendingStatus" class="add" (click)="showStatusModal(customer.id, blockStatusConst)" title="Block" data-toggle="tooltip">
                 <i class="material-icons">remove_circle_outline</i></a>
-              <a *ngIf="customer.status == inactiveStatus || customer.status == deletedStatus" class="add" (click)="showStatusModal(customer.id, unblockStatusConst)" title="UnBlock" data-toggle="tooltip">
+              <a *ngIf="customer.status == inactiveStatus || customer.status == deletedStatus || customer.status == pendingStatus"  class="add" (click)="showStatusModal(customer.id, activeStatusConst)" title="Activate" data-toggle="tooltip">
                 <i class="material-icons">replay</i></a>
             </td>
           </tr>
@@ -106,7 +106,7 @@
             </button>
           </div>
           <div class="modal-body text-bg-light">
-            Do you really want to unblock the customer ?
+            Would you like to activate the customer ?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" (click)="updateCustomerStatus(activeStatus)"> OK</button>

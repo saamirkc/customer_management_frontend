@@ -1,5 +1,8 @@
 h2 {
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: cursive, sans-serif;
   font-weight: bold;
   font-size: 20px
+}
+label{
+  font-family: 'Kaushan Script', cursive;
 }

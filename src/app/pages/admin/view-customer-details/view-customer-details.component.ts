@@ -31,11 +31,9 @@ export class ViewCustomerDetailsComponent implements OnInit {
   private _inactiveStatus = StatusType.INACTIVE;
   private _deletedStatus = StatusType.DELETED;
   private _blockStatusConst = Constants.BLOCK_STATUS;
-  private _unblockStatusConst = Constants.UNBLOCK_STATUS;
+  private _activeStatusConst = Constants.ACTIVE_STATUS;
   private _deleteStatusConst = Constants.DELETE_STATUS;
   private _customerList: CustomerListResponse[] = [];
-  private _customerDetail: CustomerDetails;
-  private readonly _customerDetailForm: FormGroup;
   private _customerId?: number;
 
   _selectedStatusOption?: string;
@@ -46,15 +44,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
   _totalElements = 0;
   _pages: number[] = [];
 
-  constructor(private formBuilder: FormBuilder, private successhandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
-    this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
-    this._customerDetailForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    })
-  }
+  constructor(private formBuilder: FormBuilder, private successhandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {}
 
   search(search: string): void {
     this.getCustomerDetails(search, '');
@@ -84,7 +74,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
     console.log("show status in invoked", status);
     if (status == this.deleteStatusConst){
       this.modalService.open(this.deleteModal, {centered: true})
-    } else if (status == this.unblockStatusConst){
+    } else if (status == this.activeStatusConst){
       this.modalService.open(this.unblockModal, {centered: true})
     }else if (status == this.blockStatusConst){
       this.modalService.open(this.blockModal, {centered: true})
@@ -127,7 +117,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
         modalRef.componentInstance.customer = value.object;
         modalRef.componentInstance.customerId = id;
         modalRef.componentInstance.viewOnly = true;
-        // popup or redirect to another uri.
       }, error: err => {
         this.errorHandlerService.handleError(err);
       }
@@ -151,8 +140,9 @@ export class ViewCustomerDetailsComponent implements OnInit {
           const customerIndex = this.customerList.findIndex(c => c.id === this._customerId);
           if (customerIndex !== -1) {
             this.customerList[customerIndex].status = status;
+            console.log("Modified time is", JSON.parse(value.object).modifiedTs);
+            this.customerList[customerIndex].modifiedTs = JSON.parse(value.object).modifiedTs;
           }
-          // popup or redirect to another uri.
         }, error: err => {
           this.errorHandlerService.handleError(err);
         }
@@ -165,9 +155,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
     return this._customerList;
   }
 
-  get customerDetail(): CustomerDetails {
-    return this._customerDetail;
-  }
   get pendingStatus(): StatusType {
     return this._pendingStatus;
   }
@@ -185,9 +172,8 @@ export class ViewCustomerDetailsComponent implements OnInit {
   get blockStatusConst(): string {
     return this._blockStatusConst;
   }
-
-  get unblockStatusConst(): string {
-    return this._unblockStatusConst;
+  get activeStatusConst(): string {
+    return this._activeStatusConst;
   }
 
   get deleteStatusConst(): string {

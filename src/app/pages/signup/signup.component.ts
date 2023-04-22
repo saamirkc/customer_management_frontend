@@ -16,9 +16,11 @@ import {ErrorsValidation} from "../../models/errors-validation";
 export class SignupComponent implements OnInit {
   private readonly _registrationForm: FormGroup;
   private _isLoading = false;
+
   get registrationForm(): FormGroup {
     return this._registrationForm;
   }
+
   userNameFlag: boolean = true;
 
   private _passwordErrors: ErrorsValidation = {
@@ -44,6 +46,7 @@ export class SignupComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
     })
   }
+
   isPhoneNumber(value: string) {
     const phoneRegex = /^\d{10}$/; // regex to match a 10-digit phone number
     return phoneRegex.test(value);
@@ -72,6 +75,10 @@ export class SignupComponent implements OnInit {
               this._isLoading = false;
               this._cd.detectChanges(); // force Angular to update the view
             });
+          } else {
+            this._isLoading = false;
+            this._cd.detectChanges();
+            this._router.navigate(['/login']);
           }
         },
         error: err => {
@@ -82,10 +89,14 @@ export class SignupComponent implements OnInit {
       }
     )
   }
+
   get passwordErrors(): ErrorsValidation {
     return this._passwordErrors;
   }
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+  }
+
   get userNameErrors(): ErrorsValidation {
     return this._userNameErrors;
   }

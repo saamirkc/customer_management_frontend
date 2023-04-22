@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import Swal from "sweetalert2";
 import {CustomerService} from "../../../services/customer/customer.service";
 import {CommonService} from "../../../shared/common.service";
 import {StatusType} from "../../../enums/status-type";
@@ -89,15 +88,16 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       }
     );
   }
+
   createFamilyMemberForMarriedCustomer(index: number): FormGroup {
     if (this._customerDetailsForm) {
       const maritalStatusControl = this._customerDetailsForm.get('maritalStatus');
       const isMarried = maritalStatusControl?.value;
-      if (isMarried){
+      if (isMarried) {
         const relationshipControl = this.formBuilder.control({
           value: this.familyOptions[index],
-          disabled: isMarried
-        }, Validators.required);
+          disabled: false
+        });
         return this.formBuilder.group({
           relationship: relationshipControl,
           relationshipPersonName: ['', Validators.required]
