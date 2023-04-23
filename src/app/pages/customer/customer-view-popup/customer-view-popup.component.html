@@ -34,13 +34,13 @@
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="gender"
                            id="inlineRadioMale"
-                           value="MALE" [checked]="customer.gender=='MALE'">
+                           value="MALE" formControlName="gender" [checked]="customer.gender=='MALE'">
                     <label class="form-check-label" for="inlineRadioMale"> Male </label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="gender"
                            id="inlineRadioFemale"
-                           value="FEMALE" [checked]="customer.gender=='FEMALE'">
+                           value="FEMALE" formControlName="gender" [checked]="customer.gender=='FEMALE'">
                     <label class="form-check-label" for="inlineRadioFemale">Female</label>
                   </div>
                 </div>
@@ -71,14 +71,12 @@
                 </span>
               </div>
               <div class="md-form">
-                <label>Date Of Birth </label>
+                <label>Date Of Birth <span class="text-danger">*</span></label>
                 <input type="date" formControlName="dateOfBirth" name="dateOfBirth" class="form-control mt-2"
-                       [class.is-invalid]="customerDetailForm.get('dateOfBirth')?.invalid && customerDetailForm.get('dateOfBirth')?.touched"/>
-                <span
-                  *ngIf="customerDetailForm.get('dateOfBirth')?.invalid && (customerDetailForm.get('dateOfBirth')?.dirty || customerDetailForm.get('dateOfBirth')?.touched)"
-                  class="text-danger">Date of birth is required
-              </span>
-
+                       [class.is-invalid]="customerDetailForm.get('dateOfBirth')?.invalid && customerDetailForm.get('dateOfBirth')?.touched"
+                       max="{{today | date:'yyyy-MM-dd'}}"/>
+                <span *ngIf="customerDetailForm.get('dateOfBirth')?.invalid && (customerDetailForm.get('dateOfBirth')?.dirty || customerDetailForm.get('dateOfBirth')?.touched)"
+                      class="text-danger">Date of birth is required</span>
               </div>
               <div class="md-form">
                 <label>Citizen Number <span class="text-danger">*</span> </label>
@@ -133,7 +131,6 @@
                 </select>
               </div>
               <label>Customer's Family <span class="text-danger">*</span></label>
-
               <div class="family-member" formArrayName="customerFamilyList">
                 <div *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
                   <div class="form-row">
@@ -142,6 +139,7 @@
                         <option *ngFor="let option of familyOptions" [value]="option">{{ option }}</option>
                       </select>
                     </div>
+
                     <div class="col-md-6">
                       <input formControlName="relationshipPersonName" class="form-control d-inline-block w-100"
                              placeholder="Enter the Name" type="text" required
@@ -152,7 +150,8 @@
                       </div>
 
                       <button
-                        *ngIf="customerDetailForm?.get('maritalStatus')?.value == true && i > 3 || customerDetailForm?.get('maritalStatus')?.value == false && i > 2"
+                        *ngIf="((customerDetailForm?.get('maritalStatus')?.value == true || customerDetailForm?.get('maritalStatus')?.value == 'true') && i > 3) ||
+                        ((customerDetailForm?.get('maritalStatus')?.value == false || customerDetailForm?.get('maritalStatus')?.value == 'false') && i > 2)"
                         class="btn-remove btn btn-danger" type="button"
                         (click)="removeFamilyMember(i)"> X
                       </button>

@@ -15,6 +15,7 @@ export class DataService {
   private _customerIdSubject = new Subject<number>();
 
   private _customerDetailSubject = new BehaviorSubject<CustomerDetails>({
+    address: "", citizenNumber: "", dateOfBirth: "", firstName: "", gender: "", lastName: "", mobileNumber: "",
     customerFamilyList: [],
     maritalStatus: false,
     status: "",

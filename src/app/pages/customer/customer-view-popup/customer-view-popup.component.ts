@@ -19,10 +19,20 @@ import {ErrorsValidation} from "../../../models/errors-validation";
 export class CustomerViewPopupComponent implements OnInit {
   @Input() customerId?: number
   @Input() viewOnly?: boolean
-  @Input() customer: CustomerDetails = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
+  @Input() customer: CustomerDetails = {
+    address: "",
+    citizenNumber: "",
+    dateOfBirth: "",
+    firstName: "",
+    gender: "",
+    lastName: "",
+    mobileNumber: "",
+    customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   private _statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
   private _familyOptions: FamilyType[] = [];
   private _customerDetailForm?: FormGroup;
+  today: string = new Date().toISOString().split('T')[0];
+
   private _userNameErrors: ErrorsValidation = {
     required: 'Username is required',
     invalid: 'Please enter a valid email or phone number'
@@ -56,7 +66,6 @@ export class CustomerViewPopupComponent implements OnInit {
           this.successHandlerService.handleSuccessEvent(value.message)
           this.activeModal.dismiss();
           this.customer = value.object;
-          window.location.reload();
         }, error: err => {
           this.errorHandlerService.handleError(err);
         }
@@ -98,6 +107,7 @@ export class CustomerViewPopupComponent implements OnInit {
 
   onMaritalStatusChange(event: any): void {
     let isFamilyGroupPushed: boolean = false;
+    const maritalStatusControl = this.customerDetailForm.get('maritalStatus');
     if (event.target.value === 'true') {
       if (this.customer.maritalStatus) {
         this.customer.customerFamilyList.forEach((customerFamily) => {
@@ -112,13 +122,13 @@ export class CustomerViewPopupComponent implements OnInit {
           }
         })
       }
-      this.customerDetailForm.patchValue({maritalStatus: true});
+      maritalStatusControl?.setValue(event.target.value);
       if (!isFamilyGroupPushed) {
         this.customerFamilyList.push(this.createFamilyMember(0))
       }
       this.familyOptions.push(FamilyType.SPOUSE);
     } else {
-      this.customerDetailForm.patchValue({maritalStatus: false});
+      maritalStatusControl?.setValue(event.target.value);
       const index = this.familyOptions.indexOf(FamilyType.SPOUSE);
       if (index > -1) {
         this.familyOptions.splice(index, 1);
@@ -128,7 +138,6 @@ export class CustomerViewPopupComponent implements OnInit {
       }
     }
   }
-
   ngOnInit(): void {
     this._customerDetailForm = this.formBuilder.group({
       id: [this.customerId],
@@ -148,7 +157,6 @@ export class CustomerViewPopupComponent implements OnInit {
       mobileNumber: [this.customer.mobileNumber, [Validators.required, this.commonService.mobileNumberValidator]],
       customerFamilyList: this.formBuilder.array([])
     })
-
     this.customer.customerFamilyList.forEach((customerFamily) => {
       const familyFormGroup = this.formBuilder.group({
         id: [customerFamily.id],

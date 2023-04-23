@@ -19,7 +19,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
 
   submitted = false;
   disabled = true;
-
+  today: string = new Date().toISOString().split('T')[0];
   private _userNameErrors: ErrorsValidation = {
     required: 'Username is required',
     invalid: 'Please enter a valid email or phone number'
@@ -52,7 +52,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       lastName: ['', Validators.required],
       gender: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
-      maritalStatus: [false, Validators.required],
+      maritalStatus: ['false', Validators.required],
       userLogin: this.formBuilder.group({
         userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
         password: ['', [Validators.required, Validators.minLength(6)]],

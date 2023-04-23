@@ -1,8 +1,7 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CustomerService} from "../../../services/customer/customer.service";
 import CustomerListResponse from "../../../models/customer-list-response";
-import {CustomerDetails} from "../../../models/customer-details";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder} from "@angular/forms";
 import {CommonService} from "../../../shared/common.service";
 import {CustomerViewPopupComponent} from "../../customer/customer-view-popup/customer-view-popup.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
@@ -140,7 +139,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
           const customerIndex = this.customerList.findIndex(c => c.id === this._customerId);
           if (customerIndex !== -1) {
             this.customerList[customerIndex].status = status;
-            console.log("Modified time is", JSON.parse(value.object).modifiedTs);
             this.customerList[customerIndex].modifiedTs = JSON.parse(value.object).modifiedTs;
           }
         }, error: err => {

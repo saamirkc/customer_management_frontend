@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {LoginService} from "../../services/login/login.service";
 import {Router} from "@angular/router";
@@ -20,6 +20,7 @@ import {ErrorsValidation} from "../../models/errors-validation";
 })
 export class LoginComponent implements OnInit {
   private readonly _loginForm: FormGroup;
+  private _isLoading = false;
 
   get loginForm(): FormGroup {
     return this._loginForm;
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
     invalid: 'Password length must be minimum 6'
   };
 
-  constructor(private formBuilder: FormBuilder, private commonService: CommonService, private successHandlerService: SuccessHandlerService,
+  constructor(private formBuilder: FormBuilder, private commonService: CommonService,private _cd: ChangeDetectorRef, private successHandlerService: SuccessHandlerService,
               private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
               private dataService: DataService, private tokenService: TokenService) {
     this._loginForm = this.formBuilder.group({
@@ -51,6 +52,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     const formData = this._loginForm.value; // extract form data
+    this._isLoading = true;
     this.loginService.login(formData).subscribe(
       {
         next: value => {
@@ -64,21 +66,24 @@ export class LoginComponent implements OnInit {
           if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
             // Navigate to the customer dashboard
             this.router.navigate(['/customer-dashboard']).then(r => {
-              // this.tokenService.setLoginStatus(true)
+              this._isLoading = false;
+              this._cd.detectChanges(); // force Angular to update the view
               this.dataService.setLoginStatus(true);
             })
           } else if (value.object.customerGroupId == constants.ADMIN_GROUP_ID) {
             // Navigate to the admin dashboard
             this.router.navigate(['/admin-dashboard']).then(res => {
-              // this.tokenService.setLoginStatus(true)
+              this._isLoading = false;
+              this._cd.detectChanges(); // force Angular to update the view
               this.dataService.setLoginStatus(true);
-              // this.dataService.setCustomerDetailSubject(value.object.customerId)
             });
           } else {
             this.tokenService.removeTokens();
           }
         },
         error: err => {
+          this._isLoading = false;
+          this._cd.detectChanges(); // force Angular to update the view
           this.errorHandlerService.handleError(err);
         }
       }
@@ -90,5 +95,9 @@ export class LoginComponent implements OnInit {
 
   get userNameErrors(): ErrorsValidation {
     return this._userNameErrors;
+  }
+
+  get isLoading(): boolean {
+    return this._isLoading;
   }
 }

@@ -129,7 +129,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label>Date of Birth <span class="text-danger">*</span></label>
-          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirth" name="date" required
+          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirth" name="date" max="{{today | date:'yyyy-MM-dd'}}" required
                  [class.is-invalid]="customerDetailsForm.get('dateOfBirth')?.invalid && customerDetailsForm.get('dateOfBirth')?.touched"/>
           <span
             *ngIf="customerDetailsForm.get('dateOfBirth')?.invalid && (customerDetailsForm.get('dateOfBirth')?.dirty || customerDetailsForm.get('dateOfBirth')?.touched)"
@@ -195,7 +195,6 @@
           || customerFamilyList.controls[i].get('relationshipPersonName')?.touched)" class="invalid-feedback d-block"
                style="margin-left: 51%">Relationship Person Name is required
           </div>
-
           <button
             *ngIf="customerDetailsForm?.get('maritalStatus')?.value == 'true' && i > 3 || customerDetailsForm?.get('maritalStatus')?.value == 'false' && i > 2"
             class="btn btn-danger" style="margin-left: 90%; position: absolute; margin-top: -3.7%;  padding: 6px"

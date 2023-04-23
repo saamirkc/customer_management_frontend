@@ -24,7 +24,15 @@ export class ProfileComponent implements OnInit {
   private profileImageMain?: File;
 
   constructor(private loginService: LoginService, private errorHandlerService: ErrorhandlerService, private tokenService: TokenService, private sanitizer: DomSanitizer, private customerService: CustomerService, private dataService: DataService,) {
-    this._customerDetail = {customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
+    this._customerDetail = {
+      address: "",
+      citizenNumber: "",
+      dateOfBirth: "",
+      firstName: "",
+      gender: "",
+      lastName: "",
+      mobileNumber: "",
+      customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
   }
 
   ngOnInit(): void {

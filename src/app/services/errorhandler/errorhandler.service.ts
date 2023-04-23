@@ -8,8 +8,15 @@ export class ErrorhandlerService implements ErrorHandler {
   constructor() {}
 
   handleError(err: any) {
+    console.log("error in login is" ,err)
     let errorMessage = '';
-    if (err.error.details != null && err.error.details.length != 0) {
+    if(!err.error){
+      Swal.fire({
+        title: 'Your request is taking longer time. Please try again after some time.',
+        icon: 'error',
+        timer: 3000
+      });
+    } else if (err.error.details != null && err.error.details.length != 0) {
       if(err.error.details[0] == ""){
         Swal.fire({
           title: err.error.details[1],
