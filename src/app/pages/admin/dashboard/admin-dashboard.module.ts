@@ -7,6 +7,8 @@ import {ProfileComponent} from "../../profile/profile.component";
 import {ViewCustomerDetailsComponent} from "../view-customer-details/view-customer-details.component";
 import {AddCustomerDetailsComponent} from "../add-customer-details/add-customer-details.component";
 import {UniqueItemsPipe} from "../../../shared/unique-items.pipe";
+import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   {

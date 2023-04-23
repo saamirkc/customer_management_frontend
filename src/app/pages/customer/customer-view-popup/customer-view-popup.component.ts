@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CustomerDetails} from "../../../models/customer-details";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {CustomerService} from "../../../services/customer/customer.service";
@@ -10,6 +10,9 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../../shared/common.service";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
 import {ErrorsValidation} from "../../../models/errors-validation";
+import {DataService} from "../../../services/data.service";
+import {BehaviorSubject} from "rxjs";
+import CustomerListResponse from "../../../models/customer-list-response";
 
 @Component({
   selector: 'app-customer-view-popup',
@@ -28,6 +31,13 @@ export class CustomerViewPopupComponent implements OnInit {
     lastName: "",
     mobileNumber: "",
     customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
+
+  private _customerList: CustomerListResponse = {createdBy: 0, createdTs: "",
+    emailAddress: "", id: 0, modifiedTs: "",
+    address: "",
+    mobileNumber: "",
+    status: StatusType.ACTIVE, userName: ""
+  };
   private _statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
   private _familyOptions: FamilyType[] = [];
   private _customerDetailForm?: FormGroup;
@@ -46,7 +56,10 @@ export class CustomerViewPopupComponent implements OnInit {
     invalid: 'Please enter a valid email'
   };
 
-  constructor(private formBuilder: FormBuilder, private successHandlerService: SuccessHandlerService, private commonService: CommonService, private activeModal: NgbActiveModal, private errorHandlerService: ErrorhandlerService, private router: Router, private customerService: CustomerService) {
+  constructor(private formBuilder: FormBuilder, private successHandlerService: SuccessHandlerService,
+              private commonService: CommonService, private activeModal: NgbActiveModal,
+              private errorHandlerService: ErrorhandlerService, private dataService: DataService,
+              private router: Router, private customerService: CustomerService) {
   }
 
   onSave(): void {
@@ -66,6 +79,15 @@ export class CustomerViewPopupComponent implements OnInit {
           this.successHandlerService.handleSuccessEvent(value.message)
           this.activeModal.dismiss();
           this.customer = value.object;
+          console.log("value object", value.object);
+          this._customerList.id = value.object.id;
+          this._customerList.status = value.object.status;
+          this._customerList.address = value.object.address;
+          this._customerList.createdTs=value.object.createdTs;
+          this._customerList.modifiedTs = value.object.modifiedTs;
+          this._customerList.mobileNumber=value.object.mobileNumber;
+          this._customerList.userName=value.object.userName;
+          this.dataService.setCustomerDetailSubject(this._customerList);
         }, error: err => {
           this.errorHandlerService.handleError(err);
         }

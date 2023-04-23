@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbActiveModal, NgbModalModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -78,7 +78,7 @@ import {SharedModule} from "./shared/shared.module";
     MatSelectModule,
     AdminDashboardModule,
   ],
-  providers: [authInterceptProviders],
+  providers: [authInterceptProviders, NgbActiveModal],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -10,6 +10,8 @@ import {StatusType} from "../../../enums/status-type";
 import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
 import Constants from "../../../shared/constants";
+import {DataService} from "../../../services/data.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-view-customer-details',
@@ -22,6 +24,8 @@ export class ViewCustomerDetailsComponent implements OnInit {
   @ViewChild('deleteModal') deleteModal?: TemplateRef<any>;
   @ViewChild('blockModal') blockModal?: TemplateRef<any>;
   @ViewChild('unblockModal') unblockModal?: TemplateRef<any>;
+
+  private customerDetailSubscription?: Subscription;
 
   _searchTerm: string = '';
   public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
@@ -37,13 +41,16 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   _selectedStatusOption?: string;
 
+  showUpdatedComponent = false;
+
+
   _pageSize = 10;
   _pageNumber = 0;
   _totalPages = 0;
   _totalElements = 0;
   _pages: number[] = [];
 
-  constructor(private formBuilder: FormBuilder, private successhandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {}
+  constructor(private formBuilder: FormBuilder, private dataService: DataService, private successhandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {}
 
   search(search: string): void {
     this.getCustomerDetails(search, '');
@@ -83,6 +90,16 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCustomerDetails('', '');
+    this.customerDetailSubscription = this.dataService.getCustomerDetailSubject().subscribe({
+      next: customerDetails => {
+        if(customerDetails){
+          const index = this.customerList.findIndex(customer => customer.id === customerDetails.id);
+          this.customerList[index] = customerDetails;
+        }
+      }, error: err => {
+        console.log("The error thrown is ", err);
+      }
+    })
   }
 
   getCustomerDetails(search: string, status: string) {
