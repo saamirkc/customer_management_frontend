@@ -67,8 +67,8 @@ export class TokenService {
   public getRefreshToken(): string {
     const encryptedRefreshToken = localStorage.getItem(constants.REFRESH_TOKEN_KEY);
     if (encryptedRefreshToken) {
-      return encryptedRefreshToken;
-      // return this.decrypt(encryptedRefreshToken);
+      // return encryptedRefreshToken;
+      return this.decrypt(encryptedRefreshToken);
     }
     return '';
   }

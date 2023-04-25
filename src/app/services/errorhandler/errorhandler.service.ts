@@ -5,19 +5,25 @@ import Swal from "sweetalert2";
   providedIn: 'root'
 })
 export class ErrorhandlerService implements ErrorHandler {
-  constructor() {}
+  constructor() {
+  }
 
   handleError(err: any) {
-    console.log("error in login is" ,err)
     let errorMessage = '';
-    if(!err.error){
+    if (typeof err === 'string') {
+      Swal.fire({
+        title: err,
+        icon: 'error',
+        timer: 3000
+      });
+    } else if (!err.error) {
       Swal.fire({
         title: 'Your request is taking longer time. Please try again after some time.',
         icon: 'error',
         timer: 3000
       });
     } else if (err.error.details != null && err.error.details.length != 0) {
-      if(err.error.details[0] == ""){
+      if (err.error.details[0] == "") {
         Swal.fire({
           title: err.error.details[1],
           icon: 'error',

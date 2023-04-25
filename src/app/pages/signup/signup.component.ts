@@ -7,7 +7,6 @@ import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.serv
 import {DataService} from "../../services/data.service";
 import {SuccessHandlerService} from "../../services/successhandler/success-handler.service";
 import {ErrorsValidation} from "../../models/errors-validation";
-
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -94,9 +93,7 @@ export class SignupComponent implements OnInit {
     return this._passwordErrors;
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
   get userNameErrors(): ErrorsValidation {
     return this._userNameErrors;
   }
