@@ -15,7 +15,7 @@
               <label>UserName</label>
               <input type="email" name="email" formControlName="userName" class="form-control mt-1" id="email"
                      aria-describedby="emailHelp"
-                     placeholder="Email or Mobile Number"
+                     placeholder="Email or Mobile Number" required
                      [class.is-invalid]="loginForm.get('userName')?.invalid && loginForm.get('userName')?.touched"/>
               <span *ngIf="loginForm.get('userName')?.invalid && loginForm.get('userName')?.touched"
                     class="invalid-feedback">

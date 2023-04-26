@@ -8,10 +8,9 @@ import {DataService} from "../../../services/data.service";
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent  {
-  constructor(private tokenService: TokenService, private dataService: DataService) {
+  constructor(private tokenService: TokenService) {
   }
   logOut(){
-    this.dataService.setLoginStatus(false);
     this.tokenService.removeTokens();
   }
 }

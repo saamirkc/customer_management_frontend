@@ -79,6 +79,9 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCustomerDetails('', '');
+    this.subscribeCustomerSubjectDetails();
+  }
+  subscribeCustomerSubjectDetails(){
     this._customerDetailSubscription = this.dataService.getCustomerDetailSubject().subscribe({
       next: customerDetails => {
         if(customerDetails){
@@ -90,7 +93,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
       }
     })
   }
-
   getCustomerDetails(search: string, status: string) {
     this.customerService.getCustomerList(this._pageNumber, this._pageSize, status, search, 'createdTs', 'desc')
       .subscribe({

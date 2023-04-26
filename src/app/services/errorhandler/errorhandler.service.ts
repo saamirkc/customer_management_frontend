@@ -10,8 +10,6 @@ export class ErrorhandlerService implements ErrorHandler {
   handleError(err: any) {
     let errorMessage = '';
     if (typeof err === 'string') {
-      console.log("1st if")
-
       Swal.fire({
         title: err,
         icon: 'error',

@@ -77,28 +77,6 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       }
     );
   }
-
-  createFamilyMemberForMarriedCustomer(index: number): FormGroup {
-    if (this._customerDetailsForm) {
-      const maritalStatusControl = this._customerDetailsForm.get('maritalStatus');
-      const isMarried = maritalStatusControl?.value;
-      if (isMarried) {
-        const relationshipControl = this.formBuilder.control({
-          value: this._familyOptions[index],
-          disabled: false
-        });
-        return this.formBuilder.group({
-          relationship: relationshipControl,
-          relationshipPersonName: ['', Validators.required]
-        });
-      }
-    }
-    return this.formBuilder.group({
-      relationship: [this._familyOptions[index], Validators.required],
-      relationshipPersonName: ['', Validators.required]
-    });
-  }
-
   get customerFamilyList() {
     return this._customerDetailsForm.get('customerFamilyList') as FormArray;
   }
@@ -114,12 +92,13 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   onMaritalStatusChange(event: any): void {
     if (event.target.value === 'true') {
       this._familyOptions.push(FamilyType.SPOUSE);
-      this.customerFamilyList.push(this.createFamilyMemberForMarriedCustomer(this._familyOptions.length - 1))
+      this.customerFamilyList.push(this.createFamilyMember(this._familyOptions.length - 1))
     } else {
       const index = this._familyOptions.indexOf(FamilyType.SPOUSE);
-      if (index > -1) {
-        this._familyOptions.splice(index, 1);
-      }
+      // to slice the last option
+      if (index > -1) this._familyOptions.splice(index, 1);
+
+      // to remove the customer family list last form array.
       while (this.customerFamilyList.length > constants.UNMARRIED_CUSTOMER_FAMILY) {
         this.customerFamilyList.removeAt(this.customerFamilyList.length - 1);
       }
@@ -140,6 +119,26 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
         }
       }
     )
+  }
+  createFamilyMemberForMarriedCustomer(index: number): FormGroup {
+    if (this._customerDetailsForm) {
+      const maritalStatusControl = this._customerDetailsForm.get('maritalStatus');
+      const isMarried = maritalStatusControl?.value;
+      if (isMarried) {
+        const relationshipControl = this.formBuilder.control({
+          value: this._familyOptions[index],
+          disabled: false
+        });
+        return this.formBuilder.group({
+          relationship: relationshipControl,
+          relationshipPersonName: ['', Validators.required]
+        });
+      }
+    }
+    return this.formBuilder.group({
+      relationship: [this._familyOptions[index], Validators.required],
+      relationshipPersonName: ['', Validators.required]
+    });
   }
   get userNameErrors(): ErrorsValidation {
     return this._userNameErrors;

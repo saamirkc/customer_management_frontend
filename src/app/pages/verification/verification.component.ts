@@ -1,12 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CustomerService} from '../../services/customer/customer.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CustomerService } from '../../services/customer/customer.service';
 import Constants from '../../shared/constants';
-import {StatusType} from '../../enums/status-type';
-import {ErrorhandlerService} from '../../services/errorhandler/errorhandler.service';
-import {DataService} from '../../services/data.service';
-import {Subscription} from 'rxjs';
-import {SuccessHandlerService} from '../../services/successhandler/success-handler.service';
+import { StatusType } from '../../enums/status-type';
+import { ErrorhandlerService } from '../../services/errorhandler/errorhandler.service';
+import { DataService } from '../../services/data.service';
+import { Subscription } from 'rxjs';
+import { SuccessHandlerService } from '../../services/successhandler/success-handler.service';
 
 @Component({
   selector: 'app-verification',
@@ -47,7 +47,8 @@ export class VerificationComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (value) => {
           if (
-            value.status == Constants.STATUS_SUCCESS && JSON.parse(value.object).status == StatusType.ACTIVE
+            value.status == Constants.STATUS_SUCCESS &&
+            JSON.parse(value.object).status == StatusType.ACTIVE
           ) {
             this.successHandlerService.handleSuccessEvent(value.message);
             this._router.navigate(['/login']);

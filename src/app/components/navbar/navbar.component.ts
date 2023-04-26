@@ -16,15 +16,9 @@ export class NavbarComponent implements OnInit {
 
   constructor(private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {
   }
+
   ngOnInit(): void {
-    this.dataService.getLoginStatus().subscribe({
-      next: value => {
-        this._isLoggedIn = value;
-        this._userName = this.tokenService.getFullName();
-      }, error: err => {
-        console.log("Error on logged on subscription ", err);
-      }
-    })
+    this.subscribeLoginStatus();
     if (this.tokenService.hasToken(true)) {
       this._isLoggedIn = true;
       this._userName = this.tokenService.getFullName();
@@ -32,9 +26,21 @@ export class NavbarComponent implements OnInit {
       this._isLoggedIn = false;
     }
   }
+
   logOut() {
     this._isLoggedIn = false;
     this.tokenService.removeTokens();
+  }
+  subscribeLoginStatus() {
+    this.dataService.getLoginStatus().subscribe({
+      next: value => {
+        this._isLoggedIn = value;
+        this._userName = this.tokenService.getFullName();
+        console.log("The user is logged on subscription ", value)
+      }, error: err => {
+        console.log("Error on logged on subscription ", err);
+      }
+    })
   }
 
 }

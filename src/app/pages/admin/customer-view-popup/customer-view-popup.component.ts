@@ -129,35 +129,36 @@ export class CustomerViewPopupComponent implements OnInit {
   }
 
   onMaritalStatusChange(event: any): void {
-    let isFamilyGroupPushed: boolean = false;
     const maritalStatusControl = this.customerDetailForm.get('maritalStatus');
     if (event.target.value === 'true') {
-      if (this.customer.maritalStatus) {
-        this.customer.customerFamilyList.forEach((customerFamily) => {
+      this.pushFamilyGroupToFamilyList();
+      maritalStatusControl?.setValue(event.target.value);
+    } else {
+      maritalStatusControl?.setValue(event.target.value);
+      const index = this.familyOptions.indexOf(FamilyType.SPOUSE);
+      if (index > -1) this.familyOptions.splice(index, 1);
+      while (this.customerFamilyList.length > constants.UNMARRIED_CUSTOMER_FAMILY) {
+        this.customerFamilyList.removeAt(this.customerFamilyList.length - 1);
+      }
+    }
+  }
+  pushFamilyGroupToFamilyList() {
+    let isFamilyGroupPushed: boolean = false;
+    if (this.customer.maritalStatus) {
+      this.customer.customerFamilyList.forEach((customerFamily) => {
+        if (customerFamily.relationship == FamilyType.SPOUSE) {
           const familyFormGroup = this.formBuilder.group({
             id: [customerFamily.id],
             relationship: [customerFamily.relationship, Validators.required],
             relationshipPersonName: [customerFamily.relationshipPersonName, Validators.required]
           });
-          if (customerFamily.relationship == FamilyType.SPOUSE) {
-            (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(familyFormGroup);
-            isFamilyGroupPushed = true;
-          }
-        })
-      }
-      maritalStatusControl?.setValue(event.target.value);
-      if (!isFamilyGroupPushed) this.customerFamilyList.push(this.createFamilyMember(0))
-      this.familyOptions.push(FamilyType.SPOUSE);
-    } else {
-      maritalStatusControl?.setValue(event.target.value);
-      const index = this.familyOptions.indexOf(FamilyType.SPOUSE);
-      if (index > -1) {
-        this.familyOptions.splice(index, 1);
-      }
-      while (this.customerFamilyList.length > constants.UNMARRIED_CUSTOMER_FAMILY) {
-        this.customerFamilyList.removeAt(this.customerFamilyList.length - 1);
-      }
+          (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(familyFormGroup);
+          isFamilyGroupPushed = true;
+        }
+      })
     }
+    if (!isFamilyGroupPushed) this.customerFamilyList.push(this.createFamilyMember(0))
+    this.familyOptions.push(FamilyType.SPOUSE);
   }
 
   ngOnInit(): void {

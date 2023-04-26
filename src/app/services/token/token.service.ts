@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import constants from '../../shared/constants';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+  }
 
   public setTokens(jwtToken: string, refreshToken: string): void {
     const encryptedJwtToken = this.encrypt(jwtToken);
@@ -20,6 +21,7 @@ export class TokenService {
     localStorage.setItem(constants.GROUP_ID, groupId.toString());
     localStorage.setItem(constants.FULL_NAME, fullName);
   }
+
   public setCustomerId(customerId: number) {
     localStorage.setItem(constants.CUSTOMER_ID, customerId.toString());
   }
@@ -39,22 +41,19 @@ export class TokenService {
   public getJwtToken(needDecryptedToken: boolean): string {
     if (needDecryptedToken) {
       const encryptedJwtToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
-      if (encryptedJwtToken) {
-        // return encryptedJwtToken;
-        return this.decrypt(encryptedJwtToken);
-      }
+      if (encryptedJwtToken) return this.decrypt(encryptedJwtToken);
+      // return encryptedJwtToken;
     } else {
       const accessToken = localStorage.getItem(constants.JWT_TOKEN_KEY);
-      if (accessToken) {
-        return accessToken;
-      }
+      if (accessToken) return accessToken;
     }
     return '';
   }
 
-  hasToken(needDecrptedToken: boolean): boolean {
-    return !!this.getJwtToken(needDecrptedToken);
+  hasToken(needDecryptedToken: boolean): boolean {
+    return !!this.getJwtToken(needDecryptedToken);
   }
+
   public getRefreshToken(): string {
     const encryptedRefreshToken = localStorage.getItem(
       constants.REFRESH_TOKEN_KEY
