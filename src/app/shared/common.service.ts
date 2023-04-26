@@ -11,11 +11,7 @@ export class CommonService {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phoneRegex = /^\d{10}$/;
     const value = control.value;
-
-    if (!value) {
-      return null;
-    }
-
+    if (!value) return null;
     if (emailRegex.test(value) || phoneRegex.test(value)) {
       return null;
     } else {
@@ -25,9 +21,7 @@ export class CommonService {
   emailValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const value = control.value;
-    if (!value) {
-      return null;
-    }
+    if (!value) return null;
     if (emailRegex.test(value)) {
       return null;
     } else {
@@ -37,9 +31,7 @@ export class CommonService {
   mobileNumberValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const phoneRegex = /^\d{10}$/;
     const value = control.value;
-    if (!value) {
-      return null;
-    }
+    if (!value) return null;
     if (phoneRegex.test(value)) {
       return null;
     } else {

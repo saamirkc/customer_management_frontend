@@ -6,7 +6,6 @@ import {LoginData} from "../../models/login-data";
 import {ApiResponse} from "../../models/api-response";
 import {map, Observable, timeout} from "rxjs";
 import {TokenData} from "../../models/token-data";
-import constants from "../../shared/constants";
 import {TokenService} from "../token/token.service";
 
 @Injectable({
@@ -22,22 +21,16 @@ export class LoginService {
       timeout(10000)
     );
   }
-
   public getTokensAfterJwtExpiry(refreshTokenData: TokenData): Observable<any> {
     return this.http.post<ApiResponse>(`${environment.apiBaseUrl}/refresh-tokens/get-tokens`, refreshTokenData)
       .pipe(
         map((data) => {
-          if (data.status == 'SUCCESS') {
+          if (data.status == 'SUCCESS' && data.object.token!=null && data.object.refreshToken!=null) {
             this.tokenService.setTokens(data.object.token, data.object.refreshToken);
           }
           return data;
         })
       );
-  }
-
-  isLoggedIn() {
-    let tokenStr = localStorage.getItem(constants.JWT_TOKEN_KEY);
-    return !(tokenStr == undefined || tokenStr == '' || tokenStr == null);
   }
 
   logOut() {

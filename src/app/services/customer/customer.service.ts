@@ -48,17 +48,17 @@ export class CustomerService {
 
   getProfileImage(customerId: number) {
     let getProfileImageUrl: string = `${environment.apiBaseUrl}/customer/view/own-profile-image/id/${customerId}`;
-    let blobObservable = this.http.get<Blob>(getProfileImageUrl, {responseType: 'blob' as 'json'});
-    blobObservable.pipe(
-      map((res) => {
-        return res;
-      }),
-      catchError((error) => {
-        console.log(error);
-        return throwError(error);
-      })
-    );
-    return blobObservable;
+    return this.http.get<Blob>(getProfileImageUrl, {responseType: 'blob' as 'json'});
+    // blobObservable.pipe(
+    //   map((res) => {
+    //     return res;
+    //   }),
+    //   catchError((error) => {
+    //     console.log(error);
+    //     return throwError(error);
+    //   })
+    // );
+    // return blobObservable;
   }
 
   uploadProfileImage(file: File, customerId: string | null | undefined): Observable<ApiResponse> {

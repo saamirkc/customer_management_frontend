@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import {RouterModule, Routes} from "@angular/router";
 import {AdminDashboardComponent} from "./admin-dashboard.component";
 import {WelcomeComponent} from "../welcome/welcome.component";
@@ -7,9 +6,6 @@ import {ProfileComponent} from "../../profile/profile.component";
 import {ViewCustomerDetailsComponent} from "../view-customer-details/view-customer-details.component";
 import {AddCustomerDetailsComponent} from "../add-customer-details/add-customer-details.component";
 import {UniqueItemsPipe} from "../../../shared/unique-items.pipe";
-import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
 const routes: Routes = [
   {
     path: '',

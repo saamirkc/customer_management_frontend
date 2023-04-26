@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
-import {NgbActiveModal, NgbModalModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbActiveModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -29,8 +29,7 @@ import { ViewCustomerDetailsComponent } from './pages/admin/view-customer-detail
 import { AddCustomerDetailsComponent } from './pages/admin/add-customer-details/add-customer-details.component';
 import {MatLineModule} from "@angular/material/core";
 import {AdminDashboardComponent} from "./pages/admin/dashboard/admin-dashboard.component";
-import {CustomerViewPopupComponent} from "./pages/customer/customer-view-popup/customer-view-popup.component";
-import { DeleteModalComponentComponent } from './pages/admin/delete-modal-component/delete-modal-component.component';
+import {CustomerViewPopupComponent} from "./pages/admin/customer-view-popup/customer-view-popup.component";
 import { VerificationComponent } from './pages/verification/verification.component';
 import {MatSelectModule} from "@angular/material/select";
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
@@ -52,7 +51,6 @@ import {SharedModule} from "./shared/shared.module";
     AddCustomerDetailsComponent,
     CustomerViewPopupComponent,
     CustomerViewPopupComponent,
-    DeleteModalComponentComponent,
     VerificationComponent,
     PageNotFoundComponent,
   ],

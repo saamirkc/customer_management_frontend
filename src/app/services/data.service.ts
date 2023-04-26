@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {CustomerDetails} from "../models/customer-details";
 import {CustomerService} from "./customer/customer.service";
-import Swal from "sweetalert2";
 import CustomerListResponse from "../models/customer-list-response";
 import {StatusType} from "../enums/status-type";
 

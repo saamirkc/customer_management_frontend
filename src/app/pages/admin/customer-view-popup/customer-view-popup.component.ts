@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CustomerDetails} from "../../../models/customer-details";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {CustomerService} from "../../../services/customer/customer.service";
@@ -11,8 +11,8 @@ import {CommonService} from "../../../shared/common.service";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
 import {ErrorsValidation} from "../../../models/errors-validation";
 import {DataService} from "../../../services/data.service";
-import {BehaviorSubject} from "rxjs";
 import CustomerListResponse from "../../../models/customer-list-response";
+import constants from "../../../shared/constants";
 
 @Component({
   selector: 'app-customer-view-popup',
@@ -30,9 +30,10 @@ export class CustomerViewPopupComponent implements OnInit {
     gender: "",
     lastName: "",
     mobileNumber: "",
-    customerFamilyList: [], maritalStatus: false, status: "", userName: ""};
-
-  private _customerList: CustomerListResponse = {createdBy: 0, createdTs: "",
+    customerFamilyList: [], maritalStatus: false, status: "", userName: ""
+  };
+  private _customerList: CustomerListResponse = {
+    createdBy: 0, createdTs: "",
     emailAddress: "", id: 0, modifiedTs: "",
     address: "",
     mobileNumber: "",
@@ -41,7 +42,7 @@ export class CustomerViewPopupComponent implements OnInit {
   private _statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
   private _familyOptions: FamilyType[] = [];
   private _customerDetailForm?: FormGroup;
-  today: string = new Date().toISOString().split('T')[0];
+  private _today: string = new Date().toISOString().split('T')[0];
 
   private _userNameErrors: ErrorsValidation = {
     required: 'Username is required',
@@ -62,37 +63,37 @@ export class CustomerViewPopupComponent implements OnInit {
               private router: Router, private customerService: CustomerService) {
   }
 
-  onSave(): void {
-    // Handle save logic here
-    this.activeModal.close('Saved');
-  }
-
   // Make an API call to edit the customer with the given id
   updateCustomerDetailsById() {
-    if (this.customerDetailForm.invalid) {
-      return;
-    }
+    if (this.customerDetailForm.invalid) return;
     if (this.customerId != null) {
       const formData = this.customerDetailForm.value;
-      this.customerService.updateCustomerDetail(formData, this.customerId).subscribe({
-        next: value => {
-          this.successHandlerService.handleSuccessEvent(value.message)
-          this.activeModal.dismiss();
-          this.customer = value.object;
-          console.log("value object", value.object);
-          this._customerList.id = value.object.id;
-          this._customerList.status = value.object.status;
-          this._customerList.address = value.object.address;
-          this._customerList.createdTs=value.object.createdTs;
-          this._customerList.modifiedTs = value.object.modifiedTs;
-          this._customerList.mobileNumber=value.object.mobileNumber;
-          this._customerList.userName=value.object.userName;
-          this.dataService.setCustomerDetailSubject(this._customerList);
-        }, error: err => {
-          this.errorHandlerService.handleError(err);
-        }
-      })
+      this.subscribeUpdatedCustomerDetails(formData, this.customerId);
     }
+  }
+
+  subscribeUpdatedCustomerDetails(customerDetails: CustomerDetails, customerId: number) {
+    this.customerService.updateCustomerDetail(customerDetails, customerId).subscribe({
+      next: value => {
+        this.successHandlerService.handleSuccessEvent(value.message)
+        this.activeModal.dismiss();
+        this.customer = value.object;
+        this.setCustomerList(value.object);
+      }, error: err => {
+        this.errorHandlerService.handleError(err);
+      }
+    })
+  }
+
+  setCustomerList(value: CustomerListResponse) {
+    this._customerList.id = value.id;
+    this._customerList.status = value.status;
+    this._customerList.address = value.address;
+    this._customerList.createdTs = value.createdTs;
+    this._customerList.modifiedTs = value.modifiedTs;
+    this._customerList.mobileNumber = value.mobileNumber;
+    this._customerList.userName = value.userName;
+    this.dataService.setCustomerDetailSubject(this._customerList);
   }
 
   cancelUpdate() {
@@ -124,7 +125,7 @@ export class CustomerViewPopupComponent implements OnInit {
   }
 
   get customerDetailForm(): FormGroup {
-    return <FormGroup<any>>this._customerDetailForm;
+    return <FormGroup>this._customerDetailForm;
   }
 
   onMaritalStatusChange(event: any): void {
@@ -145,9 +146,7 @@ export class CustomerViewPopupComponent implements OnInit {
         })
       }
       maritalStatusControl?.setValue(event.target.value);
-      if (!isFamilyGroupPushed) {
-        this.customerFamilyList.push(this.createFamilyMember(0))
-      }
+      if (!isFamilyGroupPushed) this.customerFamilyList.push(this.createFamilyMember(0))
       this.familyOptions.push(FamilyType.SPOUSE);
     } else {
       maritalStatusControl?.setValue(event.target.value);
@@ -155,12 +154,38 @@ export class CustomerViewPopupComponent implements OnInit {
       if (index > -1) {
         this.familyOptions.splice(index, 1);
       }
-      while (this.customerFamilyList.length > 3) {
+      while (this.customerFamilyList.length > constants.UNMARRIED_CUSTOMER_FAMILY) {
         this.customerFamilyList.removeAt(this.customerFamilyList.length - 1);
       }
     }
   }
+
   ngOnInit(): void {
+    this.initializeCustomerDetailsForm();
+    this.renderCustomerFamilyTemplateDetails()
+    if (this.viewOnly) this.customerDetailForm.disable();
+  }
+
+  renderCustomerFamilyTemplateDetails() {
+    this.customer.customerFamilyList.forEach((customerFamily) => {
+      const familyFormGroup = this.formBuilder.group({
+        id: [customerFamily.id],
+        relationship: [customerFamily.relationship, Validators.required],
+        relationshipPersonName: [customerFamily.relationshipPersonName, Validators.required]
+      });
+      (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(familyFormGroup);
+      if (customerFamily.relationship) this.familyOptions?.push(customerFamily.relationship);
+    });
+    // in case if the customerFamilyList is 0.
+    if (this.customer.customerFamilyList.length == 0) {
+      for (let i = 0; i < constants.UNMARRIED_CUSTOMER_FAMILY; i++) {
+        this._familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER];
+        (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(this.createFamilyMember(i));
+      }
+    }
+  }
+
+  initializeCustomerDetailsForm() {
     this._customerDetailForm = this.formBuilder.group({
       id: [this.customerId],
       firstName: [this.customer.firstName, Validators.required],
@@ -179,26 +204,6 @@ export class CustomerViewPopupComponent implements OnInit {
       mobileNumber: [this.customer.mobileNumber, [Validators.required, this.commonService.mobileNumberValidator]],
       customerFamilyList: this.formBuilder.array([])
     })
-    this.customer.customerFamilyList.forEach((customerFamily) => {
-      const familyFormGroup = this.formBuilder.group({
-        id: [customerFamily.id],
-        relationship: [customerFamily.relationship, Validators.required],
-        relationshipPersonName: [customerFamily.relationshipPersonName, Validators.required]
-      });
-      (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(familyFormGroup);
-      if (customerFamily.relationship) {
-        this.familyOptions?.push(customerFamily.relationship);
-      }
-    });
-    if (this.customer.customerFamilyList.length == 0){
-      for (let i = 0; i < 3; i++) {
-        this._familyOptions = [FamilyType.FATHER,FamilyType.MOTHER,FamilyType.GRANDFATHER];
-        (<FormArray>this.customerDetailForm.get('customerFamilyList')).push(this.createFamilyMember(i));
-      }
-    }
-    if (this.viewOnly) {
-      this.customerDetailForm.disable();
-    }
   }
 
   get statusOptions(): StatusType[] {
@@ -215,5 +220,9 @@ export class CustomerViewPopupComponent implements OnInit {
 
   get emailErrors(): ErrorsValidation {
     return this._emailErrors;
+  }
+
+  get today(): string {
+    return this._today;
   }
 }

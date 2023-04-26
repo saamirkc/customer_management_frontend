@@ -3,7 +3,7 @@ import {CustomerService} from "../../../services/customer/customer.service";
 import CustomerListResponse from "../../../models/customer-list-response";
 import {FormBuilder} from "@angular/forms";
 import {CommonService} from "../../../shared/common.service";
-import {CustomerViewPopupComponent} from "../../customer/customer-view-popup/customer-view-popup.component";
+import {CustomerViewPopupComponent} from "../customer-view-popup/customer-view-popup.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {StatusType} from "../../../enums/status-type";
@@ -20,15 +20,12 @@ import {Subscription} from "rxjs";
 })
 export class ViewCustomerDetailsComponent implements OnInit {
   @ViewChild('editCustomerModalTemplate') editCustomerModalTemplate: any;
-
   @ViewChild('deleteModal') deleteModal?: TemplateRef<any>;
   @ViewChild('blockModal') blockModal?: TemplateRef<any>;
   @ViewChild('unblockModal') unblockModal?: TemplateRef<any>;
-
-  private customerDetailSubscription?: Subscription;
-
-  _searchTerm: string = '';
-  public statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
+  private _customerDetailSubscription?: Subscription;
+  private _searchTerm: string = '';
+  private _statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
   private _pendingStatus = StatusType.PENDING;
   private _activeStatus = StatusType.ACTIVE;
   private _inactiveStatus = StatusType.INACTIVE;
@@ -39,18 +36,12 @@ export class ViewCustomerDetailsComponent implements OnInit {
   private _customerList: CustomerListResponse[] = [];
   private _customerId?: number;
 
-  _selectedStatusOption?: string;
+  private _selectedStatusOption?: string;
 
-  showUpdatedComponent = false;
-
-
-  _pageSize = 10;
-  _pageNumber = 0;
-  _totalPages = 0;
-  _totalElements = 0;
+  _pageSize = 10; _pageNumber = 0; _totalPages = 0; _totalElements = 0;
   _pages: number[] = [];
 
-  constructor(private formBuilder: FormBuilder, private dataService: DataService, private successhandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {}
+  constructor(private formBuilder: FormBuilder, private dataService: DataService, private successHandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {}
 
   search(search: string): void {
     this.getCustomerDetails(search, '');
@@ -77,7 +68,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   showStatusModal(customerId: number, status: string): void {
     this._customerId = customerId;
-    console.log("show status in invoked", status);
     if (status == this.deleteStatusConst){
       this.modalService.open(this.deleteModal, {centered: true})
     } else if (status == this.activeStatusConst){
@@ -85,12 +75,11 @@ export class ViewCustomerDetailsComponent implements OnInit {
     }else if (status == this.blockStatusConst){
       this.modalService.open(this.blockModal, {centered: true})
     };
-
   }
 
   ngOnInit(): void {
     this.getCustomerDetails('', '');
-    this.customerDetailSubscription = this.dataService.getCustomerDetailSubject().subscribe({
+    this._customerDetailSubscription = this.dataService.getCustomerDetailSubject().subscribe({
       next: customerDetails => {
         if(customerDetails){
           const index = this.customerList.findIndex(customer => customer.id === customerDetails.id);
@@ -115,7 +104,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
         }
       })
   }
-
   goToPage(page: number) {
     if (page >= 0 && page < this._totalPages) {
       this._pageNumber = page;
@@ -127,8 +115,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
   viewCustomerById(id: number) {
     this.customerService.viewCustomerById(id).subscribe({
       next: value => {
-        // this._customerDetail = value.object;
-        // console.log(this._customerDetail);
         const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true});
         modalRef.componentInstance.customer = value.object;
         modalRef.componentInstance.customerId = id;
@@ -138,7 +124,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
       }
     })
   }
-
   // Make an API call to delete the customer with the given id
   public decline() {
     this.modalService.dismissAll();
@@ -152,7 +137,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
     if (this._customerId != null) {
       this.customerService.updateCustomerStatusById(this._customerId,status).subscribe({
         next: value => {
-          this.successhandlerService.handleSuccessEvent(value.message);
+          this.successHandlerService.handleSuccessEvent(value.message);
           const customerIndex = this.customerList.findIndex(c => c.id === this._customerId);
           if (customerIndex !== -1) {
             this.customerList[customerIndex].status = status;
@@ -193,5 +178,21 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   get deleteStatusConst(): string {
     return this._deleteStatusConst;
+  }
+  get statusOptions(): StatusType[] {
+    return this._statusOptions;
+  }
+  get selectedStatusOption(): string {
+    return <string>this._selectedStatusOption;
+  }
+  set selectedStatusOption(value: string) {
+    this._selectedStatusOption = value;
+  }
+  get searchTerm(): string {
+    return this._searchTerm;
+  }
+
+  set searchTerm(value: string) {
+    this._searchTerm = value;
   }
 }

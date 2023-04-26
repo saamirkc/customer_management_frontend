@@ -10,9 +10,9 @@
           <div class="main-section">
             <div class="search-section  col-md-12">
               <form>
-                <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="_searchTerm" name="_searchTerm" (keyup)="search(_searchTerm)" #searchInput>
-                <mat-select [(ngModel)]="_selectedStatusOption" class="form-control select-type"
-                            name="_selectedStatusOption" ngDefaultControl
+                <input type="text" class="form-control" placeholder="Search&hellip;" [(ngModel)]="searchTerm" name="_searchTerm" (keyup)="search(searchTerm)" #searchInput>
+                <mat-select [(ngModel)]="selectedStatusOption" class="form-control select-type"
+                            name="selectedStatusOption" ngDefaultControl
                             [disableOptionCentering]="false" placeholder="Select Status">
                   <mat-option *ngFor="let option of statusOptions" [value]="option">{{option}}</mat-option>
                 </mat-select>
@@ -27,7 +27,7 @@
             No user details found.
           </div>
         </div>
-        <table *ngIf="customerList.length > 0" class="table table-striped table-hover table-bordered">
+        <table *ngIf="customerList.length > 0" class="table table-striped table-hover table-bordered" aria-describedby="customerList">
           <thead>
           <tr>
             <th>#</th>

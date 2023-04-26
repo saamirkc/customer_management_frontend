@@ -1,16 +1,13 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
-import constants from "../../shared/constants";
-import {Router} from "@angular/router";
+import constants from '../../shared/constants';
+import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenService {
-
-
-  constructor(private router: Router) {
-  }
+  constructor(private router: Router) {}
 
   public setTokens(jwtToken: string, refreshToken: string): void {
     const encryptedJwtToken = this.encrypt(jwtToken);
@@ -23,12 +20,6 @@ export class TokenService {
     localStorage.setItem(constants.GROUP_ID, groupId.toString());
     localStorage.setItem(constants.FULL_NAME, fullName);
   }
-  // public setLoginStatus(isLoggedIn: boolean) {
-  //   localStorage.setItem(constants.IS_LOGGED_IN, String(isLoggedIn));
-  // }
-  // public getLoggedInStatus() {
-  //   return localStorage.getItem(constants.IS_LOGGED_IN);
-  // }
   public setCustomerId(customerId: number) {
     localStorage.setItem(constants.CUSTOMER_ID, customerId.toString());
   }
@@ -65,7 +56,9 @@ export class TokenService {
     return !!this.getJwtToken(needDecrptedToken);
   }
   public getRefreshToken(): string {
-    const encryptedRefreshToken = localStorage.getItem(constants.REFRESH_TOKEN_KEY);
+    const encryptedRefreshToken = localStorage.getItem(
+      constants.REFRESH_TOKEN_KEY
+    );
     if (encryptedRefreshToken) {
       // return encryptedRefreshToken;
       return this.decrypt(encryptedRefreshToken);
@@ -79,9 +72,7 @@ export class TokenService {
   }
 
   private decodeToken(token: string): any {
-    if (!token) {
-      return null;
-    }
+    if (!token) return null;
     try {
       return JSON.parse(atob(token.split('.')[1]));
     } catch (e) {
@@ -91,7 +82,7 @@ export class TokenService {
 
   public removeTokens(): void {
     localStorage.clear();
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
   }
 
   private encrypt(value: string): string {

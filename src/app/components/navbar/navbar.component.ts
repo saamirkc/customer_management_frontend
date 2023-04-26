@@ -21,7 +21,6 @@ export class NavbarComponent implements OnInit {
       next: value => {
         this._isLoggedIn = value;
         this._userName = this.tokenService.getFullName();
-        console.log("The user is logged on subscription ", value)
       }, error: err => {
         console.log("Error on logged on subscription ", err);
       }

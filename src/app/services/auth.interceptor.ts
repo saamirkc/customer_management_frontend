@@ -28,8 +28,6 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log("is refreshing  top of the program", this.isRefreshing)
-
     const decryptedAccessToken = this.tokenService.getJwtToken(true);
     const decryptedRefreshToken = this.tokenService.getRefreshToken();
 
@@ -40,12 +38,12 @@ export class AuthInterceptor implements HttpInterceptor {
       token: decryptedAccessToken,
       refreshToken: decryptedRefreshToken
     };
+
     return next.handle(request).pipe(
       catchError((error) => {
-        if (error instanceof HttpErrorResponse && error.status != 200) {
-          return this.handle401Error(request, next, tokenData);
+        if (this.tokenService.isTokenExpired(decryptedAccessToken) && error instanceof HttpErrorResponse && error.status != 200) {
+          return this.handleError(request, next, tokenData);
         } else {
-          this.errorHandlerService.handleError(error);
           return throwError(error);
         }
       })
@@ -60,7 +58,7 @@ export class AuthInterceptor implements HttpInterceptor {
     });
   }
 
-  private handle401Error(request: HttpRequest<any>, next: HttpHandler, tokenData: TokenData) {
+  private handleError(request: HttpRequest<any>, next: HttpHandler, tokenData: TokenData) {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
@@ -74,7 +72,6 @@ export class AuthInterceptor implements HttpInterceptor {
             this.loginService.logOut();
             return EMPTY;
           }
-          //return next.handle;
         }),
         catchError((error: any) => {
           this.isRefreshing = false;

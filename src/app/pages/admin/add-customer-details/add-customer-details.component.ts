@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CustomerService} from "../../../services/customer/customer.service";
 import {CommonService} from "../../../shared/common.service";
@@ -8,6 +8,7 @@ import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.s
 import {ErrorsValidation} from "../../../models/errors-validation";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
 import {Router} from "@angular/router";
+import constants from "../../../shared/constants";
 
 @Component({
   selector: 'app-add-customer-details',
@@ -15,11 +16,8 @@ import {Router} from "@angular/router";
   styleUrls: ['./add-customer-details.component.css']
 })
 export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
-  _customerDetailsForm!: FormGroup;
-
-  submitted = false;
-  disabled = true;
-  today: string = new Date().toISOString().split('T')[0];
+  private _customerDetailsForm!: FormGroup;
+  private _today: string = new Date().toISOString().split('T')[0];
   private _userNameErrors: ErrorsValidation = {
     required: 'Username is required',
     invalid: 'Please enter a valid email or phone number'
@@ -37,16 +35,19 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
     invalid: 'Please enter a valid email'
   };
   @ViewChildren('selectBox') selectBoxes?: QueryList<ElementRef>;
-
-  public statusOptions = [StatusType.ACTIVE]
-  public familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER]
-  selectedFamilyOptions: string[] = [];
-
+  private _statusOptions = [StatusType.ACTIVE]
+  private _familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER]
   constructor(private customerService: CustomerService, private successHandlerService: SuccessHandlerService, private router: Router,
               private errorHandlerService: ErrorhandlerService, private commonService: CommonService, private formBuilder: FormBuilder) {
+    this.initializeCustomerDetailsForm();
   }
 
   ngOnInit(): void {
+    for (let i = 1; i < constants.UNMARRIED_CUSTOMER_FAMILY; i++) {
+      this.customerFamilyList.push(this.createFamilyMember(i))
+    }
+  }
+  initializeCustomerDetailsForm(){
     this._customerDetailsForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -57,33 +58,21 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
         userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
         password: ['', [Validators.required, Validators.minLength(6)]],
       }),
-      status: ['ACTIVE', Validators.required],
+      status: [StatusType.ACTIVE, Validators.required],
       address: ['', Validators.required],
       citizenNumber: ['', Validators.required],
       emailAddress: ['', [this.commonService.emailValidator]],
       mobileNumber: ['', [Validators.required, this.commonService.mobileNumberValidator]],
       customerFamilyList: this.formBuilder.array([this.createFamilyMember(0)])
     })
-    for (let i = 1; i < 3; i++) {
-      this.customerFamilyList.push(this.createFamilyMember(i))
-    }
   }
-
-  get familyMembersList(): FormArray {
-    return this._customerDetailsForm.get('customerFamilyList') as FormArray;
-  }
-
   get customerDetailsForm(): FormGroup {
     return this._customerDetailsForm;
   }
 
-  get customerDetailsFormControls() {
-    return this._customerDetailsForm.controls;
-  }
-
   createFamilyMember(index: number): FormGroup {
     return this.formBuilder.group({
-        relationship: [this.familyOptions[index], Validators.required],
+        relationship: [this._familyOptions[index], Validators.required],
         relationshipPersonName: ['', Validators.required]
       }
     );
@@ -95,7 +84,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       const isMarried = maritalStatusControl?.value;
       if (isMarried) {
         const relationshipControl = this.formBuilder.control({
-          value: this.familyOptions[index],
+          value: this._familyOptions[index],
           disabled: false
         });
         return this.formBuilder.group({
@@ -105,11 +94,10 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       }
     }
     return this.formBuilder.group({
-      relationship: [this.familyOptions[index], Validators.required],
+      relationship: [this._familyOptions[index], Validators.required],
       relationshipPersonName: ['', Validators.required]
     });
   }
-
 
   get customerFamilyList() {
     return this._customerDetailsForm.get('customerFamilyList') as FormArray;
@@ -125,24 +113,21 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
 
   onMaritalStatusChange(event: any): void {
     if (event.target.value === 'true') {
-      this.familyOptions.push(FamilyType.SPOUSE);
-      this.customerFamilyList.push(this.createFamilyMemberForMarriedCustomer(this.familyOptions.length - 1))
+      this._familyOptions.push(FamilyType.SPOUSE);
+      this.customerFamilyList.push(this.createFamilyMemberForMarriedCustomer(this._familyOptions.length - 1))
     } else {
-      const index = this.familyOptions.indexOf(FamilyType.SPOUSE);
+      const index = this._familyOptions.indexOf(FamilyType.SPOUSE);
       if (index > -1) {
-        this.familyOptions.splice(index, 1);
+        this._familyOptions.splice(index, 1);
       }
-      while (this.customerFamilyList.length > 3) {
+      while (this.customerFamilyList.length > constants.UNMARRIED_CUSTOMER_FAMILY) {
         this.customerFamilyList.removeAt(this.customerFamilyList.length - 1);
       }
     }
-    // this.disableSelectBoxes();
   }
-
   formSubmit() {
-    if (this.customerDetailsForm.invalid) {
-      return;
-    }
+    if (this.customerDetailsForm.invalid) return;
+
     const formData = this.customerDetailsForm.value; // extract the form data
     this.customerService.addCustomerDetails(formData).subscribe({
         next: value => {
@@ -156,21 +141,6 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       }
     )
   }
-
-  public disableSelect(memberIndex: number): boolean {
-    return memberIndex < 3;
-  }
-
-  onSelectOption(event: Event, index: number) {
-    const selectedOption = (event.target as HTMLSelectElement).value;
-    this.selectedFamilyOptions[index] = selectedOption;
-  }
-
-  filteredFamilyOptions(index: number) {
-    return this.familyOptions.filter(option => !this.selectedFamilyOptions.includes(option)
-      || this.selectedFamilyOptions.indexOf(option) === index);
-  }
-
   get userNameErrors(): ErrorsValidation {
     return this._userNameErrors;
   }
@@ -193,5 +163,15 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
         selectBox.nativeElement.disabled = true;
       });
     }
+  }
+  get statusOptions(): StatusType[] {
+    return this._statusOptions;
+  }
+
+  get familyOptions(): FamilyType[] {
+    return this._familyOptions;
+  }
+  get today(): string {
+    return this._today;
   }
 }
