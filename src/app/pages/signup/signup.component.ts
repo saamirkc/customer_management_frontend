@@ -9,6 +9,7 @@ import { SuccessHandlerService } from '../../services/successhandler/success-han
 import { ErrorsValidation } from '../../models/errors-validation';
 import { RegistrationFormData } from '../../models/registration-form-data';
 import { ApiResponse } from '../../models/api-response';
+import {FormHelpersService} from "../../services/form-helpers.service";
 
 @Component({
   selector: 'app-signup',
@@ -35,6 +36,7 @@ export class SignupComponent implements OnInit {
     private successHandlerService: SuccessHandlerService,
     private commonService: CommonService,
     private dataService: DataService,
+    private formHelperService: FormHelpersService,
     private _cd: ChangeDetectorRef // add the ChangeDetectorRef
   ) {
     this._registrationForm = this.formBuilder.group({
@@ -98,6 +100,16 @@ export class SignupComponent implements OnInit {
       this._cd.detectChanges();
       this._router.navigate(['/login']);
     }
+  }
+  userNameVerificationControl(controlName: string): boolean{
+    const userNameControl = this.registrationForm.get(controlName);
+    if (userNameControl) userNameControl?.valid && userNameControl?.touched && this.isPhoneNumber(userNameControl.value);
+    return false;
+  }
+  isInvalidControl(controlName: string): boolean {
+    const control = this.registrationForm.get(controlName);
+    if (control) return this.formHelperService.isInvalidControl(control);
+    return false;
   }
   ngOnInit(): void {}
 }

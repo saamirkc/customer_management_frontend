@@ -11,6 +11,7 @@ import { SuccessHandlerService } from '../../services/successhandler/success-han
 import { ErrorsValidation } from '../../models/errors-validation';
 import { LoginData } from '../../models/login-data';
 import { ApiResponse } from '../../models/api-response';
+import {FormHelpersService} from "../../services/form-helpers.service";
 
 @Component({
   selector: 'app-login',
@@ -35,7 +36,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private commonService: CommonService, private _cd: ChangeDetectorRef, private successHandlerService: SuccessHandlerService,
     private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
-    private dataService: DataService, private tokenService: TokenService
+    private dataService: DataService, private formHelperService: FormHelpersService, private tokenService: TokenService
   ) {
     this._loginForm = this.formBuilder.group({
       userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
@@ -91,6 +92,11 @@ export class LoginComponent implements OnInit {
     } else {
       this.tokenService.removeTokens();
     }
+  }
+  isInvalidControl(controlName: string): boolean {
+    const control = this.loginForm.get(controlName);
+    if  (control) return this.formHelperService.isInvalidControl(control);
+    return false;
   }
   get passwordErrors(): ErrorsValidation {
     return this._passwordErrors;

@@ -11,9 +11,9 @@
               <div class="md-form">
                 <label class="">First Name <span class="text-danger">*</span></label>
                 <input type="text" formControlName="firstName" name="firstName" class="form-control mt-2"
-                       [class.is-invalid]="customerDetailForm.get('firstName')?.invalid && customerDetailForm.get('firstName')?.touched">
+                       [class.is-invalid]="isInvalidControl('firstName')">
                 <span
-                  *ngIf="customerDetailForm.get('firstName')?.invalid && (customerDetailForm.get('firstName')?.dirty || customerDetailForm.get('firstName')?.touched)"
+                  *ngIf="isInvalidControl('firstName')"
                   class="text-danger"> First Name is required
                 </span>
               </div>
@@ -21,9 +21,9 @@
               <div class="md-form">
                 <label>Last Name <span class="text-danger">*</span></label>
                 <input type="text" formControlName="lastName" name="lastName" class="form-control mt-2"
-                       [class.is-invalid]="customerDetailForm.get('lastName')?.invalid && customerDetailForm.get('lastName')?.touched">
+                       [class.is-invalid]="isInvalidControl('lastName')">
                 <span
-                  *ngIf="customerDetailForm.get('lastName')?.invalid && (customerDetailForm.get('lastName')?.dirty || customerDetailForm.get('lastName')?.touched)"
+                  *ngIf="isInvalidControl('lastName')"
                   class="text-danger"> Last Name is required
                 </span>
               </div>
@@ -64,27 +64,27 @@
               <div class="md-form">
                 <label>Address <span class="text-danger">*</span></label>
                 <input type="text" formControlName="address" name="address" class="form-control mt-2" required
-                       [class.is-invalid]="customerDetailForm.get('address')?.invalid && customerDetailForm.get('address')?.touched">
+                       [class.is-invalid]="isInvalidControl('address')">
                 <span
-                  *ngIf="customerDetailForm.get('address')?.invalid && (customerDetailForm.get('address')?.dirty || customerDetailForm.get('address')?.touched)"
+                  *ngIf="isInvalidControl('address')"
                   class="text-danger"> Address is required
                 </span>
               </div>
               <div class="md-form">
                 <label>Date Of Birth <span class="text-danger">*</span></label>
                 <input type="date" formControlName="dateOfBirth" name="dateOfBirth" class="form-control mt-2"
-                       [class.is-invalid]="customerDetailForm.get('dateOfBirth')?.invalid && customerDetailForm.get('dateOfBirth')?.touched"
+                       [class.is-invalid]="isInvalidControl('dateOfBirth')"
                        max="{{today | date:'yyyy-MM-dd'}}"/>
-                <span *ngIf="customerDetailForm.get('dateOfBirth')?.invalid && (customerDetailForm.get('dateOfBirth')?.dirty || customerDetailForm.get('dateOfBirth')?.touched)"
+                <span *ngIf="isInvalidControl('dateOfBirth')"
                       class="text-danger">Date of birth is required</span>
               </div>
               <div class="md-form">
                 <label>Citizen Number <span class="text-danger">*</span> </label>
                 <input type="text" formControlName="citizenNumber" name="citizenNumber" class="form-control mt-2"
                        required
-                       [class.is-invalid]="customerDetailForm.get('citizenNumber')?.invalid && customerDetailForm.get('citizenNumber')?.touched">
+                       [class.is-invalid]="isInvalidControl('citizenNumber')">
                 <span
-                  *ngIf="customerDetailForm.get('citizenNumber')?.invalid && (customerDetailForm.get('citizenNumber')?.dirty || customerDetailForm.get('citizenNumber')?.touched)"
+                  *ngIf="isInvalidControl('citizenNumber')"
                   class="text-danger"> Citizenship Number is required
                 </span>
               </div>
@@ -93,9 +93,9 @@
                 <label>UserName <span class="text-danger">*</span></label>
                 <input type="text" formControlName="userName" name="userName" class="form-control mt-2"
                        required
-                       [class.is-invalid]="customerDetailForm.get('userLogin.userName')?.invalid && customerDetailForm.get('userLogin.userName')?.touched"/>
+                       [class.is-invalid]="isInvalidControl('userLogin.userName')"/>
                 <span
-                  *ngIf=" customerDetailForm.get('userLogin.userName')?.invalid && customerDetailForm.get('userLogin.userName')?.touched"
+                  *ngIf=" isInvalidControl('userLogin.userName')"
                   class="text-danger">
                 {{ customerDetailForm.get('userLogin.userName')?.errors?.['required'] ? userNameErrors.required : userNameErrors.invalid }}
               </span>
@@ -105,7 +105,7 @@
                 <label>Email Address</label>
                 <input type="text" formControlName="emailAddress" name="emailAddress" class="form-control mt-2">
                 <span
-                  *ngIf="customerDetailForm.get('emailAddress')?.invalid && (customerDetailForm.get('emailAddress')?.dirty || customerDetailForm.get('emailAddress')?.touched)"
+                  *ngIf="isInvalidControl('emailAddress')"
                   class="text-danger">
                       {{ emailErrors.invalid }}
                 </span>
@@ -115,9 +115,9 @@
                 <label>Mobile Number <span class="text-danger">*</span></label>
                 <input type="text" formControlName="mobileNumber" name="mobileNumber" class="form-control mt-2"
                        required
-                       [class.is-invalid]="customerDetailForm.get('mobileNumber')?.invalid && customerDetailForm.get('mobileNumber')?.touched">
+                       [class.is-invalid]="isInvalidControl('mobileNumber')">
                 <span
-                  *ngIf="customerDetailForm.get('mobileNumber')?.invalid && customerDetailForm.get('mobileNumber')?.touched"
+                  *ngIf="isInvalidControl('mobileNumber')"
                   class="text-danger">
                 {{ customerDetailForm.get('mobileNumber')?.errors?.['required'] ? mobileNumberErrors.required : mobileNumberErrors.invalid }}
               </span>
@@ -143,18 +143,12 @@
                     <div class="col-md-6">
                       <input formControlName="relationshipPersonName" class="form-control d-inline-block w-100"
                              placeholder="Enter the Name" type="text" required
-                             [class.is-invalid]="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid && customerFamilyList.controls[i].get('relationshipPersonName')?.touched"/>
-                      <div *ngIf="customerFamilyList.controls[i].get('relationshipPersonName')?.invalid && (customerFamilyList.controls[i].get('relationshipPersonName')?.dirty
-                          || customerFamilyList.controls[i].get('relationshipPersonName')?.touched)"
+                             [class.is-invalid]="isRelationshipPersonNameInvalid('relationshipPersonName',i)"/>
+                      <div *ngIf="isRelationshipPersonNameInvalid('relationshipPersonName',i)"
                            class="invalid-feedback">Relationship Person Name is required
                       </div>
 
-                      <button
-                        *ngIf="((customerDetailForm?.get('maritalStatus')?.value == true || customerDetailForm?.get('maritalStatus')?.value == 'true') && i > 3) ||
-                        ((customerDetailForm?.get('maritalStatus')?.value == false || customerDetailForm?.get('maritalStatus')?.value == 'false') && i > 2)"
-                        class="btn-remove btn btn-danger" type="button"
-                        (click)="removeFamilyMember(i)"> X
-                      </button>
+                      <button *ngIf="shouldShowRemoveButton(i)" class="btn-remove btn btn-danger" type="button" (click)="removeFamilyMember(i)"> X</button>
                     </div>
                   </div>
                 </div>
