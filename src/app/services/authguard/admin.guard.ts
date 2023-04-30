@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import { Observable } from 'rxjs';
-import constants from "../../shared/constants";
+import constants from "../shared/constants";
 import {TokenService} from "../token/token.service";
 
 @Injectable({

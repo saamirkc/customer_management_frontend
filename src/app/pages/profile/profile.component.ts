@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {LoginService} from "../../services/login/login.service";
 import {TokenService} from "../../services/token/token.service";
 import {CustomerService} from "../../services/customer/customer.service";
-import {DataService} from "../../services/data.service";
+import {DataService} from "../../services/shared/data.service";
 import {CustomerDetails} from "../../models/customer-details";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
@@ -58,7 +58,7 @@ export class ProfileComponent implements OnInit {
         this._profileImageView = URL.createObjectURL(value);
         this._safeProfileImageUrl = this.getSanitizedUrl(this._profileImageView);
       }, error: err => {
-        console.log("The error is thrown while fetching the profile image", err);
+        this.errorHandlerService.handleError(err);
       }
     })
   }

@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from '../../services/customer/customer.service';
-import Constants from '../../shared/constants';
+import Constants from '../../services/shared/constants';
 import { StatusType } from '../../enums/status-type';
 import { ErrorhandlerService } from '../../services/errorhandler/errorhandler.service';
-import { DataService } from '../../services/data.service';
+import { DataService } from '../../services/shared/data.service';
 import { Subscription } from 'rxjs';
 import { SuccessHandlerService } from '../../services/successhandler/success-handler.service';
 
@@ -35,7 +35,7 @@ export class VerificationComponent implements OnInit, OnDestroy {
         this._userName = value;
       },
       error: (err) => {
-        console.log('The error thrown is ', err);
+        this.errorHandlerService.handleError(err);
       },
     });
   }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
-import constants from '../../shared/constants';
+import constants from '../shared/constants';
 import {Router} from '@angular/router';
 
 @Injectable({
@@ -9,7 +9,6 @@ import {Router} from '@angular/router';
 export class TokenService {
   constructor(private router: Router) {
   }
-
   public setTokens(jwtToken: string, refreshToken: string): void {
     const encryptedJwtToken = this.encrypt(jwtToken);
     const encryptedRefreshToken = this.encrypt(refreshToken);

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from "rxjs";
-import CustomerListResponse from "../models/customer-list-response";
-import {StatusType} from "../enums/status-type";
+import CustomerListResponse from "../../models/customer-list-response";
+import {StatusType} from "../../enums/status-type";
 
 @Injectable({
   providedIn: 'root'

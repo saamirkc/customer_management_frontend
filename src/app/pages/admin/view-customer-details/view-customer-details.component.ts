@@ -2,15 +2,15 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CustomerService} from "../../../services/customer/customer.service";
 import CustomerListResponse from "../../../models/customer-list-response";
 import {FormBuilder} from "@angular/forms";
-import {CommonService} from "../../../shared/common.service";
+import {CommonService} from "../../../services/shared/common.service";
 import {CustomerViewPopupComponent} from "../customer-view-popup/customer-view-popup.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {StatusType} from "../../../enums/status-type";
 import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
-import Constants from "../../../shared/constants";
-import {DataService} from "../../../services/data.service";
+import Constants from "../../../services/shared/constants";
+import {DataService} from "../../../services/shared/data.service";
 import {Subscription} from "rxjs";
 
 @Component({
@@ -35,17 +35,21 @@ export class ViewCustomerDetailsComponent implements OnInit {
   private _deleteStatusConst = Constants.DELETE_STATUS;
   private _customerList: CustomerListResponse[] = [];
   private _customerId?: number;
-
   private _selectedStatusOption?: string;
 
-  _pageSize = 10; _pageNumber = 0; _totalPages = 0; _totalElements = 0;
+  _pageSize = 10;
+  _pageNumber = 0;
+  _totalPages = 0;
+  _totalElements = 0;
   _pages: number[] = [];
 
-  constructor(private formBuilder: FormBuilder, private dataService: DataService, private successHandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {}
+  constructor(private formBuilder: FormBuilder, private dataService: DataService, private successHandlerService: SuccessHandlerService, private errorHandlerService: ErrorhandlerService, private router: Router, private modalService: NgbModal, private customerService: CustomerService, private commonService: CommonService) {
+  }
 
   search(search: string): void {
     this.getCustomerDetails(search, '');
   }
+
   resetSearch(searchInput: HTMLInputElement) {
     this._searchTerm = '';
     searchInput.value = '';
@@ -58,41 +62,45 @@ export class ViewCustomerDetailsComponent implements OnInit {
       this.getCustomerDetails(this._searchTerm, this._selectedStatusOption);
     }
   }
+
   openEditCustomerModal(customerId: number): void {
     this.customerService.viewCustomerById(customerId).subscribe((response) => {
       const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true, backdrop: 'static'});
-      modalRef.componentInstance.customer = response.object;
-      modalRef.componentInstance.customerId = customerId;
+      modalRef.componentInstance._customer = response.object;
+      modalRef.componentInstance._customerId = customerId;
     });
   }
 
   showStatusModal(customerId: number, status: string): void {
     this._customerId = customerId;
-    if (status == this.deleteStatusConst){
+    if (status == this.deleteStatusConst) {
       this.modalService.open(this.deleteModal, {centered: true})
-    } else if (status == this.activeStatusConst){
+    } else if (status == this.activeStatusConst) {
       this.modalService.open(this.unblockModal, {centered: true})
-    }else if (status == this.blockStatusConst){
+    } else if (status == this.blockStatusConst) {
       this.modalService.open(this.blockModal, {centered: true})
-    };
+    }
+    ;
   }
 
   ngOnInit(): void {
     this.getCustomerDetails('', '');
     this.subscribeCustomerSubjectDetails();
   }
-  subscribeCustomerSubjectDetails(){
+
+  subscribeCustomerSubjectDetails() {
     this._customerDetailSubscription = this.dataService.getCustomerDetailSubject().subscribe({
       next: customerDetails => {
-        if(customerDetails){
+        if (customerDetails) {
           const index = this.customerList.findIndex(customer => customer.id === customerDetails.id);
           this.customerList[index] = customerDetails;
         }
       }, error: err => {
-        console.log("The error thrown is ", err);
+        this.errorHandlerService.handleError(err)
       }
     })
   }
+
   getCustomerDetails(search: string, status: string) {
     this.customerService.getCustomerList(this._pageNumber, this._pageSize, status, search, 'createdTs', 'desc')
       .subscribe({
@@ -106,6 +114,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
         }
       })
   }
+
   goToPage(page: number) {
     if (page >= 0 && page < this._totalPages) {
       this._pageNumber = page;
@@ -118,14 +127,15 @@ export class ViewCustomerDetailsComponent implements OnInit {
     this.customerService.viewCustomerById(id).subscribe({
       next: value => {
         const modalRef = this.modalService.open(CustomerViewPopupComponent, {centered: true});
-        modalRef.componentInstance.customer = value.object;
-        modalRef.componentInstance.customerId = id;
-        modalRef.componentInstance.viewOnly = true;
+        modalRef.componentInstance._customer = value.object;
+        modalRef.componentInstance._customerId = id;
+        modalRef.componentInstance._viewOnly = true;
       }, error: err => {
         this.errorHandlerService.handleError(err);
       }
     })
   }
+
   // Make an API call to delete the customer with the given id
   public decline() {
     this.modalService.dismissAll();
@@ -137,7 +147,7 @@ export class ViewCustomerDetailsComponent implements OnInit {
 
   updateCustomerStatus(status: StatusType) {
     if (this._customerId != null) {
-      this.customerService.updateCustomerStatusById(this._customerId,status).subscribe({
+      this.customerService.updateCustomerStatusById(this._customerId, status).subscribe({
         next: value => {
           this.successHandlerService.handleSuccessEvent(value.message);
           const customerIndex = this.customerList.findIndex(c => c.id === this._customerId);
@@ -168,12 +178,15 @@ export class ViewCustomerDetailsComponent implements OnInit {
   get inactiveStatus(): StatusType {
     return this._inactiveStatus;
   }
+
   get deletedStatus(): StatusType {
     return this._deletedStatus;
   }
+
   get blockStatusConst(): string {
     return this._blockStatusConst;
   }
+
   get activeStatusConst(): string {
     return this._activeStatusConst;
   }
@@ -181,15 +194,19 @@ export class ViewCustomerDetailsComponent implements OnInit {
   get deleteStatusConst(): string {
     return this._deleteStatusConst;
   }
+
   get statusOptions(): StatusType[] {
     return this._statusOptions;
   }
+
   get selectedStatusOption(): string {
     return <string>this._selectedStatusOption;
   }
+
   set selectedStatusOption(value: string) {
     this._selectedStatusOption = value;
   }
+
   get searchTerm(): string {
     return this._searchTerm;
   }

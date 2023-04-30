@@ -37,7 +37,6 @@ export class ErrorhandlerService implements ErrorHandler {
         });
         errorMessage = `Error: ${err.error.details[0]}`;
       }
-      console.log('Error details ->', errorMessage);
     } else {
       Swal.fire({
         title: err.error.message,
@@ -45,7 +44,6 @@ export class ErrorhandlerService implements ErrorHandler {
         timer: 3000,
       });
       errorMessage = `Error: ${err.error.message}`;
-      console.log('Error ->', errorMessage);
       // throw err;
     }
     if (err.error instanceof ErrorEvent) {

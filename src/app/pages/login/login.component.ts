@@ -1,17 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login/login.service';
 import { Router } from '@angular/router';
-import { DataService } from '../../services/data.service';
+import { DataService } from '../../services/shared/data.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonService } from '../../shared/common.service';
+import { CommonService } from '../../services/shared/common.service';
 import { TokenService } from '../../services/token/token.service';
-import constants from '../../shared/constants';
+import constants from '../../services/shared/constants';
 import { ErrorhandlerService } from '../../services/errorhandler/errorhandler.service';
 import { SuccessHandlerService } from '../../services/successhandler/success-handler.service';
 import { ErrorsValidation } from '../../models/errors-validation';
 import { LoginData } from '../../models/login-data';
 import { ApiResponse } from '../../models/api-response';
-import {FormHelpersService} from "../../services/form-helpers.service";
+import {FormHelpersService} from "../../services/shared/form-helpers.service";
 
 @Component({
   selector: 'app-login',

@@ -1,15 +1,15 @@
 import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CustomerService} from "../../../services/customer/customer.service";
-import {CommonService} from "../../../shared/common.service";
+import {CommonService} from "../../../services/shared/common.service";
 import {StatusType} from "../../../enums/status-type";
 import {FamilyType} from "../../../enums/family-type";
 import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
 import {ErrorsValidation} from "../../../models/errors-validation";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
 import {Router} from "@angular/router";
-import constants from "../../../shared/constants";
-import {FormHelpersService} from "../../../services/form-helpers.service";
+import constants from "../../../services/shared/constants";
+import {FormHelpersService} from "../../../services/shared/form-helpers.service";
 
 @Component({
   selector: 'app-add-customer-details',
@@ -19,8 +19,6 @@ import {FormHelpersService} from "../../../services/form-helpers.service";
 export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   private _customerDetailsForm!: FormGroup;
   private _today: string = new Date().toISOString().split('T')[0];
-  selectedOption: string = "";
-
   private _userNameErrors: ErrorsValidation = {
     required: 'Username is required',
     invalid: 'Please enter a valid email or phone number'
@@ -37,7 +35,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
     required: '',
     invalid: 'Please enter a valid email'
   };
-  @ViewChildren('selectBox') selectBoxes?: QueryList<ElementRef>;
+  @ViewChildren('selectBox') private _selectBoxes?: QueryList<ElementRef>;
   private _statusOption = StatusType.ACTIVE;
   private _familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER]
 
@@ -49,7 +47,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     for (let i = 1; i < constants.UNMARRIED_CUSTOMER_FAMILY; i++) {
-      this.customerFamilyList.push(this.createFamilyMember(i))
+      this.customerFamilyList.push(this.formHelperService.createFamilyMember(i,this._familyOptions))
     }
   }
 
@@ -69,28 +67,19 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       citizenNumber: ['', Validators.required],
       emailAddress: ['', [this.commonService.emailValidator]],
       mobileNumber: ['', [Validators.required, this.commonService.mobileNumberValidator]],
-      customerFamilyList: this.formBuilder.array([this.createFamilyMember(0)])
+      customerFamilyList: this.formBuilder.array([this.formHelperService.createFamilyMember(0,this._familyOptions)])
     })
   }
 
   get customerDetailsForm(): FormGroup {
     return this._customerDetailsForm;
   }
-
-  createFamilyMember(index: number): FormGroup {
-    return this.formBuilder.group({
-        relationship: [this._familyOptions[index], Validators.required],
-        relationshipPersonName: ['', Validators.required]
-      }
-    );
-  }
-
   get customerFamilyList() {
     return this._customerDetailsForm.get('customerFamilyList') as FormArray;
   }
 
   addFamilyMember() {
-    this.customerFamilyList.push(this.createFamilyMember(0))
+    this.customerFamilyList.push(this.formHelperService.createFamilyMember(0,this._familyOptions))
   }
 
   removeFamilyMember(index: number) {
@@ -100,7 +89,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   onMaritalStatusChange(event: any): void {
     if (event.target.value == 'true') {
       this._familyOptions.push(FamilyType.SPOUSE);
-      this.customerFamilyList.push(this.createFamilyMember(this._familyOptions.length - 1))
+      this.customerFamilyList.push(this.formHelperService.createFamilyMember(this._familyOptions.length - 1,this._familyOptions))
     } else {
       this.formHelperService.removeSpouseFamilyOption(this._familyOptions, this.customerFamilyList);
     }
@@ -135,9 +124,9 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  shouldShowRemoveButton(i: number): boolean {
+  showHideRemoveButton(i: number): boolean {
     const maritalStatus = this.customerDetailsForm?.get('maritalStatus')?.value;
-    return (maritalStatus == 'true' && i > 3) || (maritalStatus == 'false' && i > 2);
+    return this.formHelperService.showHideRemoveButton(i, maritalStatus)
   }
 
   createFamilyMemberForMarriedCustomer(index: number): FormGroup {
@@ -178,8 +167,8 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.selectBoxes) {
-      this.selectBoxes.forEach(selectBox => {
+    if (this._selectBoxes) {
+      this._selectBoxes.forEach(selectBox => {
         selectBox.nativeElement.disabled = true;
       });
     }

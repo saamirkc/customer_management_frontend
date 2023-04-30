@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {TokenService} from "../../../services/token/token.service";
-import {DataService} from "../../../services/data.service";
+import {DataService} from "../../../services/shared/data.service";
 
 @Component({
   selector: 'app-sidebar',

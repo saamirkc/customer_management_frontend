@@ -194,7 +194,7 @@
                style="margin-left: 51%">Relationship Person Name is required
           </div>
           <button
-            *ngIf="shouldShowRemoveButton(i)"
+            *ngIf="showHideRemoveButton(i)"
             class="btn btn-danger" style="margin-left: 90%; position: absolute; margin-top: -3.7%;  padding: 6px"
             type="button"
             (click)="removeFamilyMember(i)">Remove

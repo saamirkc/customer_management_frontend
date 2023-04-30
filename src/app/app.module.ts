@@ -34,7 +34,7 @@ import { VerificationComponent } from './pages/verification/verification.compone
 import {MatSelectModule} from "@angular/material/select";
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import {AdminDashboardModule} from "./pages/admin/dashboard/admin-dashboard.module";
-import {SharedModule} from "./shared/shared.module";
+import {SharedModule} from "./module/shared.module";
 @NgModule({
   declarations: [
     AppComponent,

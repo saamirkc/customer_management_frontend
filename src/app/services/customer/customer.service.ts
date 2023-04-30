@@ -29,7 +29,6 @@ export class CustomerService {
   }
 
   viewCustomerById(customerId: number): Observable<ApiResponse> {
-    console.log("view customer by id is invoked", customerId)
     return this.http.get<ApiResponse>(`${environment.apiBaseUrl}/customer/details/id/${customerId}`);
   }
 
@@ -49,22 +48,11 @@ export class CustomerService {
   getProfileImage(customerId: number) {
     let getProfileImageUrl: string = `${environment.apiBaseUrl}/customer/view/own-profile-image/id/${customerId}`;
     return this.http.get<Blob>(getProfileImageUrl, {responseType: 'blob' as 'json'});
-    // blobObservable.pipe(
-    //   map((res) => {
-    //     return res;
-    //   }),
-    //   catchError((error) => {
-    //     console.log(error);
-    //     return throwError(error);
-    //   })
-    // );
-    // return blobObservable;
   }
 
   uploadProfileImage(file: File, customerId: string | null | undefined): Observable<ApiResponse> {
     const formData: FormData = new FormData();
     formData.append('file', file);
-    console.log("before hitting the upload api in the backend", file)
     return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/upload/profile-image/id/${customerId}`, formData).pipe(
       timeout(10000)
     )

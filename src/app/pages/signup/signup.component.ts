@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CustomerService } from '../../services/customer/customer.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonService } from '../../shared/common.service';
+import { CommonService } from '../../services/shared/common.service';
 import { Router } from '@angular/router';
 import { ErrorhandlerService } from '../../services/errorhandler/errorhandler.service';
-import { DataService } from '../../services/data.service';
+import { DataService } from '../../services/shared/data.service';
 import { SuccessHandlerService } from '../../services/successhandler/success-handler.service';
 import { ErrorsValidation } from '../../models/errors-validation';
 import { RegistrationFormData } from '../../models/registration-form-data';
 import { ApiResponse } from '../../models/api-response';
-import {FormHelpersService} from "../../services/form-helpers.service";
+import {FormHelpersService} from "../../services/shared/form-helpers.service";
 
 @Component({
   selector: 'app-signup',
@@ -103,7 +103,7 @@ export class SignupComponent implements OnInit {
   }
   userNameVerificationControl(controlName: string): boolean{
     const userNameControl = this.registrationForm.get(controlName);
-    if (userNameControl) userNameControl?.valid && userNameControl?.touched && this.isPhoneNumber(userNameControl.value);
+    if (userNameControl) return userNameControl?.valid && userNameControl?.touched && this.isPhoneNumber(userNameControl.value);
     return false;
   }
   isInvalidControl(controlName: string): boolean {

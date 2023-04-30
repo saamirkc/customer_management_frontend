@@ -5,7 +5,7 @@ import {WelcomeComponent} from "../welcome/welcome.component";
 import {ProfileComponent} from "../../profile/profile.component";
 import {ViewCustomerDetailsComponent} from "../view-customer-details/view-customer-details.component";
 import {AddCustomerDetailsComponent} from "../add-customer-details/add-customer-details.component";
-import {UniqueItemsPipe} from "../../../shared/unique-items.pipe";
+import {UniqueItemsPipe} from "../../../services/shared/unique-items.pipe";
 const routes: Routes = [
   {
     path: '',

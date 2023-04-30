@@ -11,9 +11,6 @@ import {Injectable} from "@angular/core";
 import {LoginService} from "./login/login.service";
 import {TokenData} from "../models/token-data";
 import {TokenService} from "./token/token.service";
-import {Router} from "@angular/router";
-import {ErrorhandlerService} from "./errorhandler/errorhandler.service";
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
@@ -22,9 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
   );
 
   constructor(private loginService: LoginService,
-              private tokenService: TokenService,
-              private router: Router,
-              private errorHandlerService: ErrorhandlerService) {
+              private tokenService: TokenService) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

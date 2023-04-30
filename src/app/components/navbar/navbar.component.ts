@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {LoginService} from "../../services/login/login.service";
-import {DataService} from "../../services/data.service";
+import {DataService} from "../../services/shared/data.service";
 import {TokenService} from "../../services/token/token.service";
 import {CustomerService} from "../../services/customer/customer.service";
+import {ErrorhandlerService} from "../../services/errorhandler/errorhandler.service";
 
 @Component({
   selector: 'app-navbar',
@@ -14,7 +15,7 @@ export class NavbarComponent implements OnInit {
   _userName?: string | null;
   _isAdminDashboard: boolean = false;
 
-  constructor(private tokenService: TokenService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {
+  constructor(private tokenService: TokenService, private errorhandlerService : ErrorhandlerService, private customerService: CustomerService, private dataService: DataService, private loginService: LoginService) {
   }
 
   ngOnInit(): void {
@@ -36,9 +37,8 @@ export class NavbarComponent implements OnInit {
       next: value => {
         this._isLoggedIn = value;
         this._userName = this.tokenService.getFullName();
-        console.log("The user is logged on subscription ", value)
       }, error: err => {
-        console.log("Error on logged on subscription ", err);
+        this.errorhandlerService.handleError(err)
       }
     })
   }
