@@ -15,7 +15,7 @@ import { SuccessHandlerService } from '../../services/successhandler/success-han
 })
 export class VerificationComponent implements OnInit, OnDestroy {
   private _verificationCode: string = '';
-  private customerId?: string | null;
+  private customerId?: string;
   private _userName: string = '';
   private userNameSubscription?: Subscription;
   constructor(

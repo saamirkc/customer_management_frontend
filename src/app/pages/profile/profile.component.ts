@@ -73,9 +73,11 @@ export class ProfileComponent implements OnInit {
 
   public getSanitizedUrl(url: string): SafeUrl {
     if (this.sanitizer) {
-      return this._safeProfileImageUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+      this._safeProfileImageUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+      return this._safeProfileImageUrl;
     } else {
-      return this._safeProfileImageUrl = '';
+      this._safeProfileImageUrl = '';
+      return this._safeProfileImageUrl;
     }
   }
 
