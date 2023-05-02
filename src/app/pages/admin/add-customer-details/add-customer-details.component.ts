@@ -33,8 +33,8 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
 
   initializeCustomerDetailsForm() {
     this._customerDetailsForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, this.commonService.noWhitespaceValidator]],
+      lastName: ['', [Validators.required, this.commonService.noWhitespaceValidator]],
       gender: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       maritalStatus: ['false', Validators.required],
@@ -44,8 +44,8 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
           this.commonService.noWhitespaceValidator]]
       }),
       status: [StatusType.ACTIVE, Validators.required],
-      address: ['', Validators.required],
-      citizenNumber: ['', Validators.required],
+      address: ['', [Validators.required,this.commonService.noWhitespaceValidator]],
+      citizenNumber: ['', [Validators.required,this.commonService.noWhitespaceValidator]],
       emailAddress: ['', [this.commonService.emailValidator, this.commonService.noWhitespaceValidator]],
       mobileNumber: ['', [Validators.required, this.commonService.mobileNumberValidator]],
       customerFamilyList: this.formBuilder.array([this.formHelperService.createFamilyMember(0, this._familyOptions)])

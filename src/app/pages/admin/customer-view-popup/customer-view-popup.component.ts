@@ -173,8 +173,8 @@ export class CustomerViewPopupComponent implements OnInit {
     if (this._customer) {
       this._customerDetailForm = this.formBuilder.group({
         id: [this._customerId],
-        firstName: [this._customer.firstName, Validators.required],
-        lastName: [this._customer.lastName, Validators.required],
+        firstName: [this._customer.firstName, [Validators.required,this.commonService.noWhitespaceValidator]],
+        lastName: [this._customer.lastName, [Validators.required,this.commonService.noWhitespaceValidator]],
         gender: [this._customer.gender, Validators.required],
         dateOfBirth: [this._customer.dateOfBirth, Validators.required],
         maritalStatus: [this._customer.maritalStatus, Validators.required],
@@ -183,8 +183,8 @@ export class CustomerViewPopupComponent implements OnInit {
           password: [''],
         }),
         status: [this._customer.status, Validators.required],
-        address: [this._customer.address, Validators.required],
-        citizenNumber: [this._customer.citizenNumber, Validators.required],
+        address: [this._customer.address, [Validators.required,this.commonService.noWhitespaceValidator]],
+        citizenNumber: [this._customer.citizenNumber, [Validators.required,this.commonService.noWhitespaceValidator]],
         emailAddress: [this._customer.emailAddress, [this.commonService.emailValidator, this.commonService.noWhitespaceValidator]],
         mobileNumber: [this._customer.mobileNumber, [Validators.required, this.commonService.mobileNumberValidator]],
         customerFamilyList: this.formBuilder.array([]),

@@ -9,6 +9,22 @@ import {ErrorsValidation} from "../../models/errors-validation";
 })
 export class FormHelpersService {
   private _errorMessages: { [key: string]: ErrorsValidation } = {
+    firstName: {
+      required: 'FirstName is required.',
+      invalid: ''
+    },
+    lastName: {
+      required: 'LastName is required.',
+      invalid: ''
+    },
+    address: {
+      required: 'Address is required.',
+      invalid: ''
+    },
+    citizenNumber: {
+      required: 'Citizen Number is required.',
+      invalid: ''
+    },
     userName: {
       required: 'Username is required.',
       invalid: 'Please enter a valid email or mobile number.'

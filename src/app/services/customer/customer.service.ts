@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../env/environment";
 import {RegistrationFormData} from "../../models/registration-form-data";
 import {ApiResponse} from "../../models/api-response";
-import {catchError, map, Observable, throwError, timeout} from "rxjs";
+import { Observable, timeout} from "rxjs";
 import {CustomerDetails} from "../../models/customer-details";
 import {StatusType} from "../../enums/status-type";
 import {StatusRequest} from "../../models/status-request";

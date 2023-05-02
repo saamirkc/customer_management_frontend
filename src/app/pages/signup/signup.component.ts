@@ -31,8 +31,8 @@ export class SignupComponent implements OnInit {
     private _cd: ChangeDetectorRef // add the ChangeDetectorRef
   ) {
     this._registrationForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required,this.commonService.noWhitespaceValidator]],
+      lastName: ['', [Validators.required,this.commonService.noWhitespaceValidator]],
       userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20),
         this.commonService.noWhitespaceValidator]]});

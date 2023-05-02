@@ -14,7 +14,8 @@
                        [class.is-invalid]="isInvalidControl('firstName')">
                 <span
                   *ngIf="isInvalidControl('firstName')"
-                  class="text-danger"> First Name is required
+                  class="text-danger">
+                   {{ getErrorMessage('firstName') }}
                 </span>
               </div>
 
@@ -24,7 +25,9 @@
                        [class.is-invalid]="isInvalidControl('lastName')">
                 <span
                   *ngIf="isInvalidControl('lastName')"
-                  class="text-danger"> Last Name is required
+                  class="text-danger">
+                 {{ getErrorMessage('lastName') }}
+
                 </span>
               </div>
 
@@ -67,7 +70,8 @@
                        [class.is-invalid]="isInvalidControl('address')">
                 <span
                   *ngIf="isInvalidControl('address')"
-                  class="text-danger"> Address is required
+                  class="text-danger">
+                   {{ getErrorMessage('address') }}
                 </span>
               </div>
               <div class="md-form">
@@ -85,7 +89,8 @@
                        [class.is-invalid]="isInvalidControl('citizenNumber')">
                 <span
                   *ngIf="isInvalidControl('citizenNumber')"
-                  class="text-danger"> Citizenship Number is required
+                  class="text-danger">
+                  {{ getErrorMessage('citizenNumber') }}
                 </span>
               </div>
 
