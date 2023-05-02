@@ -1,16 +1,16 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { LoginService } from '../../services/login/login.service';
-import { Router } from '@angular/router';
-import { DataService } from '../../services/shared/data.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonService } from '../../services/shared/common.service';
-import { TokenService } from '../../services/token/token.service';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {LoginService} from '../../services/login/login.service';
+import {Router} from '@angular/router';
+import {DataService} from '../../services/shared/data.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CommonService} from '../../services/shared/common.service';
+import {TokenService} from '../../services/token/token.service';
 import constants from '../../services/shared/constants';
-import { ErrorhandlerService } from '../../services/errorhandler/errorhandler.service';
-import { SuccessHandlerService } from '../../services/successhandler/success-handler.service';
-import { ErrorsValidation } from '../../models/errors-validation';
-import { LoginData } from '../../models/login-data';
-import { ApiResponse } from '../../models/api-response';
+import {ErrorhandlerService} from '../../services/errorhandler/errorhandler.service';
+import {SuccessHandlerService} from '../../services/successhandler/success-handler.service';
+import {ErrorsValidation} from '../../models/errors-validation';
+import {LoginData} from '../../models/login-data';
+import {ApiResponse} from '../../models/api-response';
 import {FormHelpersService} from "../../services/shared/form-helpers.service";
 
 @Component({
@@ -25,32 +25,29 @@ export class LoginComponent implements OnInit {
   get loginForm(): FormGroup {
     return this._loginForm;
   }
-  private _userNameErrors: ErrorsValidation = {
-    required: 'Username is required',
-    invalid: 'Please enter a valid email or phone number',
-  };
-  private _passwordErrors: ErrorsValidation = {
-    required: 'Password is required',
-    invalid: 'Password length must be minimum 6',
-  };
 
   constructor(private formBuilder: FormBuilder, private commonService: CommonService, private _cd: ChangeDetectorRef, private successHandlerService: SuccessHandlerService,
-    private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
-    private dataService: DataService, private formHelperService: FormHelpersService, private tokenService: TokenService
+              private errorHandlerService: ErrorhandlerService, private loginService: LoginService, private router: Router,
+              private dataService: DataService, private formHelperService: FormHelpersService, private tokenService: TokenService
   ) {
     this._loginForm = this.formBuilder.group({
       userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20),
+        this.commonService.noWhitespaceValidator]],
       loginType: ['', Validators.required],
     });
   }
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+  }
+
   formSubmit() {
     if (this._loginForm.invalid) return;
     const formData = this._loginForm.value; // extract form data
     this._isLoading = true;
     this.subscribeLoggedInUser(formData);
   }
+
   subscribeLoggedInUser(formData: LoginData) {
     this.loginService.login(formData).subscribe({
       next: (value) => {
@@ -66,6 +63,7 @@ export class LoginComponent implements OnInit {
       },
     });
   }
+
   setValuesInLocalStorage(value: ApiResponse) {
     this.tokenService.setTokens(value.object.token, value.object.refreshToken);
     this.tokenService.setCustomerNameGroupId(
@@ -74,6 +72,7 @@ export class LoginComponent implements OnInit {
     );
     this.tokenService.setCustomerId(value.object.customerId);
   }
+
   navigateUserBasedOnRoles(value: ApiResponse) {
     if (value.object.customerGroupId == constants.CUSTOMER_GROUP_ID) {
       // Navigate to the customer dashboard
@@ -93,19 +92,17 @@ export class LoginComponent implements OnInit {
       this.tokenService.removeTokens();
     }
   }
+
   isInvalidControl(controlName: string): boolean {
     const control = this.loginForm.get(controlName);
-    if  (control) return this.formHelperService.isInvalidControl(control);
+    if (control) return this.formHelperService.isInvalidControl(control);
     return false;
   }
-  get passwordErrors(): ErrorsValidation {
-    return this._passwordErrors;
+  getErrorMessage(controlName: string): string {
+    const control = this.loginForm.get(controlName);
+    if (control) return this.formHelperService.getErrorMessage(controlName,control);
+    return '';
   }
-
-  get userNameErrors(): ErrorsValidation {
-    return this._userNameErrors;
-  }
-
   get isLoading(): boolean {
     return this._isLoading;
   }

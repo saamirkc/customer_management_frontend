@@ -5,7 +5,6 @@ import {CommonService} from "../../../services/shared/common.service";
 import {StatusType} from "../../../enums/status-type";
 import {FamilyType} from "../../../enums/family-type";
 import {ErrorhandlerService} from "../../../services/errorhandler/errorhandler.service";
-import {ErrorsValidation} from "../../../models/errors-validation";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
 import {Router} from "@angular/router";
 import constants from "../../../services/shared/constants";
@@ -18,25 +17,7 @@ import {FormHelpersService} from "../../../services/shared/form-helpers.service"
 })
 export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   private _customerDetailsForm!: FormGroup;
-  private _today: string = new Date().toISOString().split('T')[0];
-  private _userNameErrors: ErrorsValidation = {
-    required: 'Username is required',
-    invalid: 'Please enter a valid email or phone number'
-  };
-  private _passwordErrors: ErrorsValidation = {
-    required: 'Password is required',
-    invalid: 'Password length must be minimum 6'
-  };
-  private _mobileNumberErrors: ErrorsValidation = {
-    required: 'Mobile Number is required',
-    invalid: 'Please enter a valid mobile number '
-  };
-  private _emailErrors: ErrorsValidation = {
-    required: '',
-    invalid: 'Please enter a valid email'
-  };
   @ViewChildren('selectBox') private _selectBoxes?: QueryList<ElementRef>;
-  private _statusOption = StatusType.ACTIVE;
   private _familyOptions = [FamilyType.FATHER, FamilyType.MOTHER, FamilyType.GRANDFATHER]
 
   constructor(private customerService: CustomerService, private successHandlerService: SuccessHandlerService, private router: Router,
@@ -46,9 +27,8 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    for (let i = 1; i < constants.UNMARRIED_CUSTOMER_FAMILY; i++) {
-      this.customerFamilyList.push(this.formHelperService.createFamilyMember(i,this._familyOptions))
-    }
+    for (let i = 1; i < constants.UNMARRIED_CUSTOMER_FAMILY; i++)
+      this.customerFamilyList.push(this.formHelperService.createFamilyMember(i, this._familyOptions))
   }
 
   initializeCustomerDetailsForm() {
@@ -60,26 +40,28 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
       maritalStatus: ['false', Validators.required],
       userLogin: this.formBuilder.group({
         userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20),
+          this.commonService.noWhitespaceValidator]]
       }),
       status: [StatusType.ACTIVE, Validators.required],
       address: ['', Validators.required],
       citizenNumber: ['', Validators.required],
-      emailAddress: ['', [this.commonService.emailValidator]],
+      emailAddress: ['', [this.commonService.emailValidator, this.commonService.noWhitespaceValidator]],
       mobileNumber: ['', [Validators.required, this.commonService.mobileNumberValidator]],
-      customerFamilyList: this.formBuilder.array([this.formHelperService.createFamilyMember(0,this._familyOptions)])
+      customerFamilyList: this.formBuilder.array([this.formHelperService.createFamilyMember(0, this._familyOptions)])
     })
   }
 
   get customerDetailsForm(): FormGroup {
     return this._customerDetailsForm;
   }
+
   get customerFamilyList() {
     return this._customerDetailsForm.get('customerFamilyList') as FormArray;
   }
 
   addFamilyMember() {
-    this.customerFamilyList.push(this.formHelperService.createFamilyMember(0,this._familyOptions))
+    this.customerFamilyList.push(this.formHelperService.createFamilyMember(0, this._familyOptions))
   }
 
   removeFamilyMember(index: number) {
@@ -89,7 +71,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   onMaritalStatusChange(event: any): void {
     if (event.target.value == 'true') {
       this._familyOptions.push(FamilyType.SPOUSE);
-      this.customerFamilyList.push(this.formHelperService.createFamilyMember(this._familyOptions.length - 1,this._familyOptions))
+      this.customerFamilyList.push(this.formHelperService.createFamilyMember(this._familyOptions.length - 1, this._familyOptions))
     } else {
       this.formHelperService.removeSpouseFamilyOption(this._familyOptions, this.customerFamilyList);
     }
@@ -150,20 +132,10 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  get userNameErrors(): ErrorsValidation {
-    return this._userNameErrors;
-  }
-
-  get passwordErrors(): ErrorsValidation {
-    return this._passwordErrors;
-  }
-
-  get mobileNumberErrors(): ErrorsValidation {
-    return this._mobileNumberErrors;
-  }
-
-  get emailErrors(): ErrorsValidation {
-    return this._emailErrors;
+  getErrorMessage(controlName: string): string {
+    const control = this.customerDetailsForm.get(controlName);
+    if (control) return this.formHelperService.getErrorMessage(controlName, control);
+    return '';
   }
 
   ngAfterViewInit(): void {
@@ -175,7 +147,7 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   }
 
   get statusOption(): StatusType {
-    return this._statusOption;
+    return StatusType.ACTIVE;
   }
 
   get familyOptions(): FamilyType[] {
@@ -183,6 +155,6 @@ export class AddCustomerDetailsComponent implements OnInit, AfterViewInit {
   }
 
   get today(): string {
-    return this._today;
+    return new Date().toISOString().split('T')[0];
   }
 }

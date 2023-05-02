@@ -56,7 +56,7 @@ export class ProfileComponent implements OnInit {
     this.customerService.getProfileImage(Number(customerId)).subscribe({
       next: value => {
         this._profileImageView = URL.createObjectURL(value);
-        this._safeProfileImageUrl = this.getSanitizedUrl(this._profileImageView);
+        if (this._profileImageView) this._safeProfileImageUrl = this.getSanitizedUrl(this._profileImageView);
       }, error: err => {
         this.errorHandlerService.handleError(err);
       }
@@ -83,7 +83,7 @@ export class ProfileComponent implements OnInit {
 
   onProfileImageSelected(event: any) {
     this.profileImageMain = event.target.files[0];
-    if (this.profileImageMain) {
+    if (this.profileImageMain && this._customerId) {
       this.customerService.uploadProfileImage(this.profileImageMain, this._customerId).subscribe({
         next: value => {
           this.successHandlerService.handleSuccessEvent(value.message);

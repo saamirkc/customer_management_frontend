@@ -19,15 +19,6 @@ import {FormHelpersService} from "../../services/shared/form-helpers.service";
 export class SignupComponent implements OnInit {
   private readonly _registrationForm: FormGroup;
   private _isLoading = false;
-
-  private _passwordErrors: ErrorsValidation = {
-    required: 'Password is required',
-    invalid: 'Password length must be minimum 6',
-  };
-  private _userNameErrors: ErrorsValidation = {
-    required: 'Username is required',
-    invalid: 'Please enter a valid email or phone number',
-  };
   constructor(
     private formBuilder: FormBuilder,
     private errorHandlerService: ErrorhandlerService,
@@ -43,8 +34,8 @@ export class SignupComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       userName: ['', [Validators.required, this.commonService.emailOrPhoneValidator]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20),
+        this.commonService.noWhitespaceValidator]]});
   }
   formSubmit(): void {
     if (this.registrationForm.invalid) return;
@@ -56,17 +47,11 @@ export class SignupComponent implements OnInit {
     const phoneRegex = /^\d{10}$/; // regex to match a 10-digit phone number
     return phoneRegex.test(value);
   }
-  get passwordErrors(): ErrorsValidation {
-    return this._passwordErrors;
-  }
   get isLoading(): boolean {
     return this._isLoading;
   }
   get registrationForm(): FormGroup {
     return this._registrationForm;
-  }
-  get userNameErrors(): ErrorsValidation {
-    return this._userNameErrors;
   }
   subscribeRegisteredUser(formData: RegistrationFormData) {
     this.customerService.registerUser(formData).subscribe({
@@ -110,6 +95,11 @@ export class SignupComponent implements OnInit {
     const control = this.registrationForm.get(controlName);
     if (control) return this.formHelperService.isInvalidControl(control);
     return false;
+  }
+  getErrorMessage(controlName: string): string {
+    const control = this.registrationForm.get(controlName);
+    if (control) return this.formHelperService.getErrorMessage(controlName,control);
+    return '';
   }
   ngOnInit(): void {}
 }

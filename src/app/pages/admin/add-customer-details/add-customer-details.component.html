@@ -68,7 +68,7 @@
           <label style="display: block">Marital Status <span class="text-danger"> *</span></label>
           <div class="form-check form-check-inline">
             <input class="form-check-input" formControlName="maritalStatus" type="radio" name="maritalStatus"
-                   id="inlineRadioSingle" value="false"  (change)="onMaritalStatusChange($event)">
+                   id="inlineRadioSingle" value="false" (change)="onMaritalStatusChange($event)">
             <label class="form-check-label" for="inlineRadioSingle"> Single </label>
           </div>
           <div class="form-check form-check-inline">
@@ -114,7 +114,7 @@
                  [class.is-invalid]="isInvalidControl('mobileNumber')">
           <span *ngIf="isInvalidControl('mobileNumber')"
                 class="text-danger">
-                {{ customerDetailsForm.get('mobileNumber')?.errors?.['required'] ? mobileNumberErrors.required : mobileNumberErrors.invalid }}
+           {{ getErrorMessage('mobileNumber') }}
               </span>
         </div>
 
@@ -129,7 +129,8 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label>Date of Birth <span class="text-danger">*</span></label>
-          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirth" name="date" max="{{today | date:'yyyy-MM-dd'}}" required
+          <input type="date" class="form-control" formControlName="dateOfBirth" id="dateOfBirth" name="date"
+                 max="{{today | date:'yyyy-MM-dd'}}" required
                  [class.is-invalid]="isInvalidControl('dateOfBirth')"/>
           <span
             *ngIf="isInvalidControl('dateOfBirth')"
@@ -139,12 +140,12 @@
         </div>
         <div class="form-group col-md-6">
           <label>Email Address</label>
-          <input type="email" name="emailAddress" formControlName="emailAddress" class="form-control"
+          <input type="text" name="emailAddress" formControlName="emailAddress" class="form-control"
                  placeholder=" Email">
           <span
             *ngIf="isInvalidControl('emailAddress')"
             class="text-danger">
-          {{ emailErrors.invalid }}
+           {{ getErrorMessage('emailAddress')}}
           </span>
 
         </div>
@@ -157,12 +158,11 @@
           <input type="text" class="form-control" id="userName" formControlName="userName" name="userName"
                  placeholder="Username" required
                  [class.is-invalid]="isInvalidControl('userName')"/>
-
           <span
             *ngIf="isInvalidControl('userLogin.userName')"
             class="text-danger">
-                {{ customerDetailsForm.get('userLogin.userName')?.errors?.['required'] ? userNameErrors.required : userNameErrors.invalid }}
-              </span>
+            {{ getErrorMessage('userLogin.userName') }}
+           </span>
 
         </div>
 
@@ -174,7 +174,7 @@
           <span
             *ngIf="isInvalidControl('userLogin.password')"
             class="text-danger">
-                {{ customerDetailsForm.get('userLogin.password')?.errors?.['required'] ? passwordErrors.required : passwordErrors.invalid }}
+            {{ getErrorMessage('userLogin.password') }}
               </span>
         </div>
       </div>
@@ -182,7 +182,8 @@
 
       <div formArrayName="customerFamilyList">
         <div *ngFor="let member of customerFamilyList['controls']; let i = index" [formGroupName]="i" name="i">
-          <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2 relation-select" #selectBox>
+          <select name="relationship" formControlName="relationship" class="form-select col-md-6 mt-2 relation-select"
+                  #selectBox>
             <option *ngFor="let option of familyOptions" [ngValue]="option">{{ option }}</option>
           </select>
 

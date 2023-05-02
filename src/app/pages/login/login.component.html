@@ -13,13 +13,12 @@
           <form [formGroup]="loginForm" name="loginForm" (ngSubmit)="formSubmit()">
             <div class="form-group">
               <label>UserName</label>
-              <input type="email" name="email" formControlName="userName" class="form-control mt-1" id="email"
-                     aria-describedby="emailHelp"
+              <input type="text" name="userName" formControlName="userName" class="form-control mt-1" id="userName"
                      placeholder="Email or Mobile Number" required
                      [class.is-invalid]="isInvalidControl('userName')"/>
               <span *ngIf="isInvalidControl('userName')"
                     class="invalid-feedback">
-                {{ loginForm.get('userName')?.errors?.['required'] ? userNameErrors.required : userNameErrors.invalid }}
+                {{ getErrorMessage('userName') }}
               </span>
 
             </div>
@@ -31,7 +30,7 @@
                      [class.is-invalid]="isInvalidControl('password')"/>
               <span *ngIf="isInvalidControl('password')"
                     class="invalid-feedback">
-                {{ loginForm.get('password')?.errors?.['required'] ? passwordErrors.required : passwordErrors.invalid }}
+                  {{ getErrorMessage('password') }}
               </span>
             </div>
 

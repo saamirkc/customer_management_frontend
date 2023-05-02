@@ -25,14 +25,6 @@ export class ViewCustomerDetailsComponent implements OnInit {
   @ViewChild('unblockModal') unblockModal?: TemplateRef<any>;
   private _customerDetailSubscription?: Subscription;
   private _searchTerm: string = '';
-  private _statusOptions = [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED]
-  private _pendingStatus = StatusType.PENDING;
-  private _activeStatus = StatusType.ACTIVE;
-  private _inactiveStatus = StatusType.INACTIVE;
-  private _deletedStatus = StatusType.DELETED;
-  private _blockStatusConst = Constants.BLOCK_STATUS;
-  private _activeStatusConst = Constants.ACTIVE_STATUS;
-  private _deleteStatusConst = Constants.DELETE_STATUS;
   private _customerList: CustomerListResponse[] = [];
   private _customerId?: number;
   private _selectedStatusOption?: string;
@@ -79,10 +71,8 @@ export class ViewCustomerDetailsComponent implements OnInit {
       this.modalService.open(this.unblockModal, {centered: true})
     } else if (status == this.blockStatusConst) {
       this.modalService.open(this.blockModal, {centered: true})
-    }
-    ;
+    };
   }
-
   ngOnInit(): void {
     this.getCustomerDetails('', '');
     this.subscribeCustomerSubjectDetails();
@@ -166,37 +156,35 @@ export class ViewCustomerDetailsComponent implements OnInit {
   get customerList(): CustomerListResponse[] {
     return this._customerList;
   }
-
   get pendingStatus(): StatusType {
-    return this._pendingStatus;
+    return StatusType.PENDING;
   }
-
   get activeStatus(): StatusType {
-    return this._activeStatus;
+    return StatusType.ACTIVE;
   }
 
   get inactiveStatus(): StatusType {
-    return this._inactiveStatus;
+    return StatusType.INACTIVE;
   }
 
   get deletedStatus(): StatusType {
-    return this._deletedStatus;
+    return StatusType.DELETED;
   }
 
   get blockStatusConst(): string {
-    return this._blockStatusConst;
+    return Constants.BLOCK_STATUS;
   }
 
   get activeStatusConst(): string {
-    return this._activeStatusConst;
+    return Constants.ACTIVE_STATUS;
   }
 
   get deleteStatusConst(): string {
-    return this._deleteStatusConst;
+    return Constants.DELETE_STATUS;
   }
 
   get statusOptions(): StatusType[] {
-    return this._statusOptions;
+    return [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED];
   }
 
   get selectedStatusOption(): string {

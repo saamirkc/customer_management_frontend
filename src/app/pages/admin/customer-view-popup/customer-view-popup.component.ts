@@ -9,7 +9,6 @@ import {FamilyType} from "../../../enums/family-type";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CommonService} from "../../../services/shared/common.service";
 import {SuccessHandlerService} from "../../../services/successhandler/success-handler.service";
-import {ErrorsValidation} from "../../../models/errors-validation";
 import {DataService} from "../../../services/shared/data.service";
 import CustomerListResponse from "../../../models/customer-list-response";
 import constants from "../../../services/shared/constants";
@@ -25,28 +24,8 @@ export class CustomerViewPopupComponent implements OnInit {
   @Input() _viewOnly?: boolean;
   @Input() _customer?: CustomerDetails;
   private _customerList?: CustomerListResponse;
-  private _statusOptions = [
-    StatusType.PENDING,
-    StatusType.ACTIVE,
-    StatusType.INACTIVE,
-    StatusType.DELETED,
-  ];
   private _familyOptions: FamilyType[] = [];
   private _customerDetailForm?: FormGroup;
-  private _today: string = new Date().toISOString().split('T')[0];
-
-  private _userNameErrors: ErrorsValidation = {
-    required: 'Username is required',
-    invalid: 'Please enter a valid email or phone number',
-  };
-  private _mobileNumberErrors: ErrorsValidation = {
-    required: 'Mobile Number is required',
-    invalid: 'Please enter a valid mobile number',
-  };
-  private _emailErrors: ErrorsValidation = {
-    required: '',
-    invalid: 'Please enter a valid email',
-  };
 
   constructor(
     private formBuilder: FormBuilder,
@@ -206,7 +185,7 @@ export class CustomerViewPopupComponent implements OnInit {
         status: [this._customer.status, Validators.required],
         address: [this._customer.address, Validators.required],
         citizenNumber: [this._customer.citizenNumber, Validators.required],
-        emailAddress: [this._customer.emailAddress, [this.commonService.emailValidator]],
+        emailAddress: [this._customer.emailAddress, [this.commonService.emailValidator, this.commonService.noWhitespaceValidator]],
         mobileNumber: [this._customer.mobileNumber, [Validators.required, this.commonService.mobileNumberValidator]],
         customerFamilyList: this.formBuilder.array([]),
       });
@@ -261,23 +240,17 @@ export class CustomerViewPopupComponent implements OnInit {
   }
 
   get statusOptions(): StatusType[] {
-    return this._statusOptions;
+    return [StatusType.PENDING, StatusType.ACTIVE, StatusType.INACTIVE, StatusType.DELETED];
   }
 
-  get userNameErrors(): ErrorsValidation {
-    return this._userNameErrors;
-  }
-
-  get mobileNumberErrors(): ErrorsValidation {
-    return this._mobileNumberErrors;
-  }
-
-  get emailErrors(): ErrorsValidation {
-    return this._emailErrors;
+  getErrorMessage(controlName: string): string {
+    const control = this.customerDetailForm.get(controlName);
+    if (control) return this.formHelperService.getErrorMessage(controlName, control);
+    return '';
   }
 
   get today(): string {
-    return this._today;
+    return new Date().toISOString().split('T')[0];
   }
 
   get customerId(): number {

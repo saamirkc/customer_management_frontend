@@ -50,7 +50,7 @@ export class CustomerService {
     return this.http.get<Blob>(getProfileImageUrl, {responseType: 'blob' as 'json'});
   }
 
-  uploadProfileImage(file: File, customerId: string | null | undefined): Observable<ApiResponse> {
+  uploadProfileImage(file: File, customerId: string): Observable<ApiResponse> {
     const formData: FormData = new FormData();
     formData.append('file', file);
     return this.http.put<ApiResponse>(`${environment.apiBaseUrl}/customer/upload/profile-image/id/${customerId}`, formData).pipe(
@@ -58,7 +58,7 @@ export class CustomerService {
     )
   }
 
-  verifyCustomer(verificationCode: string, customerId: string | null) {
+  verifyCustomer(verificationCode: string, customerId: string) {
     return this.http.post<any>(`${environment.apiBaseUrl}/public/users/verify/id/${customerId}?verificationCode=${verificationCode}`, {}).pipe(
       timeout(10000)
     )

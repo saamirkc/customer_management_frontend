@@ -97,7 +97,7 @@
                 <span
                   *ngIf=" isInvalidControl('userLogin.userName')"
                   class="text-danger">
-                {{ customerDetailForm.get('userLogin.userName')?.errors?.['required'] ? userNameErrors.required : userNameErrors.invalid }}
+                             {{ getErrorMessage('userLogin.userName') }}
               </span>
               </div>
 
@@ -107,7 +107,7 @@
                 <span
                   *ngIf="isInvalidControl('emailAddress')"
                   class="text-danger">
-                      {{ emailErrors.invalid }}
+                  {{ getErrorMessage('emailAddress') }}
                 </span>
               </div>
 
@@ -119,7 +119,7 @@
                 <span
                   *ngIf="isInvalidControl('mobileNumber')"
                   class="text-danger">
-                {{ customerDetailForm.get('mobileNumber')?.errors?.['required'] ? mobileNumberErrors.required : mobileNumberErrors.invalid }}
+                   {{ getErrorMessage('mobileNumber') }}
               </span>
               </div>
 
@@ -148,7 +148,9 @@
                            class="invalid-feedback">Relationship Person Name is required
                       </div>
 
-                      <button *ngIf="showHideRemoveButton(i)" class="btn-remove btn btn-danger" type="button" (click)="removeFamilyMember(i)"> X</button>
+                      <button *ngIf="showHideRemoveButton(i)" class="btn-remove btn btn-danger" type="button"
+                              (click)="removeFamilyMember(i)"> X
+                      </button>
                     </div>
                   </div>
                 </div>
