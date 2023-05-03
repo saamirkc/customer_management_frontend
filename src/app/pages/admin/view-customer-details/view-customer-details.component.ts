@@ -46,7 +46,9 @@ export class ViewCustomerDetailsComponent implements OnInit {
     this._searchTerm = '';
     searchInput.value = '';
     this._selectedStatusOption = StatusType.PENDING;
-    this.getCustomerDetails('', '');
+    this._pageNumber=0;
+    this._pageSize=10;
+    this.getCustomerDetails('', this._selectedStatusOption);
   }
 
   searchByStatus(): void {
@@ -108,7 +110,11 @@ export class ViewCustomerDetailsComponent implements OnInit {
   goToPage(page: number) {
     if (page >= 0 && page < this._totalPages) {
       this._pageNumber = page;
-      this.getCustomerDetails('', '');
+      if (this._selectedStatusOption) {
+        this.getCustomerDetails(this._searchTerm, this._selectedStatusOption);
+      } else {
+        this.getCustomerDetails('','')
+      }
     }
   }
 
