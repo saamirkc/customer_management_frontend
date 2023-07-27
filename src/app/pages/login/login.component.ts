@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
     this.tokenService.setTokens(value.object.token, value.object.refreshToken);
     this.tokenService.setCustomerNameGroupId(
       value.object.customerGroupId,
-      value.object.fullName
+      value.object.fullName,
     );
     this.tokenService.setCustomerId(value.object.customerId);
   }
