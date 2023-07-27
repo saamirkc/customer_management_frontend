@@ -38,9 +38,9 @@
               <input type="text" name="userName" class="form-control" formControlName="userName" id="userName"
                      placeholder="Email or Mobile Number" required
                      [class.is-invalid]="isInvalidControl('userName')"/>
-              <div *ngIf="userNameVerificationControl('userName')"
-                   class="feedback-valid">Mobile Number as the username cannot be self verified!
-              </div>
+<!--              <div *ngIf="userNameVerificationControl('userName')"-->
+<!--                   class="feedback-valid">Mobile Number as the username cannot be self verified!-->
+<!--              </div>-->
               <span *ngIf="isInvalidControl('userName')"
                     class="invalid-feedback">
              {{ getErrorMessage('userName') }}
